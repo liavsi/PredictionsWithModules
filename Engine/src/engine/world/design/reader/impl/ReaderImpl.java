@@ -9,7 +9,6 @@ import engine.world.design.action.impl.KillAction;
 import engine.world.design.execution.entity.manager.EntityInstanceManager;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
-import engine.world.design.termination.api.Termination;
 import engine.world.design.termination.impl.TerminationImpl;
 import engine.world.design.termination.second.Second;
 import engine.world.design.termination.second.SecondImpl;
@@ -34,9 +33,6 @@ import schema.generated.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,8 +135,7 @@ public class ReaderImpl implements Reader {
                 res = createcalCulationAction(prdAction);
                 break;
             case ("condition"):
-                res = null; // TODO: 16/08/2023  
-                //   res = createConditionAction(prdAction); 
+                res = createConditionAction(prdAction);
                 break;
             case ("set"):
                 res = createSetAction(prdAction);
@@ -160,79 +155,69 @@ public class ReaderImpl implements Reader {
     }
 
 
-//    private Action createConditionAction(PRDAction prdAction) {
-//        Action res = null;
-//        Condition condition = null;
-//        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-//        String singularity = prdAction.getPRDCondition().getSingularity();
-//        switch (singularity) {
-//            case "single":
-//                EntityDefinition entity =  createdWorld.getEntityDefinitionByName(prdAction.getPRDCondition().getEntity());
-//                String property = prdAction.getPRDCondition().getProperty();
-//                String value = prdAction.getPRDCondition().getValue();
-//                String operator = prdAction.getPRDCondition().getOperator();
-//                condition = new SingleCondition(entity, property,value,operator);
-//                res = new ConditionAction(mainEntity,condition);
-//                break;
-//            case "multiple":
-//                String logical = prdAction.getPRDCondition().getLogical();
-//                if(logical != "or" && logical != "and"){
-//                    throw new RuntimeException("invalid logical value");
-//                }
-//                MultipleCondition multipleCondition = new MultipleCondition(mainEntity,logical);
-//                for (PRDCondition prdCondition: prdAction.getPRDCondition().getPRDCondition()){
-//                    multipleCondition.addCondition(createConditionAction(prdCondition));
-//                }
-//                break;
-//            default:
-//                throw new IllegalArgumentException(singularity + "is not a valid Condition Singularity");
-//        }
-//        for (PRDAction prdAction1: prdAction.getPRDThen().getPRDAction()){
-//            res.getThanActions().add(buildActionFromPRD(prdAction1));
-//        }
-//        for (PRDAction prdAction1: prdAction.getPRDElse().getPRDAction()){
-//            res.getElseActions().add(buildActionFromPRD(prdAction1));
-//        }
-//        List<PRDCondition> prdCondition = prdAction.getPRDCondition().getPRDCondition();
-//
-//        return res;
-//    }
-//
-//    private Action createConditionAction(PRDCondition prdCondition) {
-//        AbstractCondition res = null;
-//        //EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-//        String singularity = prdCondition.getSingularity();
-//        switch (singularity) {
-//            case "single":
-//                EntityDefinition entity =  createdWorld.getEntityDefinitionByName(prdCondition.getEntity());
-//                String property = prdCondition.getProperty();
-//                String value = prdCondition.getValue();
-//                String operator = prdCondition.getOperator();
-//                res = new SingleCondition(mainEntity, entity, property,value,operator);
-//                break;
-//            case "multiple":
-//                String logical = prdAction.getPRDCondition().getLogical();
-//                if(logical != "or" && logical != "and"){
-//                    throw new RuntimeException("invalid logical value");
-//                }
-//                MultipleCondition multipleCondition = new MultipleCondition(mainEntity,logical);
-//                for (PRDCondition prdCondition: prdAction.getPRDCondition().getPRDCondition()){
-//                    multipleCondition.addCondition(createConditionAction(prdCondition));
-//                }
-//                break;
-//            default:
-//                throw new IllegalArgumentException(singularity + "is not a valid Condition Singularity");
-//        }
-//        for (PRDAction prdAction1: prdAction.getPRDThen().getPRDAction()){
-//            res.getThanActions().add(buildActionFromPRD(prdAction1));
-//        }
-//        for (PRDAction prdAction1: prdAction.getPRDElse().getPRDAction()){
-//            res.getElseActions().add(buildActionFromPRD(prdAction1));
-//        }
-//        List<PRDCondition> prdCondition = prdAction.getPRDCondition().getPRDCondition();
-//
-//        return res;
-//    }
+    private Action createConditionAction(PRDAction prdAction) {
+        ConditionAction res = null;
+        Condition condition = null;
+        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        String singularity = prdAction.getPRDCondition().getSingularity();
+        switch (singularity) {
+            case "single":
+                EntityDefinition entity =  createdWorld.getEntityDefinitionByName(prdAction.getPRDCondition().getEntity());
+                String property = prdAction.getPRDCondition().getProperty();
+                String value = prdAction.getPRDCondition().getValue();
+                String operator = prdAction.getPRDCondition().getOperator();
+                condition = new SingleCondition(entity, property,value,operator);
+                res = new ConditionAction(mainEntity,condition);
+                break;
+            case "multiple":
+                String logical = prdAction.getPRDCondition().getLogical();
+                if(logical != "or" && logical != "and"){
+                    throw new RuntimeException("invalid logical value");
+                }
+                MultipleCondition multipleCondition = new MultipleCondition(logical);
+                for (PRDCondition prdCondition: prdAction.getPRDCondition().getPRDCondition()){
+                    multipleCondition.addCondition(createSubCondition(prdCondition));
+                }
+                res = new ConditionAction(mainEntity,multipleCondition);
+                break;
+            default:
+                throw new IllegalArgumentException(singularity + "is not a valid Condition Singularity");
+        }
+        for (PRDAction prdAction1: prdAction.getPRDThen().getPRDAction()){
+            res.getThanActions().add(buildActionFromPRD(prdAction1));
+        }
+        for (PRDAction prdAction1: prdAction.getPRDElse().getPRDAction()){
+            res.getElseActions().add(buildActionFromPRD(prdAction1));
+        }
+        return res;
+    }
+
+    private Condition createSubCondition(PRDCondition prdCondition) {
+        Condition res = null;
+        String singularity = prdCondition.getSingularity();
+        switch (singularity) {
+            case "single":
+                EntityDefinition entity =  createdWorld.getEntityDefinitionByName(prdCondition.getEntity());
+                String property = prdCondition.getProperty();
+                String value = prdCondition.getValue();
+                String operator = prdCondition.getOperator();
+                res = new SingleCondition(entity, property,value,operator);
+                break;
+            case "multiple":
+                String logical = prdCondition.getLogical();
+                if(logical != "or" && logical != "and"){
+                    throw new RuntimeException("invalid logical value");
+                }
+                MultipleCondition multipleCondition = new MultipleCondition(logical);
+                for (PRDCondition prdCondition1: prdCondition.getPRDCondition()){
+                    multipleCondition.addCondition(createSubCondition(prdCondition1));
+                }
+                break;
+            default:
+                throw new IllegalArgumentException(singularity + "is not a valid Condition Singularity");
+        }
+        return res;
+    }
 
 
     private Action createcalCulationAction(PRDAction prdAction) {
