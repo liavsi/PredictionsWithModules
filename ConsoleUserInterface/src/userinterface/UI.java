@@ -13,12 +13,14 @@ public class UI {
         System.out.println("please enter your choice:");
         Scanner scanner = new Scanner(System.in);
         int choice = scanner.nextInt();
-//        switch (choice) {
-//            case 1:
-//                currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
-//                break;
+        switch (choice) {
+            case 1:
+                currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
+                break;
+        }
 //            case 2:
 //                showDataToUser(currEngine.getWorldDTO());
+//        Data Transfer Object
 //                break;
 //            case 3:
 //                showSimulationIdNumber(currEngine.runNewSimulation());
@@ -33,8 +35,9 @@ public class UI {
 //            default:
 //                throw new IllegalArgumentException(choice + "is not a valid choice");
 //        }
-        currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
-        System.out.println(currEngine.toString());
+       // currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
+        System.out.println("ended");
+      //  System.out.println(currEngine.toString());
     }
 
     private static void showSimulationData(SimulationOutcome newSimulation) {

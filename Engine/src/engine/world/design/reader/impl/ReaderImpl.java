@@ -2,11 +2,10 @@ package engine.world.design.reader.impl;
 
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
+import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.action.condition.*;
-import engine.world.design.action.impl.DecreaseAction;
-import engine.world.design.action.impl.IncreaseAction;
-import engine.world.design.action.impl.KillAction;
-import engine.world.design.execution.entity.manager.EntityInstanceManager;
+import engine.world.design.action.impl.*;
+import engine.world.design.reader.validator.api.Validator;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
 import engine.world.design.termination.impl.TerminationImpl;
@@ -150,8 +149,12 @@ public class ReaderImpl implements Reader {
     }
 
     private Action createSetAction(PRDAction prdAction) {
-        // TODO: 11/08/2023 implement method and class
-        return null;
+        Action res = null;
+        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        String property = prdAction.getProperty();
+        String value = prdAction.getValue();
+        res = new SetAction(mainEntity, property, value);
+        return res;
     }
 
 
@@ -221,8 +224,25 @@ public class ReaderImpl implements Reader {
 
 
     private Action createcalCulationAction(PRDAction prdAction) {
-        // TODO: 11/08/2023 implement method  and class
-        return null;
+        Action res = null;
+        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        String property = prdAction.getProperty();
+        String arg1 = null, arg2 = null;
+        CalculationType calculationType = null;
+        if(prdAction.getPRDMultiply() != null) {
+            arg1 = prdAction.getPRDMultiply().getArg1();
+            arg2 = prdAction.getPRDMultiply().getArg2();
+            calculationType = CalculationType.MULTIPLY;
+        } else if (prdAction.getPRDDivide() != null) {
+            arg1 = prdAction.getPRDDivide().getArg1();
+            arg2 = prdAction.getPRDDivide().getArg2();
+            calculationType = CalculationType.DIVIDE;
+        }
+        else {
+            throw new IllegalArgumentException(prdAction.toString() + "is Calculation but illegal property" +prdAction.getPRDDivide().toString() +prdAction.getPRDMultiply().toString());
+        }
+        res = new CalculationAction(mainEntity, property, arg1, arg2, calculationType);
+        return res;
     }
 
     private Action createKillAction(PRDAction prdAction) {

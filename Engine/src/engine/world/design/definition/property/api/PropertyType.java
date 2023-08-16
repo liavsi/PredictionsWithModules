@@ -4,10 +4,12 @@ public enum PropertyType {
     DECIMAL {
 
         public Integer convert(Object value) {
-            if (!(value instanceof Integer)) {
-                throw new IllegalArgumentException("value " + value + " is not of a DECIMAL type (expected Integer class)");
-            }
-            return (Integer) value;
+//            if (!(value instanceof Integer)) {
+//                throw new IllegalArgumentException("value " + value + " is not of a DECIMAL type (expected Integer class)");
+//            }
+            Double tmp = (Double)value;
+            int res = tmp.intValue();
+            return res;
         }
     }, BOOLEAN {
 
