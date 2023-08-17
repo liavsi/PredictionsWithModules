@@ -8,6 +8,8 @@ import engine.world.design.action.impl.*;
 import engine.world.design.reader.validator.api.Validator;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
+import engine.world.design.rule.activation.api.Activation;
+import engine.world.design.rule.activation.impl.ActivationImpl;
 import engine.world.design.termination.impl.TerminationImpl;
 import engine.world.design.termination.second.Second;
 import engine.world.design.termination.second.SecondImpl;
@@ -97,7 +99,7 @@ public class ReaderImpl implements Reader {
                 Tick tick = new TickImpl(((PRDByTicks) prdTicksOrSeconds).getCount());
                 termination.setTicks(tick);
             }
-            if(prdTicksOrSeconds instanceof PRDBySecond) {
+            else if(prdTicksOrSeconds instanceof PRDBySecond) {
                 Second second = new SecondImpl(((PRDBySecond) prdTicksOrSeconds).getCount());
                 termination.setSecondsToPast(second);
             }
@@ -111,8 +113,19 @@ public class ReaderImpl implements Reader {
     private void buildRulesFromPRD(PRDRules prdRules) {
         List<Rule> ruleList = new ArrayList<>();
         Action action;
+        Rule currRule = null;
+        Activation activation = null;
         for (PRDRule prdRule: prdRules.getPRDRule()) {
-            Rule currRule = new RuleImpl(prdRule.getName());
+            String name = prdRule.getName();
+            if (prdRule.getPRDActivation() != null) {
+                int ticks = prdRule.getPRDActivation().getTicks();
+                double probability = prdRule.getPRDActivation().getProbability();
+                activation = new ActivationImpl(ticks,probability);
+            }
+            else {
+                activation = new ActivationImpl();
+            }
+            currRule = new RuleImpl(name, activation);
             for (PRDAction prdAction : prdRule.getPRDActions().getPRDAction()) {
                 currRule.addAction(buildActionFromPRD(prdAction));
             }
@@ -174,7 +187,7 @@ public class ReaderImpl implements Reader {
                 break;
             case "multiple":
                 String logical = prdAction.getPRDCondition().getLogical();
-                if(logical != "or" && logical != "and"){
+                if(!logical.equals("or") && !logical.equals("and")){
                     throw new RuntimeException("invalid logical value");
                 }
                 MultipleCondition multipleCondition = new MultipleCondition(logical);
@@ -208,13 +221,14 @@ public class ReaderImpl implements Reader {
                 break;
             case "multiple":
                 String logical = prdCondition.getLogical();
-                if(logical != "or" && logical != "and"){
+                if(!logical.equals("or") && !logical.equals("and")){
                     throw new RuntimeException("invalid logical value");
                 }
                 MultipleCondition multipleCondition = new MultipleCondition(logical);
                 for (PRDCondition prdCondition1: prdCondition.getPRDCondition()){
                     multipleCondition.addCondition(createSubCondition(prdCondition1));
                 }
+                res = multipleCondition;
                 break;
             default:
                 throw new IllegalArgumentException(singularity + "is not a valid Condition Singularity");

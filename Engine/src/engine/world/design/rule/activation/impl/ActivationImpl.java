@@ -6,10 +6,22 @@ import engine.world.design.rule.activation.api.Activation;
 public class ActivationImpl implements Activation {
 
     private Integer ticks = 1;
-    private Float probability = 1f;
+    private Double probability = 1d;
     private RandomFloatGenerator randomFloatGenerator = new RandomFloatGenerator(0f, 1f);
+
+    public ActivationImpl(){}
+    public ActivationImpl(int ticks,double probability) {
+        if (ticks != 0){
+            this.ticks = ticks;
+        }
+        this.probability = probability;
+    }
     @Override
-    public void setProbability(Float probability) {
+    public void setTicks(Integer ticks) {
+        this.ticks = ticks;
+    }
+    @Override
+    public void setProbability(Double probability) {
         this.probability = probability;
     }
     @Override
@@ -18,9 +30,5 @@ public class ActivationImpl implements Activation {
             return true;
         }
         return false;
-    }
-    @Override
-    public void setTicks(Integer ticks) {
-        this.ticks = ticks;
     }
 }

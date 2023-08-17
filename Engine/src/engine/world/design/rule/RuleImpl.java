@@ -2,6 +2,7 @@ package engine.world.design.rule;
 
 import engine.world.design.action.api.Action;
 import engine.world.design.rule.activation.api.Activation;
+import engine.world.design.rule.activation.impl.ActivationImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,11 +13,11 @@ public class RuleImpl implements Rule{
     private Activation activation;
     private final List<Action> actions;
 
-    public RuleImpl(String name) {
+    public RuleImpl(String name,Activation activation) {
         this.name = name;
+        this.activation = activation;
         this.actions = new ArrayList<>();
     }
-
     @Override
     public String getName() {
         return name;

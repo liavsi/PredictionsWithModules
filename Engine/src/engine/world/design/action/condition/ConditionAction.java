@@ -16,7 +16,7 @@ public class ConditionAction extends AbstractAction{
 
     private Condition condition;
     public ConditionAction(EntityDefinition entityDefinition,Condition condition) {
-        super(ActionType.CALCULATION, entityDefinition);
+        super(ActionType.CONDITION, entityDefinition);
         this.condition = condition;
         thanActions = new ArrayList<>();
         elseActions = new ArrayList<>();
