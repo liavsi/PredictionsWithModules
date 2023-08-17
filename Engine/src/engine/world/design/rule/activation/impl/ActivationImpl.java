@@ -8,21 +8,19 @@ public class ActivationImpl implements Activation {
     private Integer ticks = 1;
     private Float probability = 1f;
     private RandomFloatGenerator randomFloatGenerator = new RandomFloatGenerator(0f, 1f);
-
-    public void setTicks(Integer ticks) {
-        this.ticks = ticks;
-    }
-
+    @Override
     public void setProbability(Float probability) {
         this.probability = probability;
     }
-
-
     @Override
     public Boolean isActive(int tickNumber) {
         if(tickNumber % ticks == 0 && randomFloatGenerator.generateValue() < probability ) {
             return true;
         }
         return false;
+    }
+    @Override
+    public void setTicks(Integer ticks) {
+        this.ticks = ticks;
     }
 }

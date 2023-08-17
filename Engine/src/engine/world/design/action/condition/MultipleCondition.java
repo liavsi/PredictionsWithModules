@@ -15,7 +15,7 @@ public class MultipleCondition implements Condition{
     private List<Condition> conditions;
     String logical;
 
-    public MultipleCondition(String logical) {// TODO: 15/08/2023
+    public MultipleCondition(String logical) {
         this.logical = logical;
         conditions = new ArrayList<>();
     }
