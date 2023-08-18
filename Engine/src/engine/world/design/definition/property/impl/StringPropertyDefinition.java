@@ -6,8 +6,8 @@ import engine.world.design.definition.property.api.PropertyType;
 
 public class StringPropertyDefinition extends AbstractPropertyDefinition<String> {
 
-    public StringPropertyDefinition(String name, ValueGenerator<String> valueGenerator) {
-        super(name, PropertyType.STRING, valueGenerator);
+    public StringPropertyDefinition(String name,ValueGenerator<String> valueGenerator) {
+        super(name, PropertyType.STRING,valueGenerator);
     }
 
 }
