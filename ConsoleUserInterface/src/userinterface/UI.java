@@ -23,7 +23,7 @@ public class UI {
 
         // TODO: 18/08/2023  make sure the string from the user is ending with .xml
         while (isRunning) {
-           int choice = 0;//stage.runMenu(scanner);
+           int choice = 1;//stage.runMenu(scanner);
             switch (choice) {
                 case 1:
 //                String XML_File_Path = getXmlPathFromUser(scanner);
@@ -35,9 +35,7 @@ public class UI {
                     //Data Transfer Object
                     break;
                 case 3:
-                    int simulationId =currEngine.runNewSimulation();
-                    System.out.println(simulationId);
-                    simulationIds.add(simulationId);
+
                     stage = Stage.AFTER_SIMULATION;
                     break;
                 case 4:
@@ -62,6 +60,52 @@ public class UI {
             choice = null;
         }
         return Optional.ofNullable(choice);
+    }
+
+    private static void runningSimulation(Scanner scanner, Engine currEngine) {
+        boolean isDoneSettingEnvVars = false;
+        Map<String, Object> propertyNameToValueAsString = new HashMap<>();
+        List<PropertyDefinitionDTO> envars = currEngine.getWorldDTO().getEnvPropertiesDefinitionDTO();
+        while(!isDoneSettingEnvVars) {
+            isDoneSettingEnvVars = showEnvironmentVarsToUser(envars,propertyNameToValueAsString, scanner);
+        }
+        try{
+            int simulationId =currEngine.runNewSimulation(propertyNameToValueAsString);
+            System.out.println(simulationId);
+        }
+        catch (Exception e)
+        {
+            System.out.println(e.getMessage() + "Something went wrong during the simulation running..");
+        }
+    }
+
+    private static boolean showEnvironmentVarsToUser(List<PropertyDefinitionDTO> envars,Map<String, Object> propertyNameToValueAsString, Scanner scanner) {
+        int counter = 1;
+        if(envars.size() < 1)
+        {return true;}
+        for (PropertyDefinitionDTO env: envars) {
+            System.out.println(counter + env.getName());
+            counter++;
+        }
+        int choice = scanner.nextInt();
+        if (choice != -1) {
+            try {
+                PropertyDefinitionDTO chosenProperty = envars.get(choice-1);
+                envars.remove(chosenProperty);
+                System.out.println("Please enter value that is suitable for: " );
+                showPropertyDataToUser(chosenProperty);
+                Object valueAsString = scanner.nextLine();
+                propertyNameToValueAsString.put(chosenProperty.getName(), valueAsString);
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println(e.getMessage() + "\nTry again");
+            }
+        }
+        else {
+            return true;
+        }
+        return true;
+
+        // TODO: 18/08/2023 not let him change vars twice and stop when he finish
     }
 
     private static void showSimulationIdNumber(int simulationId) {

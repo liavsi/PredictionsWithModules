@@ -294,6 +294,11 @@ public class ReaderImpl implements Reader {
         return createdWorld;
     }
 
+    @Override
+    public void readEnvironmentPropertiesFromUser(Map<String, Object> propertyNameToValueAsString) {
+
+    }
+
     /**
      * this code is responsible for creating Property definition from the correct Type
      */
