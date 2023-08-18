@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/ConsoleUserInterface/ConsoleUserInterface.iml" filepath="$PROJECT_DIR$/ConsoleUserInterface/ConsoleUserInterface.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DTOManager/DTOManager.iml" filepath="$PROJECT_DIR$/DTOManager/DTOManager.iml" />
       <module fileurl="file://$PROJECT_DIR$/Engine/Engine.iml" filepath="$PROJECT_DIR$/Engine/Engine.iml" />
     </modules>
   </component>

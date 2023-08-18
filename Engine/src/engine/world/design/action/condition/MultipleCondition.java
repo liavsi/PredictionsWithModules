@@ -10,21 +10,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class MultipleCondition extends AbstractCondition{
+public class MultipleCondition implements Condition{
 
     private List<Condition> conditions;
     String logical;
 
-    public MultipleCondition(EntityDefinition entityDefinition, String logical) {// TODO: 15/08/2023
-        super(ActionType.CONDITION, entityDefinition);
+    public MultipleCondition(String logical) {
         this.logical = logical;
         conditions = new ArrayList<>();
     }
-
     public void addCondition(Condition condition) {
         conditions.add(condition);
     }
-
     @Override
     public boolean evaluate(Context context) {
         if (logical.equals("Or")){

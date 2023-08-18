@@ -7,13 +7,13 @@ import engine.world.design.definition.property.api.PropertyType;
 import engine.world.design.execution.context.Context;
 import engine.world.design.execution.property.PropertyInstance;
 import engine.world.design.expression.ExpressionType;
-import engine.world.utils.Expression;
 
 public class SetAction extends AbstractAction {
 
     private String property;
     private String value;
-    protected SetAction(EntityDefinition entityDefinition, String property, String value) {
+
+    public SetAction(EntityDefinition entityDefinition, String property, String value) {
         super(ActionType.SET, entityDefinition);
         this.property = property;
         this.value = value;

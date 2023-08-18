@@ -16,11 +16,12 @@ public class CalculationAction extends AbstractAction {
     private String arg1, arg2;
 
 
-    protected CalculationAction(EntityDefinition entityDefinition, String property, String arg1, String arg2) {
+    public CalculationAction(EntityDefinition entityDefinition, String property, String arg1, String arg2,CalculationType calculationType) {
         super(ActionType.CALCULATION, entityDefinition);
         this.property = property;
         this.arg1 = arg1;
         this.arg2 = arg2;
+        this.calculationType = calculationType;
     }
 
     @Override
