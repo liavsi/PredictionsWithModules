@@ -13,6 +13,7 @@ public class TerminationImpl implements Termination {
     private Tick ticks = null;
     private Second secondsToPast = null;
     private Instant startTime;
+    private Object terminateReason = null;
 
     public TerminationImpl() {
     }
@@ -38,14 +39,20 @@ public class TerminationImpl implements Termination {
             Duration elapsed = Duration.between(startTime, currentTime);
             if (elapsed.getSeconds() >= secondsToPast.getSeconds()) {
                 isTerminate = true;
+                terminateReason = secondsToPast;
             }
         }
         if (ticks != null) {
             if(currentTicks >= ticks.getTicks()) {
                 isTerminate = true;
+                terminateReason = ticks;
             }
         }
         return  isTerminate;
+    }
+
+    public Object getTerminateReason() {
+        return terminateReason;
     }
 
     @Override

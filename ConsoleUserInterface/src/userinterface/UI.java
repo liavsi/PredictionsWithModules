@@ -1,9 +1,13 @@
 package userinterface;
 
+import DTOManager.impl.EntityDefinitionDTO;
+import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
+import engine.api.Engine;
 import engine.impl.EngineImpl;
+import userinterface.stage.Stage;
 
-import java.util.Scanner;
+import java.util.*;
 
 public class UI {
     private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";

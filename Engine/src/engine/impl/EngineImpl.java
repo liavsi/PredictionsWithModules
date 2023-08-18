@@ -48,10 +48,15 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public SimulationOutcome runNewSimulation() {
+    public int runNewSimulation() {
         SimulationOutcome currSimulation = myWorld.runSimulation();
         pastSimulations.put(countId++, currSimulation);
-        return currSimulation;
+        return countId;
+    }
+
+    @Override
+    public WorldDTO getWorldDTO() {
+         return myWorld.createWorldDTO();
     }
 
     @Override
@@ -59,6 +64,12 @@ public class EngineImpl implements Engine {
         myWorld = new WorldImpl();
         myReader.readWorldFromXml(XML_PATH, JAXB_XML_PACKAGE_NAME);
     }
+
+    @Override
+    public SimulationOutcome getPastSimulationDTO(int wantedSimulationNumber) {
+        return null;
+    }
+
 
 
 
