@@ -1,5 +1,6 @@
 package engine.world.design.rule;
 
+import DTOManager.impl.RuleDTO;
 import engine.world.design.action.api.Action;
 import engine.world.design.rule.activation.api.Activation;
 
@@ -10,4 +11,5 @@ public interface Rule {
     Activation getActivation();
     List<Action> getActionToPreform();
     void addAction(Action action);
+    RuleDTO createRuleDTO();
 }

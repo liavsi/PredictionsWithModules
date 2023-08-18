@@ -1,5 +1,7 @@
 package engine.world.design.termination.api;
 
+import DTOManager.impl.TerminationDTO;
+
 public interface Termination {
 
     // start the clock of the Termination object
@@ -8,5 +10,7 @@ public interface Termination {
     // checks if ticks passed the termination object ticks or
     // the time in seconds from the start has passed
     Boolean isTerminated(Integer currentTicks);
+    public TerminationDTO createTerminationDTO();
+    Object getTerminateReason();
 
 }

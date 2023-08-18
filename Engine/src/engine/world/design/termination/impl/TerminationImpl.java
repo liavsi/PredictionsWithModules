@@ -1,5 +1,6 @@
 package engine.world.design.termination.impl;
 
+import DTOManager.impl.TerminationDTO;
 import engine.world.design.termination.api.Termination;
 import engine.world.design.termination.second.Second;
 import engine.world.design.termination.tick.api.Tick;
@@ -23,7 +24,10 @@ public class TerminationImpl implements Termination {
     public void setSecondsToPast(Second secondsToPast) {
         this.secondsToPast = secondsToPast;
     }
-
+    @Override
+    public TerminationDTO createTerminationDTO(){
+        return new TerminationDTO(ticks.getTicks(),secondsToPast.getSeconds());
+    }
 
 
     @Override

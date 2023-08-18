@@ -447,6 +447,4 @@ public class ReaderImpl implements Reader {
         }
         createdWorld.setEntities(entities);
     }
-
-
 }

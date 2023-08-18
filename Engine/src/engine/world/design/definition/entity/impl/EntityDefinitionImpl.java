@@ -1,12 +1,15 @@
 package engine.world.design.definition.entity.impl;
 
+import DTOManager.impl.EntityDefinitionDTO;
+import DTOManager.impl.PropertyDefinitionDTO;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyDefinition;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class EntityDefinitionImpl implements EntityDefinition {
+public class EntityDefinitionImpl implements EntityDefinition, Cloneable{
 
     private final String name;
     private final int population;
@@ -32,5 +35,12 @@ public class EntityDefinitionImpl implements EntityDefinition {
     public List<PropertyDefinition> getProps() {
         return properties;
     }
-
+    @Override
+    public EntityDefinitionDTO createEntityDefinitionDTO(){
+        List<PropertyDefinitionDTO> propertiesDefinitionDTO = new ArrayList<>();
+        for (PropertyDefinition propertyDefinition: getProps()){
+            propertiesDefinitionDTO.add(propertyDefinition.createPropertyDefinitionTDO());
+        }
+        return new EntityDefinitionDTO(name,population,propertiesDefinitionDTO);
+    }
 }
