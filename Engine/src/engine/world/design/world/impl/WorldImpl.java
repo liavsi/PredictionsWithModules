@@ -4,8 +4,15 @@ import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.RuleDTO;
 import DTOManager.impl.TerminationDTO;
 import DTOManager.impl.WorldDTO;
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import engine.SimulationOutcome;
+import engine.world.design.definition.property.api.PropertyDefinition;
+import engine.world.design.execution.context.Context;
+import engine.world.design.execution.context.ContextImpl;
+import engine.world.design.execution.entity.api.EntityInstance;
+import engine.world.design.execution.entity.manager.EntityInstanceManager;
+import engine.world.design.execution.entity.manager.EntityInstanceManagerImpl;
+import engine.world.design.execution.environment.api.ActiveEnvironment;
+import engine.world.design.execution.property.PropertyInstanceImpl;
 import engine.world.design.termination.api.Termination;
 import engine.world.design.world.api.World;
 import engine.world.design.definition.entity.api.EntityDefinition;
@@ -65,7 +72,41 @@ public class WorldImpl implements World {
     }
 
     @Override
-    public SimulationOutcome runSimulation() {
+    public SimulationOutcome runSimulation(Map<String, Object> propertyNameToValueAsString) {
+        // creating the Active Environment - if the user gave the property its value we will use it otherwise generate value
+        ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
+        for (PropertyDefinition envVarDefintion: envVariablesManager.getEnvVariables()) {
+            String envName = envVarDefintion.getName();
+            if(propertyNameToValueAsString.containsKey(envName)) {
+                Object value = envVarDefintion.getType().convert(propertyNameToValueAsString.get(envName));
+                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefintion,value));
+            }
+            else {
+                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefintion,envVarDefintion.generateValue()));
+            }
+        }
+
+        // creating the instance manager
+        EntityInstanceManager entityInstanceManager = new EntityInstanceManagerImpl();
+        for (EntityDefinition entityDefinition: nameToEntityDefinition.values()) {
+            for (int i = 0 ;i < entityDefinition.getPopulation(); i++) {
+                entityInstanceManager.create(entityDefinition);
+            }
+        }
+        int ticks = 0;
+
+        termination.startTerminationClock();
+        while (termination.isTerminated(ticks)) {
+            for (EntityInstance entityInstance: entityInstanceManager.getInstances().values()) {
+                Context context = new ContextImpl(entityInstance, entityInstanceManager, activeEnvironment);
+                for (Rule rule: rules) {
+                    if (rule.getActivation().isActive(ticks)) {
+                        rule.getActionToPreform().forEach(action -> action.invoke(context));
+                    }
+                }
+            }
+            ticks++;
+        }
 
         return null;
     }

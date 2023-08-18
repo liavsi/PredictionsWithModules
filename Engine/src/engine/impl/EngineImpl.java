@@ -3,7 +3,6 @@ package engine.impl;
 import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.api.Engine;
-import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.world.api.World;
 import engine.world.design.world.impl.WorldImpl;
 import engine.world.design.reader.api.Reader;
@@ -48,8 +47,9 @@ public class EngineImpl implements Engine {
     }
 
     @Override
-    public int runNewSimulation() {
-        SimulationOutcome currSimulation = myWorld.runSimulation();
+    public int runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
+        myReader.readEnvironmentPropertiesFromUser(propertyNameToValueAsString);
+        SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString);
         pastSimulations.put(countId++, currSimulation);
         return countId;
     }

@@ -15,7 +15,7 @@ public interface World {
 
     EntityDefinition getEntityDefinitionByName(String name);
     EnvVariablesManager getEnvVariables();
-    SimulationOutcome runSimulation();
+    SimulationOutcome runSimulation(Map<String, Object> propertyNameToValueAsString);
 
     void setEntities(Map<String, EntityDefinition> entities);
 
