@@ -75,6 +75,7 @@ public class WorldImpl implements World {
 
     @Override
     public SimulationOutcome runSimulation(Map<String, Object> propertyNameToValueAsString) {
+
         // creating the Active Environment - if the user gave the property its value we will use it otherwise generate value
         ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
         for (PropertyDefinition envVarDefintion: envVariablesManager.getEnvVariables()) {
@@ -84,7 +85,7 @@ public class WorldImpl implements World {
                 activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefintion,value));
             }
             else {
-                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefintion,envVarDefintion.generateValue()));
+                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefintion, envVarDefintion.generateValue()));
             }
         }
 
@@ -95,6 +96,9 @@ public class WorldImpl implements World {
                 entityInstanceManager.create(entityDefinition);
             }
         }
+
+        // take a picture
+
         int ticks = 0;
 
         termination.startTerminationClock();
@@ -109,6 +113,7 @@ public class WorldImpl implements World {
             }
             ticks++;
         }
+        // take second picture
 
         return null;
     }

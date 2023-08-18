@@ -51,6 +51,7 @@ public class EngineImpl implements Engine {
         myReader.readEnvironmentPropertiesFromUser(propertyNameToValueAsString);
         SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString);
         pastSimulations.put(countId++, currSimulation);
+        //return currSimulation.converToDTO();
         return countId;
     }
 
