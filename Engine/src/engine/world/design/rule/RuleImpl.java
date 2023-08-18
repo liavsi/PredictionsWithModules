@@ -1,5 +1,6 @@
 package engine.world.design.rule;
 
+import DTOManager.impl.RuleDTO;
 import engine.world.design.action.api.Action;
 import engine.world.design.rule.activation.api.Activation;
 import engine.world.design.rule.activation.impl.ActivationImpl;
@@ -17,6 +18,18 @@ public class RuleImpl implements Rule{
         this.name = name;
         this.activation = activation;
         this.actions = new ArrayList<>();
+    }
+    @Override
+    public RuleDTO createRuleDTO(){
+        int count = 0;
+        int ticks = activation.getTicks();
+        double probability = activation.getProbability();
+        List<String> actionsNames = new ArrayList<>();
+        for(Action action:actions){
+            actionsNames.add(action.getActionType().name());
+            count++;
+        }
+        return new RuleDTO(name,ticks,probability,actionsNames,count);
     }
     @Override
     public String getName() {

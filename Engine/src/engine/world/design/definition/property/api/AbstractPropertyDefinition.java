@@ -1,5 +1,6 @@
 package engine.world.design.definition.property.api;
 
+import DTOManager.impl.PropertyDefinitionDTO;
 import engine.world.design.definition.value.generator.api.ValueGenerator;
 
 public abstract class AbstractPropertyDefinition<T>  implements PropertyDefinition {
@@ -12,6 +13,11 @@ public abstract class AbstractPropertyDefinition<T>  implements PropertyDefiniti
         this.name = name;
         this.propertyType = propertyType;
         this.valueGenerator = valueGenerator;
+    }
+    @Override
+    public PropertyDefinitionDTO createPropertyDefinitionTDO(){
+        Object value = valueGenerator.generateValue();
+        return new PropertyDefinitionDTO(name, propertyType.name(),value);
     }
 
     @Override

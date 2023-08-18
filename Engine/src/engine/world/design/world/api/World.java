@@ -1,5 +1,6 @@
 package engine.world.design.world.api;
 
+import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.environment.api.EnvVariablesManager;
@@ -23,4 +24,8 @@ public interface World {
     void setRules(List<Rule> ruleList);
     public void setTermination(Termination termination);
 
-    }
+    Map<String, EntityDefinition> getNameToEntityDefinition();
+    Termination getTermination();
+    List<Rule> getRules();
+    WorldDTO createWorldDTO();
+}

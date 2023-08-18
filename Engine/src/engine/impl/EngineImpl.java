@@ -1,7 +1,9 @@
 package engine.impl;
 
+import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.api.Engine;
+import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.world.api.World;
 import engine.world.design.world.impl.WorldImpl;
 import engine.world.design.reader.api.Reader;
@@ -16,6 +18,7 @@ public class EngineImpl implements Engine {
 
     private Reader myReader;
     private World myWorld;
+   // private WorldDTO myWorldDTO;
     private Integer countId = 0;
     private Map<Integer, SimulationOutcome> pastSimulations;
 
@@ -23,16 +26,37 @@ public class EngineImpl implements Engine {
         return myWorld;
     }
 
+//    public WorldDTO createWorldDTO() {
+//        Map<String, EntityDefinition> entityDefinitionMap = new HashMap<>();
+//        for (EntityDefinition entityDefinition : myWorld.getNameToEntityDefinition().values()) {
+////            EntityDefinition currEntity = entityDefinition.clone();
+//////            for (PropertyDefinition propertyDefinition : entityDefinition.getProps()) {
+//////                PropertyDefinition newProp = new PropertyDefinition();
+//////
+//////
+//////            }
+//////            String entityName = prdEntity.getName();
+//////            entities.put(entityName, currEntity);
+//////        }
+//        }
+//        return null;
+//    }
+
     public EngineImpl() {
         myReader = new ReaderImpl();
         pastSimulations = new HashMap<>();
     }
 
     @Override
-    public SimulationOutcome runNewSimulation() {
+    public int runNewSimulation() {
         SimulationOutcome currSimulation = myWorld.runSimulation();
         pastSimulations.put(countId++, currSimulation);
-        return currSimulation;
+        return countId;
+    }
+
+    @Override
+    public WorldDTO getWorldDTO() {
+         return myWorld.createWorldDTO();
     }
 
     @Override
@@ -40,6 +64,12 @@ public class EngineImpl implements Engine {
         myWorld = new WorldImpl();
         myReader.readWorldFromXml(XML_PATH, JAXB_XML_PACKAGE_NAME);
     }
+
+    @Override
+    public SimulationOutcome getPastSimulationDTO(int wantedSimulationNumber) {
+        return null;
+    }
+
 
 
 
