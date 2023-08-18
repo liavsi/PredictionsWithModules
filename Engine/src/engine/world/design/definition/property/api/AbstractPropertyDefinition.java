@@ -2,6 +2,8 @@ package engine.world.design.definition.property.api;
 
 import DTOManager.impl.PropertyDefinitionDTO;
 import engine.world.design.definition.value.generator.api.ValueGenerator;
+import engine.world.design.definition.value.generator.fixed.FixedValueGenerator;
+import engine.world.design.definition.value.generator.random.impl.numeric.AbstractNumericRandomGenerator;
 
 public abstract class AbstractPropertyDefinition<T>  implements PropertyDefinition {
 
@@ -9,15 +11,28 @@ public abstract class AbstractPropertyDefinition<T>  implements PropertyDefiniti
     private final PropertyType propertyType;
     private final ValueGenerator<T> valueGenerator;
 
-    public AbstractPropertyDefinition(String name, PropertyType propertyType, ValueGenerator<T> valueGenerator) {
+    public AbstractPropertyDefinition(String name, PropertyType propertyType,ValueGenerator<T> valueGenerator) {
         this.name = name;
         this.propertyType = propertyType;
         this.valueGenerator = valueGenerator;
     }
     @Override
     public PropertyDefinitionDTO createPropertyDefinitionTDO(){
-        Object value = valueGenerator.generateValue();
-        return new PropertyDefinitionDTO(name, propertyType.name(),value);
+        Boolean isRandomInitializer;
+        Integer from = null;
+        Integer to = null;
+
+        if(valueGenerator instanceof FixedValueGenerator){
+            isRandomInitializer = Boolean.FALSE;
+        }
+        else {
+            isRandomInitializer = Boolean.TRUE;
+            if (valueGenerator instanceof AbstractNumericRandomGenerator){
+                from = (int) ((AbstractNumericRandomGenerator<T>) valueGenerator).getFrom();
+                to = (int) ((AbstractNumericRandomGenerator<T>) valueGenerator).getTo();
+            }
+        }
+        return new PropertyDefinitionDTO(name,propertyType.name(),isRandomInitializer,from,to);
     }
 
     @Override

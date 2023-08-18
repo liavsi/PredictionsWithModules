@@ -1,9 +1,7 @@
 package engine.world.design.world.impl;
 
-import DTOManager.impl.EntityDefinitionDTO;
-import DTOManager.impl.RuleDTO;
-import DTOManager.impl.TerminationDTO;
-import DTOManager.impl.WorldDTO;
+import DTOManager.impl.*;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import engine.SimulationOutcome;
 import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.execution.context.Context;
@@ -63,7 +61,11 @@ public class WorldImpl implements World {
             rulesDTO.add(rule.createRuleDTO());
         }
         TerminationDTO terminationDTO = termination.createTerminationDTO();
-        return new WorldDTO(entityDefinitionDTOMap,rulesDTO,terminationDTO);
+        List<PropertyDefinitionDTO> envPropertiesDefinitionDTO = new ArrayList<>();
+        for (PropertyDefinition propertyDefinition : envVariablesManager.getEnvVariables()){
+            envPropertiesDefinitionDTO.add(propertyDefinition.createPropertyDefinitionTDO());
+        }
+        return new WorldDTO(entityDefinitionDTOMap,rulesDTO,terminationDTO,envPropertiesDefinitionDTO);
     }
 
     @Override

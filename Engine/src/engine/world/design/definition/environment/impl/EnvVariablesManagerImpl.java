@@ -1,5 +1,6 @@
 package engine.world.design.definition.environment.impl;
 
+import DTOManager.impl.PropertyDefinitionDTO;
 import engine.world.design.definition.environment.api.EnvVariablesManager;
 import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.execution.environment.api.ActiveEnvironment;

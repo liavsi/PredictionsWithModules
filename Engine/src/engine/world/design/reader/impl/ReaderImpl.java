@@ -355,17 +355,17 @@ public class ReaderImpl implements Reader {
         if(i_prdProperty instanceof PRDEnvProperty) {
             PRDEnvProperty prdEnvProperty = (PRDEnvProperty) i_prdProperty;
             String name = prdEnvProperty.getPRDName();
-            res = new BooleanPropertyDefinition(name, ValueGeneratorFactory.createRandomBoolean());
+            res = new BooleanPropertyDefinition(name,ValueGeneratorFactory.createRandomBoolean());
         }
         else if( i_prdProperty instanceof PRDProperty) {
             PRDProperty prdProperty = (PRDProperty) i_prdProperty;
             PRDValue prdValue = prdProperty.getPRDValue();
             String name = prdProperty.getPRDName();
             if(prdValue.isRandomInitialize()) {
-                res = new BooleanPropertyDefinition(name, ValueGeneratorFactory.createRandomBoolean());
+                res = new BooleanPropertyDefinition(name,ValueGeneratorFactory.createRandomBoolean());
             }
             else {
-                res = new BooleanPropertyDefinition(name, ValueGeneratorFactory.createFixed(PropertyType.BOOLEAN.convert(prdValue.getInit())));
+                res = new BooleanPropertyDefinition(name,ValueGeneratorFactory.createFixed(PropertyType.BOOLEAN.convert(prdValue.getInit())));
             }
         }
         if(res == null) {

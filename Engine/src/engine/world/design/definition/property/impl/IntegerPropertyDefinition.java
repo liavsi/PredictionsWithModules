@@ -7,8 +7,8 @@ import engine.world.design.definition.property.api.PropertyType;
 
 public class IntegerPropertyDefinition extends AbstractPropertyDefinition<Integer> {
 
-        public IntegerPropertyDefinition(String name, ValueGenerator<Integer> valueGenerator) {
-            super(name, PropertyType.DECIMAL, valueGenerator);
+        public IntegerPropertyDefinition(String name,ValueGenerator<Integer> valueGenerator) {
+            super(name, PropertyType.DECIMAL,valueGenerator);
         }
 
 }
