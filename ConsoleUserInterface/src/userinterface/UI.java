@@ -1,6 +1,7 @@
 package userinterface;
 
 import DTOManager.impl.EntityDefinitionDTO;
+import DTOManager.impl.PropertyDefinitionDTO;
 import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.api.Engine;
@@ -69,15 +70,35 @@ public class UI {
 
 
     private static void showWorldDataToUser(WorldDTO worldDTO) {
+        int i=1;
+        System.out.println("Simulation Details:\n");
         Map<String, EntityDefinitionDTO> entityDefinitionDTOMap = worldDTO.getNameToEntityDefinitionDTO();
-//        for (EntityDefinitionDTO entityDefinitionDTO:entityDefinitionDTOMap.values()){
-//
-//        }
+        System.out.println("The Entities:\n");
+        for (EntityDefinitionDTO entityDefinitionDTO:entityDefinitionDTOMap.values()){
+            System.out.printf("Entity number " + i + "\n");
+            System.out.println("--------------\n");
+            showEntityDataToUser(entityDefinitionDTO);
+            i++;
+        }
     }
     private static void showEntityDataToUser(EntityDefinitionDTO entityDefinitionDTO){
-
+        int i = 1;
+        System.out.println("Name: " + entityDefinitionDTO.getName() + "\n");
+        System.out.println("Amount in the population: " + entityDefinitionDTO.getPopulation() + "\n");
+        System.out.println(entityDefinitionDTO.getName() + "'s Properties:\n");
+        for (PropertyDefinitionDTO propertyDefinitionDTO: entityDefinitionDTO.getPropertiesDTO()){
+            System.out.println(i+")\n");
+            showPropertyDataToUser(propertyDefinitionDTO);
+        }
     }
-
+    private static void showPropertyDataToUser(PropertyDefinitionDTO propertyDefinitionDTO){
+        System.out.println("Name:" + propertyDefinitionDTO.getName() + "\n");
+        System.out.println("Type" + propertyDefinitionDTO.getPropertyType() + "\n");
+        if(propertyDefinitionDTO.getFrom() != null && propertyDefinitionDTO.getTo() != null){
+            System.out.println("Property range value: " + propertyDefinitionDTO.getFrom() + " - " + propertyDefinitionDTO.getTo() + "\n");
+        }
+        System.out.println("The property value" + (propertyDefinitionDTO.getRandomInitializer()? "is":"isn't") + "initialized randomly\n");
+    }
 
     private static void showSimulationData(SimulationOutcome newSimulation) {
 
