@@ -40,7 +40,6 @@ public class EngineImpl implements Engine {
     }
     @Override
     public void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME) {
-        myWorld = new WorldImpl();
         myReader.readWorldFromXml(XML_PATH, JAXB_XML_PACKAGE_NAME);
         myWorld = myReader.getWorld();
     }

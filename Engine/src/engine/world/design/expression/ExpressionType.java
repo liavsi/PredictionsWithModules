@@ -1,8 +1,10 @@
 package engine.world.design.expression;
 
+import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.definition.property.api.PropertyType;
 import engine.world.design.definition.value.generator.random.impl.numeric.RandomIntegerGenerator;
 import engine.world.design.execution.context.Context;
+import engine.world.design.execution.property.PropertyInstance;
 
 import java.util.Random;
 
@@ -77,9 +79,8 @@ public enum ExpressionType {
                 try {
                     int freeVal = Integer.parseInt(expression);
                     return freeVal;
-                }
-                catch (NumberFormatException e2) {
-                    //"Unable to convert the string to float"
+                } catch (NumberFormatException e2) {
+                    throw e2;
                 }
             }
         }
