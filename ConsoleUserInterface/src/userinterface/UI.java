@@ -10,7 +10,7 @@ import java.util.*;
 
 public class UI {
     private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
-    private static final String XML_FILE_PATH = "resources/master-ex1.xml";
+    private static final String XML_FILE_PATH = "resources/ex1-error-2.xml";
 
     private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..";
     private static final String SUCCEED_DOING_SOMETHING = "Action has been performed successfully";
@@ -112,7 +112,7 @@ public class UI {
         }
         catch (Exception e)
         {
-            throw new RuntimeException(e.getMessage());
+            throw e;
         }
     }
     private static void showEndSimulationDataToUser(SimulationOutcomeDTO simulationOutcomeDTO){
@@ -134,7 +134,7 @@ public class UI {
             System.out.println(counter + ") " + env.getName());
             counter++;
         }
-        int choice = scanner.nextInt();
+        int choice = Integer.parseInt(scanner.nextLine());
         if (choice != -1) {
             try {
                 PropertyDefinitionDTO chosenProperty = envars.get(choice-1);

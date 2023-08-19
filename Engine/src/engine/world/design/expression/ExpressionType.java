@@ -33,19 +33,18 @@ public enum ExpressionType {
                         throw new RuntimeException("There is no such environment function");
                 }
             }
-            else if(context.getPrimaryEntityInstance().getPropertyByName(expression) != null){
-                return PropertyType.FLOAT.convert(context.getPrimaryEntityInstance().getPropertyByName(expression).getValue());
+            try {
+                PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(expression); // TODO: 19/08/2023 throw
+                return PropertyType.FLOAT.convert(propertyInstance.getValue());
             }
-            else{
-                try{
-                    float floatFreeVal = Float.parseFloat(expression);
-                    return floatFreeVal;
-                }
-                catch (NumberFormatException e2){
-                    //"Unable to convert the string to float"
+            catch (IllegalArgumentException e) {
+                try {
+                    float freeVal = Float.parseFloat(expression);
+                    return freeVal;
+                } catch (NumberFormatException e2) {
+                    throw e2;
                 }
             }
-            return null;
         }
     },
     DECIMAL{

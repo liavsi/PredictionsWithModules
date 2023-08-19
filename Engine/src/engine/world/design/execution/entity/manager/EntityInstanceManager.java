@@ -10,7 +10,7 @@ public interface EntityInstanceManager {
 
     EntityInstance create(EntityDefinition entityDefinition);
     Map<Integer, EntityInstance> getInstances();
-
+    void killEntities();
     void killEntity(int id);
 
 
