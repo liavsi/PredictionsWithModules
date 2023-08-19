@@ -104,6 +104,7 @@ public class WorldImpl implements World {
                     }
                 }
             }
+            entityInstanceManager.killEntities();
             ticks++;
         }
         // take second picture

@@ -17,7 +17,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
 
     private int count;
     private Map<Integer, EntityInstance> instances;
-
+    List <Integer> instanceToKill = new ArrayList<>();
     public EntityInstanceManagerImpl() {
         count = 0;
         instances = new HashMap<>();
@@ -44,10 +44,20 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
         return instances;
     }
 
+    private void addEntityToDieList(int id) {
+        instanceToKill.add(id);
+    }
+
+    @Override
+    public void killEntities() {
+        instanceToKill.forEach(id -> instances.remove(id));
+        instanceToKill = new ArrayList<>();
+    }
+
     @Override
     public void killEntity(int id) {
         if(instances.containsKey(id)) {
-            instances.remove(id);
+            addEntityToDieList(id);
         }
         else {
             throw new IllegalArgumentException("this instance is already dead");

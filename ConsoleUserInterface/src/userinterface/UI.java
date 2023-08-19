@@ -10,7 +10,7 @@ import java.util.*;
 
 public class UI {
     private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
-    private static final String XML_FILE_PATH = "resources/master-ex1.xml";
+    private static final String XML_FILE_PATH = "resources/ex1-error-2.xml";
 
     private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..";
     private static final String SUCCEED_DOING_SOMETHING = "Action has been performed successfully";
@@ -32,7 +32,7 @@ public class UI {
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
                     catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println(FAILED_WHILE_RUNNING + e.getMessage());
                     }
                     break;
                 case 2:
@@ -41,7 +41,7 @@ public class UI {
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
                     catch (Exception e) {
-                        System.out.println( FAILED_WHILE_RUNNING +e.getMessage());
+                        System.out.println(FAILED_WHILE_RUNNING +e.getMessage());
                     }
                     break;
                 case 3:
@@ -51,7 +51,7 @@ public class UI {
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
                     catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println(FAILED_WHILE_RUNNING + e.getMessage());
                     }
                     break;
                 case 4:
@@ -87,7 +87,7 @@ public class UI {
     private static Optional<Integer> getSimulationNumberFromUser(List<Integer> simulationIds, Scanner scanner) {
         System.out.println("Please choose simulation to show:\n");
         simulationIds.forEach((id) -> System.out.println(id + "\n"));
-        Integer choice = scanner.nextInt();
+        Integer choice =Integer.parseInt(scanner.nextLine());
         if( choice > simulationIds.stream().max(Integer::compare).get() || choice < simulationIds.stream().min(Integer::compare).get()) {
             choice = null;
         }
@@ -112,7 +112,7 @@ public class UI {
         }
         catch (Exception e)
         {
-            throw new RuntimeException(e.getMessage());
+            throw e;
         }
     }
     private static void showEndSimulationDataToUser(SimulationOutcomeDTO simulationOutcomeDTO){
@@ -134,7 +134,7 @@ public class UI {
             System.out.println(counter + ") " + env.getName());
             counter++;
         }
-        int choice = scanner.nextInt();
+        int choice = Integer.parseInt(scanner.nextLine());
         if (choice != -1) {
             try {
                 PropertyDefinitionDTO chosenProperty = envars.get(choice-1);
@@ -142,8 +142,6 @@ public class UI {
                 System.out.println("Please enter value that is suitable for: ");
                 showPropertyDataToUser(chosenProperty);
                 Object valueAsString = scanner.nextLine();
-                valueAsString = scanner.nextLine();
-                //check values
                 propertyNameToValueAsString.put(chosenProperty.getName(), valueAsString);
                 return false;
             } catch (IndexOutOfBoundsException e) {

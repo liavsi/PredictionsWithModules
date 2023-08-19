@@ -125,8 +125,8 @@ public class ReaderImpl implements Reader {
         for (PRDRule prdRule: prdRules.getPRDRule()) {
             String name = prdRule.getName();
             if (prdRule.getPRDActivation() != null) {
-                int ticks = prdRule.getPRDActivation().getTicks();
-                double probability = prdRule.getPRDActivation().getProbability();
+                Integer ticks = prdRule.getPRDActivation().getTicks();
+                Double probability = prdRule.getPRDActivation().getProbability();
                 activation = new ActivationImpl(ticks,probability);
             }
             else {
@@ -206,8 +206,10 @@ public class ReaderImpl implements Reader {
         for (PRDAction prdAction1: prdAction.getPRDThen().getPRDAction()){
             res.getThanActions().add(buildActionFromPRD(prdAction1));
         }
-        for (PRDAction prdAction1: prdAction.getPRDElse().getPRDAction()){
-            res.getElseActions().add(buildActionFromPRD(prdAction1));
+        if (prdAction.getPRDElse() != null) {
+            for (PRDAction prdAction1 : prdAction.getPRDElse().getPRDAction()) {
+                res.getElseActions().add(buildActionFromPRD(prdAction1));
+            }
         }
         return res;
     }
@@ -241,7 +243,7 @@ public class ReaderImpl implements Reader {
     private Action createcalCulationAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-        String property = prdAction.getProperty();
+        String property = prdAction.getResultProp();
         String arg1 = null, arg2 = null;
         CalculationType calculationType = null;
         if(prdAction.getPRDMultiply() != null) {

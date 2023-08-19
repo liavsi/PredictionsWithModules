@@ -59,6 +59,8 @@ public class TerminationImpl implements Termination {
 
     @Override
     public void startTerminationClock() {
+        ticks.setTerminateReason(false);
+        secondsToPast.setTerminateReason(false);
         startTime = Instant.now();
     }
 }

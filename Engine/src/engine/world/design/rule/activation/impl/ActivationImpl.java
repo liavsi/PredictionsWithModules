@@ -11,11 +11,13 @@ public class ActivationImpl implements Activation {
 
 
     public ActivationImpl(){}
-    public ActivationImpl(int ticks,double probability) {
-        if (ticks != 0){
+    public ActivationImpl(Integer ticks,Double probability) {
+        if (ticks != null){
             this.ticks = ticks;
         }
-        this.probability = probability;
+        if (probability != null) {
+            this.probability = probability;
+        }
     }
     @Override
     public void setTicks(Integer ticks) {

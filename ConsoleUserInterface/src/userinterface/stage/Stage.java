@@ -47,9 +47,7 @@ public enum Stage {
     private static final String errorGettingNumber = "Please Enter valid number!";
     private static final String loadXmlMessage = "Enter 1 to load xml file to the system";
     private static final String showWorldMessage = "Enter 2 to show the loaded world data";
-
     private static final String runSimulationMessage = "Enter 3 to run simulation with the current loaded world";
-
     private static final String showSimulationMessage = "Enter 4 to show past simulation outcome data";
     private static final String exitMessage = "Enter any other key to exit..";
 
