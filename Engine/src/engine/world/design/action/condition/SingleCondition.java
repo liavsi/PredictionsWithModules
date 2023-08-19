@@ -55,7 +55,16 @@ public class SingleCondition implements Condition{
             }
             case("bt"):{
                 if(verifyNumericPropertyType(propertyInstance)){
-                    if((float) propertyInstance.getValue() > (float) propertyType.convert(realValue)){
+                    if (propertyType == PropertyType.DECIMAL) {
+                       if((int)propertyType.convert(propertyInstance.getValue()) > (int) propertyType.convert(realValue)) {
+                           return true;
+                       }
+                       else {
+                           return false;
+                       }
+                    }
+                    else
+                    if ((float) (propertyType.convert(propertyInstance.getValue())) >(float) propertyType.convert(realValue)) {
                         return true;
                     }
                     else {

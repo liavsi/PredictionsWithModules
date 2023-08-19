@@ -142,8 +142,6 @@ public class UI {
                 System.out.println("Please enter value that is suitable for: ");
                 showPropertyDataToUser(chosenProperty);
                 Object valueAsString = scanner.nextLine();
-                valueAsString = scanner.nextLine();
-                //check values
                 propertyNameToValueAsString.put(chosenProperty.getName(), valueAsString);
                 return false;
             } catch (IndexOutOfBoundsException e) {

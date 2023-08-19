@@ -18,7 +18,7 @@ public class EngineImpl implements Engine {
 
     private Reader myReader;
     private World myWorld; // TODO: 19/08/2023 static?
-    private Integer countId = 0;
+    private Integer countId = 1;
     private Map<Integer, SimulationOutcome> pastSimulations;
 
     public World getWorld() {
@@ -30,8 +30,9 @@ public class EngineImpl implements Engine {
     }
     @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
-        SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString,countId++);
-        pastSimulations.put(countId++, currSimulation); // two times ++
+        SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString, countId);
+        pastSimulations.put(countId, currSimulation);
+        countId++;
         return currSimulation.createSimulationOutcomeDTO();
     }
     @Override
