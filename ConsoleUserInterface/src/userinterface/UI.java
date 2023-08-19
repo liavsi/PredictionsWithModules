@@ -1,9 +1,6 @@
 package userinterface;
 
-import DTOManager.impl.EntityDefinitionDTO;
-import DTOManager.impl.PropertyDefinitionDTO;
-import DTOManager.impl.RuleDTO;
-import DTOManager.impl.WorldDTO;
+import DTOManager.impl.*;
 import engine.SimulationOutcome;
 import engine.api.Engine;
 import engine.impl.EngineImpl;
@@ -23,16 +20,18 @@ public class UI {
         Stage stage = Stage.FILE_NOT_LOADED;
 
         // TODO: 18/08/2023  make sure the string from the user is ending with .xml
+        int choice = 1;//stage.runMenu(scanner);
         while (isRunning) {
-           int choice = 1;//stage.runMenu(scanner);
-            switch (choice) {
+            switch (choice) { // TODO: 19/08/2023 switch only for 3 to 5?
                 case 1:
 //                String XML_File_Path = getXmlPathFromUser(scanner);
                     currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
                     stage = Stage.FILE_LOADED;
+                    choice = 2;
                     break;
                 case 2:
                     showWorldDataToUser(currEngine.getWorldDTO());
+                    choice = 3;
                     //Data Transfer Object
                     break;
                 case 3:
@@ -52,7 +51,6 @@ public class UI {
         }
         System.out.println("ended main loop");
     }
-
     private static Optional<Integer> getSimulationNumberFromUser(List<Integer> simulationIds, Scanner scanner) {
         System.out.println("Please choose simulation to show:\n");
         simulationIds.forEach((id) -> System.out.println(id + "\n"));
@@ -62,7 +60,6 @@ public class UI {
         }
         return Optional.ofNullable(choice);
     }
-
     private static void runningSimulation(Scanner scanner, Engine currEngine) {
         boolean isDoneSettingEnvVars = false;
         Map<String, Object> propertyNameToValueAsString = new HashMap<>();
@@ -71,21 +68,37 @@ public class UI {
             isDoneSettingEnvVars = showEnvironmentVarsToUser(envars,propertyNameToValueAsString, scanner);
         }
         try{
-            int simulationId =currEngine.runNewSimulation(propertyNameToValueAsString);
-            System.out.println(simulationId);
+            SimulationOutcomeDTO simulationOutcomeDTO = currEngine.runNewSimulation(propertyNameToValueAsString);
+            int i = 1;
+            System.out.println("Environment Vars:\n");
+            for (PropertyDefinitionDTO propertyDefinitionDTO: currEngine.getWorldDTO().getEnvPropertiesDefinitionDTO()){
+                System.out.println(i + ") ");
+                showPropertyDataToUser(propertyDefinitionDTO);
+            }
+            showEndSimulationDataToUser(simulationOutcomeDTO);
         }
         catch (Exception e)
         {
             System.out.println(e.getMessage() + "Something went wrong during the simulation running..");
         }
     }
-
+    private static void showEndSimulationDataToUser(SimulationOutcomeDTO simulationOutcomeDTO){
+        System.out.println("------The simulation is over------\n");
+        System.out.println("ID number: " + simulationOutcomeDTO.getId() + "\n");
+        if(simulationOutcomeDTO.getTerminationDTO().isTicksTerminate()){
+            System.out.println("The number of ticks set for the simulation has passed\n");
+        }
+        if (simulationOutcomeDTO.getTerminationDTO().isSecondsTerminate()){
+            System.out.println("The seconds set for the simulation have passed\n");
+        }
+    }
     private static boolean showEnvironmentVarsToUser(List<PropertyDefinitionDTO> envars,Map<String, Object> propertyNameToValueAsString, Scanner scanner) {
         int counter = 1;
         if(envars.size() < 1)
         {return true;}
+        System.out.println("Select the number of environment variable you want to set: (and -1 if not)");
         for (PropertyDefinitionDTO env: envars) {
-            System.out.println(counter + env.getName());
+            System.out.println(counter + ") " + env.getName());
             counter++;
         }
         int choice = scanner.nextInt();
@@ -93,10 +106,13 @@ public class UI {
             try {
                 PropertyDefinitionDTO chosenProperty = envars.get(choice-1);
                 envars.remove(chosenProperty);
-                System.out.println("Please enter value that is suitable for: " );
+                System.out.println("Please enter value that is suitable for: ");
                 showPropertyDataToUser(chosenProperty);
                 Object valueAsString = scanner.nextLine();
+                valueAsString = scanner.nextLine();
+                //check values
                 propertyNameToValueAsString.put(chosenProperty.getName(), valueAsString);
+                return false;
             } catch (IndexOutOfBoundsException e) {
                 System.out.println(e.getMessage() + "\nTry again");
             }
@@ -108,12 +124,9 @@ public class UI {
 
         // TODO: 18/08/2023 not let him change vars twice and stop when he finish
     }
-
     private static void showSimulationIdNumber(int simulationId) {
 
     }
-
-
     private static void showWorldDataToUser(WorldDTO worldDTO) {
         int i=1;
         System.out.println("Simulation Details:\n");
@@ -133,12 +146,24 @@ public class UI {
             showRuleDataToUser(ruleDTO);
             i++;
         }
-        // TODO: 19/08/2023 list of termination 
+        showTerminationDataToUser(worldDTO.getTerminationDTO());
+    }
+    private static void showTerminationDataToUser(TerminationDTO terminationDTO){
+        System.out.println("End conditions of the simulation: \n");
+        System.out.println("---------------------------------\n");
+        Integer ticks = terminationDTO.getTicks();
+        Integer seconds = terminationDTO.getSecondsToPast();
+        if (ticks != null){
+            System.out.println("- The simulation will end after " + ticks + " ticks");
+        }
+        if (seconds != null){
+            System.out.println("- The simulation will end after " + seconds + " seconds");
+        }
     }
     private static void showRuleDataToUser(RuleDTO ruleDTO){
         int i = 1;
         System.out.println("- Name: " + ruleDTO.getName());
-        System.out.println("- This rule in activated every " + ruleDTO.getTicks() + "ticks ");
+        System.out.println("- This rule in activated every " + ruleDTO.getTicks() + " ticks ");
         System.out.println("with a probability of " + ruleDTO.getProbability() + "\n");
         int numOfActions = ruleDTO.getActionsNames().size();
         System.out.println("- This rule performs " + numOfActions + " actions\n");
@@ -156,22 +181,22 @@ public class UI {
     private static void showEntityDataToUser(EntityDefinitionDTO entityDefinitionDTO){
         int i = 1;
         System.out.println("Name: " + entityDefinitionDTO.getName() + "\n");
-        System.out.println("Amount in the population: " + entityDefinitionDTO.getPopulation() + "\n");
+        System.out.println("Amount in population: " + entityDefinitionDTO.getPopulation() + "\n");
         System.out.println(entityDefinitionDTO.getName() + "'s Properties:\n");
         for (PropertyDefinitionDTO propertyDefinitionDTO: entityDefinitionDTO.getPropertiesDTO()){
             System.out.println(i+")\n");
             showPropertyDataToUser(propertyDefinitionDTO);
+            i++;
         }
     }
     private static void showPropertyDataToUser(PropertyDefinitionDTO propertyDefinitionDTO){
-        System.out.println("Name:" + propertyDefinitionDTO.getName() + "\n");
-        System.out.println("Type" + propertyDefinitionDTO.getPropertyType() + "\n");
+        System.out.println("Name:" + propertyDefinitionDTO.getName());
+        System.out.println("Type: " + propertyDefinitionDTO.getPropertyType());
         if(propertyDefinitionDTO.getFrom() != null && propertyDefinitionDTO.getTo() != null){
-            System.out.println("Property range value: " + propertyDefinitionDTO.getFrom() + " - " + propertyDefinitionDTO.getTo() + "\n");
+            System.out.println("Property range value: " + propertyDefinitionDTO.getFrom() + " - " + propertyDefinitionDTO.getTo());
         }
-        System.out.println("The property value" + (propertyDefinitionDTO.getRandomInitializer()? "is":"isn't") + "initialized randomly\n");
-    }
-
+        System.out.println("The property value " + (propertyDefinitionDTO.getRandomInitializer()? "is":"isn't") + " initialized randomly");
+     }
     private static void showSimulationData(SimulationOutcome newSimulation) {
 
     }

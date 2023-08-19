@@ -1,5 +1,6 @@
 package engine.impl;
 
+import DTOManager.impl.SimulationOutcomeDTO;
 import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.api.Engine;
@@ -16,59 +17,36 @@ import java.util.Map;
 public class EngineImpl implements Engine {
 
     private Reader myReader;
-    private World myWorld;
-   // private WorldDTO myWorldDTO;
+    private World myWorld; // TODO: 19/08/2023 static?
     private Integer countId = 0;
     private Map<Integer, SimulationOutcome> pastSimulations;
 
     public World getWorld() {
         return myWorld;
     }
-
-//    public WorldDTO createWorldDTO() {
-//        Map<String, EntityDefinition> entityDefinitionMap = new HashMap<>();
-//        for (EntityDefinition entityDefinition : myWorld.getNameToEntityDefinition().values()) {
-////            EntityDefinition currEntity = entityDefinition.clone();
-//////            for (PropertyDefinition propertyDefinition : entityDefinition.getProps()) {
-//////                PropertyDefinition newProp = new PropertyDefinition();
-//////
-//////
-//////            }
-//////            String entityName = prdEntity.getName();
-//////            entities.put(entityName, currEntity);
-//////        }
-//        }
-//        return null;
-//    }
-
     public EngineImpl() {
         myReader = new ReaderImpl();
         pastSimulations = new HashMap<>();
     }
-
     @Override
-    public int runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
-        myReader.readEnvironmentPropertiesFromUser(propertyNameToValueAsString);
-        SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString);
-        pastSimulations.put(countId++, currSimulation);
-        //return currSimulation.converToDTO();
-        return countId;
+    public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
+        SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString,countId++);
+        pastSimulations.put(countId++, currSimulation); // two times ++
+        return currSimulation.createSimulationOutcomeDTO();
     }
-
     @Override
     public WorldDTO getWorldDTO() {
          return myWorld.createWorldDTO();
     }
-
     @Override
     public void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME) {
         myWorld = new WorldImpl();
         myReader.readWorldFromXml(XML_PATH, JAXB_XML_PACKAGE_NAME);
+        myWorld = myReader.getWorld();
     }
-
     @Override
-    public SimulationOutcome getPastSimulationDTO(int wantedSimulationNumber) {
-        return null;
+    public SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber) {
+        return pastSimulations.get(wantedSimulationNumber).createSimulationOutcomeDTO();
     }
 
 

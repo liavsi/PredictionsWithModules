@@ -20,16 +20,16 @@ public class WorldDTO {
     public Map<String, EntityDefinitionDTO> getNameToEntityDefinitionDTO() {
         return nameToEntityDefinitionDTO;
     }
-
     public List<RuleDTO> getRulesDTO() {
         return rulesDTO;
     }
-
     public List<PropertyDefinitionDTO> getEnvPropertiesDefinitionDTO() {
         return envPropertiesDefinitionDTO;
     }
-
     public WorldDTO(TerminationDTO terminationDTO) {
         this.terminationDTO = terminationDTO;
+    }
+    public TerminationDTO getTerminationDTO() {
+        return terminationDTO;
     }
 }

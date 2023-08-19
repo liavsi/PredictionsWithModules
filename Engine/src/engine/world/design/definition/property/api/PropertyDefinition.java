@@ -5,6 +5,6 @@ import DTOManager.impl.PropertyDefinitionDTO;
 public interface PropertyDefinition {
     String getName();
     PropertyType getType();
-    PropertyDefinitionDTO createPropertyDefinitionTDO();
+    PropertyDefinitionDTO createPropertyDefinitionDTO();
     Object generateValue();
 }

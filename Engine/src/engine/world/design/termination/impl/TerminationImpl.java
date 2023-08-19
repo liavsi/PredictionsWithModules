@@ -13,7 +13,7 @@ public class TerminationImpl implements Termination {
     private Tick ticks = null;
     private Second secondsToPast = null;
     private Instant startTime;
-    private Object terminateReason = null;
+    //private Object terminateReason = null;
 
     public TerminationImpl() {
     }
@@ -27,10 +27,10 @@ public class TerminationImpl implements Termination {
     }
     @Override
     public TerminationDTO createTerminationDTO(){
-        return new TerminationDTO(ticks.getTicks(),secondsToPast.getSeconds());
+        boolean isTicksTerminate = ticks.isTerminateReason();
+        boolean isSecondsTerminate = secondsToPast.isTerminateReason();
+        return new TerminationDTO(ticks.getTicks(),secondsToPast.getSeconds(), isTicksTerminate, isSecondsTerminate);
     }
-
-
     @Override
     public Boolean isTerminated(Integer currentTicks) {
         boolean isTerminate = false;
@@ -39,21 +39,23 @@ public class TerminationImpl implements Termination {
             Duration elapsed = Duration.between(startTime, currentTime);
             if (elapsed.getSeconds() >= secondsToPast.getSeconds()) {
                 isTerminate = true;
-                terminateReason = secondsToPast;
+                secondsToPast.setTerminateReason(true);
+                //terminateReason = secondsToPast;
             }
         }
         if (ticks != null) {
             if(currentTicks >= ticks.getTicks()) {
                 isTerminate = true;
-                terminateReason = ticks;
+                ticks.setTerminateReason(true);
+                //terminateReason = ticks;
             }
         }
         return  isTerminate;
     }
 
-    public Object getTerminateReason() {
-        return terminateReason;
-    }
+//    public Object getTerminateReason() {
+//        return terminateReason;
+//    }
 
     @Override
     public void startTerminationClock() {

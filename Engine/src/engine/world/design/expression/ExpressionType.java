@@ -69,11 +69,12 @@ public enum ExpressionType {
                         throw new RuntimeException("There is no such environment function");
                 }
             }
-            else if(context.getPrimaryEntityInstance().getPropertyByName(expression) != null){
-                return PropertyType.DECIMAL.convert(context.getPrimaryEntityInstance().getPropertyByName(expression).getValue());
+            try {
+                PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(expression); // TODO: 19/08/2023 throw
+                return PropertyType.DECIMAL.convert(propertyInstance.getValue());
             }
-            else{
-                try{
+            catch (IllegalArgumentException e) {
+                try {
                     int freeVal = Integer.parseInt(expression);
                     return freeVal;
                 }
@@ -81,7 +82,6 @@ public enum ExpressionType {
                     //"Unable to convert the string to float"
                 }
             }
-            return null;
         }
     }, 
     STRING{

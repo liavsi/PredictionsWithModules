@@ -1,18 +1,23 @@
 package engine;
 
+import DTOManager.impl.SimulationOutcomeDTO;
 import DTOManager.impl.TerminationDTO;
+import engine.world.design.termination.api.Termination;
 
 import java.util.Date;
 
 public class SimulationOutcome {
-    private final Date runDate;
+    private final String runDate;
     private final int id;
-    private final TerminationDTO terminationDTO;
+    private final Termination termination;
 
-    public SimulationOutcome(Date runDate, int id, TerminationDTO terminationDTO) {
+    public SimulationOutcome(String runDate, int id, Termination termination) {
         this.runDate = runDate;
         this.id = id;
-        this.terminationDTO = terminationDTO;
+        this.termination = termination;
+    }
+    public SimulationOutcomeDTO createSimulationOutcomeDTO(){
+        return new SimulationOutcomeDTO(runDate,id,termination.createTerminationDTO());
     }
 
 
