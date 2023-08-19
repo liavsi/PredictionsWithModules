@@ -9,12 +9,7 @@ public enum Stage {
             System.out.println(separator);
             System.out.println(loadXmlMessage);
             System.out.println(exitMessage);
-            int choice = 5;
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+            int choice = tryGetNumberFromUser(scanner);
             return choice == 1 ? 1 : 5;
         }
     },
@@ -26,12 +21,7 @@ public enum Stage {
             System.out.println(showWorldMessage);
             System.out.println(runSimulationMessage);
             System.out.println(exitMessage);
-            int choice = 5;
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }
+            int choice = tryGetNumberFromUser(scanner);
             if(choice != 1 && choice != 2 && choice != 3) {
                 choice = 5;
             }
@@ -46,12 +36,8 @@ public enum Stage {
             System.out.println(runSimulationMessage);
             System.out.println(showSimulationMessage);
             System.out.println(exitMessage);
-            int choice = 5;
-            try {
-                choice = Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-            }            if(choice != 1 && choice != 2 && choice != 3 && choice != 4) {
+            int choice = tryGetNumberFromUser(scanner);
+            if(choice != 1 && choice != 2 && choice != 3 && choice != 4) {
                 choice = 5;
             }
             return choice;        }
@@ -74,7 +60,6 @@ public enum Stage {
                 choice = Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
                 System.out.println(errorGettingNumber);
-                e.printStackTrace();
             }
         }
         return choice;

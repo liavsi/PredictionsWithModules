@@ -36,7 +36,13 @@ public class UI {
                     }
                     break;
                 case 2:
-                    showWorldDataToUser(currEngine.getWorldDTO());
+                    try {
+                        showWorldDataToUser(currEngine.getWorldDTO());
+                        System.out.println(SUCCEED_DOING_SOMETHING);
+                    }
+                    catch (Exception e) {
+                        System.out.println( FAILED_WHILE_RUNNING +e.getMessage());
+                    }
                     break;
                 case 3:
                     try {
