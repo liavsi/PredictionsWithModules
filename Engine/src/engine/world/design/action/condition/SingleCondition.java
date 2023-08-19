@@ -53,7 +53,7 @@ public class SingleCondition implements Condition{
                     return false;
                 }
             }
-            case("Bt"):{
+            case("bt"):{
                 if(verifyNumericPropertyType(propertyInstance)){
                     if((float) propertyInstance.getValue() > (float) propertyType.convert(realValue)){
                         return true;
@@ -66,7 +66,7 @@ public class SingleCondition implements Condition{
                     throw new RuntimeException("Bt can't be done on non numeric values");
                 }
             }
-            case ("Lt"):{
+            case ("lt"):{
                 if(verifyNumericPropertyType(propertyInstance)){
                     if((float) propertyInstance.getValue() < (float) propertyType.convert(realValue)){
                         return true;

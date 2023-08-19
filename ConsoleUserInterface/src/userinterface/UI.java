@@ -12,31 +12,41 @@ public class UI {
     private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
     private static final String XML_FILE_PATH = "resources/master-ex1.xml";
 
+    private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..";
+    private static final String SUCCEED_DOING_SOMETHING = "Action has been performed successfully";
     public static void main(String[] args) {
         Engine currEngine = new EngineImpl();
         Scanner scanner = new Scanner(System.in);
         List<Integer> simulationIds = new ArrayList<>();
         boolean isRunning = true;
         Stage stage = Stage.FILE_NOT_LOADED;
-
-        // TODO: 18/08/2023  make sure the string from the user is ending with .xml
-        int choice = 1;//stage.runMenu(scanner);
+        int choice;
         while (isRunning) {
-            switch (choice) { // TODO: 19/08/2023 switch only for 3 to 5?
+            choice = stage.runMenu(scanner);
+            switch (choice) {
                 case 1:
-//                String XML_File_Path = getXmlPathFromUser(scanner);
-                    currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
-                    stage = Stage.FILE_LOADED;
-                    choice = 2;
+                    String XML_File_Path = getXmlPathFromUser(scanner);
+                    try {
+                        currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
+                        stage = Stage.FILE_LOADED;
+                        System.out.println(SUCCEED_DOING_SOMETHING);
+                    }
+                    catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 2:
                     showWorldDataToUser(currEngine.getWorldDTO());
-                    choice = 3;
-                    //Data Transfer Object
                     break;
                 case 3:
-                    runningSimulation(scanner,currEngine);
-                    stage = Stage.AFTER_SIMULATION;
+                    try {
+                        runningSimulation(scanner,currEngine);
+                        stage = Stage.AFTER_SIMULATION;
+                        System.out.println(SUCCEED_DOING_SOMETHING);
+                    }
+                    catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
                     break;
                 case 4:
                      int wantedSimulationNumber = getSimulationNumberFromUser(simulationIds, scanner).get();
@@ -51,6 +61,23 @@ public class UI {
         }
         System.out.println("ended main loop");
     }
+
+    private static String getXmlPathFromUser(Scanner scanner) {
+        boolean validXml = false;
+        String xmlPath = "";
+        while (!validXml) {
+            System.out.print("Please enter valid xml file path: ");
+            xmlPath = scanner.nextLine();
+            if (!xmlPath.endsWith(".xml")) {
+                System.out.println("this is not a valid xml path.. make sure the file suffix is .xml");
+            }
+            else {
+                validXml = true;
+            }
+        }
+        return xmlPath;
+    }
+
     private static Optional<Integer> getSimulationNumberFromUser(List<Integer> simulationIds, Scanner scanner) {
         System.out.println("Please choose simulation to show:\n");
         simulationIds.forEach((id) -> System.out.println(id + "\n"));
@@ -68,18 +95,18 @@ public class UI {
             isDoneSettingEnvVars = showEnvironmentVarsToUser(envars,propertyNameToValueAsString, scanner);
         }
         try{
-            SimulationOutcomeDTO simulationOutcomeDTO = currEngine.runNewSimulation(propertyNameToValueAsString);
             int i = 1;
             System.out.println("Environment Vars:\n");
             for (PropertyDefinitionDTO propertyDefinitionDTO: currEngine.getWorldDTO().getEnvPropertiesDefinitionDTO()){
                 System.out.println(i + ") ");
                 showPropertyDataToUser(propertyDefinitionDTO);
             }
+            SimulationOutcomeDTO simulationOutcomeDTO = currEngine.runNewSimulation(propertyNameToValueAsString);
             showEndSimulationDataToUser(simulationOutcomeDTO);
         }
         catch (Exception e)
         {
-            System.out.println(e.getMessage() + "Something went wrong during the simulation running..");
+            throw new RuntimeException(e.getMessage());
         }
     }
     private static void showEndSimulationDataToUser(SimulationOutcomeDTO simulationOutcomeDTO){
