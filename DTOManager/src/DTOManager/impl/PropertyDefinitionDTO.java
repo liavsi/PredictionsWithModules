@@ -5,10 +5,10 @@ public class PropertyDefinitionDTO {
     private final String name;
     private final  String propertyType;
     private final Boolean isRandomInitializer;
-     private final Integer from;
-     private final Integer to;
+     private final Float from;
+     private final Float to;
 
-    public PropertyDefinitionDTO(String name, String propertyType, Boolean isRandomInitializer, Integer from,Integer to) {
+    public PropertyDefinitionDTO(String name, String propertyType, Boolean isRandomInitializer, Float from,Float to) {
         this.name = name;
         this.propertyType = propertyType;
         this.isRandomInitializer = isRandomInitializer;
@@ -28,11 +28,11 @@ public class PropertyDefinitionDTO {
         return isRandomInitializer;
     }
 
-    public Integer getFrom() {
+    public Float getFrom() {
         return from;
     }
 
-    public Integer getTo() {
+    public Float getTo() {
         return to;
     }
 }

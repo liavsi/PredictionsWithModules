@@ -39,7 +39,7 @@ public class EntityDefinitionImpl implements EntityDefinition, Cloneable{
     public EntityDefinitionDTO createEntityDefinitionDTO(){
         List<PropertyDefinitionDTO> propertiesDefinitionDTO = new ArrayList<>();
         for (PropertyDefinition propertyDefinition: getProps()){
-            propertiesDefinitionDTO.add(propertyDefinition.createPropertyDefinitionTDO());
+            propertiesDefinitionDTO.add(propertyDefinition.createPropertyDefinitionDTO());
         }
         return new EntityDefinitionDTO(name,population,propertiesDefinitionDTO);
     }

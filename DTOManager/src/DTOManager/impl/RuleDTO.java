@@ -8,14 +8,12 @@ public class RuleDTO {
     private Integer ticks;
     private Double probability;
     private final List<String> actionsNames;
-    private int actionsNum;
 
-    public RuleDTO(String name, Integer ticks, Double probability, List<String> actionsNames, int actionsNum) {
+    public RuleDTO(String name, Integer ticks, Double probability, List<String> actionsNames) {
         this.name = name;
         this.ticks = ticks;
         this.probability = probability;
         this.actionsNames = actionsNames;
-        this.actionsNum = actionsNum;
     }
 
     public String getName() {
@@ -32,8 +30,5 @@ public class RuleDTO {
 
     public List<String> getActionsNames() {
         return actionsNames;
-    }
-    public int getActionsNum() {
-        return actionsNum;
     }
 }

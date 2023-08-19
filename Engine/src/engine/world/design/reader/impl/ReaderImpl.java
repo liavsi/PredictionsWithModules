@@ -117,7 +117,6 @@ public class ReaderImpl implements Reader {
         }
         createdWorld.setTermination(termination);
     }
-
     private void buildRulesFromPRD(PRDRules prdRules) {
         List<Rule> ruleList = new ArrayList<>();
         Action action;
@@ -168,7 +167,6 @@ public class ReaderImpl implements Reader {
         }
         return res;
     }
-
     private Action createSetAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
@@ -177,8 +175,6 @@ public class ReaderImpl implements Reader {
         res = new SetAction(mainEntity, property, value);
         return res;
     }
-
-
     private Action createConditionAction(PRDAction prdAction) {
         ConditionAction res = null;
         Condition condition = null;
@@ -215,7 +211,6 @@ public class ReaderImpl implements Reader {
         }
         return res;
     }
-
     private Condition createSubCondition(PRDCondition prdCondition) {
         Condition res = null;
         String singularity = prdCondition.getSingularity();
@@ -243,8 +238,6 @@ public class ReaderImpl implements Reader {
         }
         return res;
     }
-
-
     private Action createcalCulationAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
@@ -266,14 +259,11 @@ public class ReaderImpl implements Reader {
         res = new CalculationAction(mainEntity, property, arg1, arg2, calculationType);
         return res;
     }
-
     private Action createKillAction(PRDAction prdAction) {
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
         Action res = new KillAction(mainEntity);
         return res;
     }
-
-
     private Action createIncreaseOrDecreaseAction(PRDAction prdAction, ActionType type) {
         Action res = null ;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
@@ -287,16 +277,15 @@ public class ReaderImpl implements Reader {
         }
         return res;
     }
-
-
     @Override
     public World getWorld() {
         return createdWorld;
     }
-
     @Override
     public void readEnvironmentPropertiesFromUser(Map<String, Object> propertyNameToValueAsString) {
-
+        for (Object value: propertyNameToValueAsString.values()){
+            createdWorld.getEnvVariables();
+        }
     }
 
     /**
@@ -373,8 +362,6 @@ public class ReaderImpl implements Reader {
         }
         return res;
     }
-
-
     private PropertyDefinition createFloatPropertyDefinition(Object i_prdProperty) {
         PropertyDefinition res = null;
         if(i_prdProperty instanceof PRDEnvProperty) {
@@ -429,7 +416,6 @@ public class ReaderImpl implements Reader {
         }
         return res;
     }
-
     /**
      * this code is responsible for creating the Entities from the PRD files
      */

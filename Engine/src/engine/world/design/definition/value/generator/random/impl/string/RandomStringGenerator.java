@@ -5,7 +5,14 @@ import engine.world.design.definition.value.generator.random.api.AbstractRandomV
 public class RandomStringGenerator extends AbstractRandomValueGenerator <String> {
     @Override
     public String generateValue() {
-        // TODO: 10/08/2023 create random string
-        return null;
+        int len = random.nextInt(50 - 1 + 1) + 1;
+        StringBuilder res = new StringBuilder(len);
+        String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!?,_-.() ";
+        for (int i = 0; i < len; i++) {
+            int ind = random.nextInt(chars.length());
+            char randomChar = chars.charAt(ind);
+            res.append(randomChar);
+        }
+        return res.toString();
     }
 }

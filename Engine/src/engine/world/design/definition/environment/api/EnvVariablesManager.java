@@ -9,4 +9,5 @@ public interface EnvVariablesManager {
     void addEnvironmentVariable(PropertyDefinition propertyDefinition);
     ActiveEnvironment createActiveEnvironment();
     Collection<PropertyDefinition> getEnvVariables();
+
 }

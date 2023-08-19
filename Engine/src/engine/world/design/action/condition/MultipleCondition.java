@@ -24,11 +24,11 @@ public class MultipleCondition implements Condition{
     }
     @Override
     public boolean evaluate(Context context) {
-        if (logical.equals("Or")){
+        if (logical.equals("or")){
             return conditions.stream().
                     anyMatch(condition -> condition.evaluate(context));
         }
-        else if(logical.equals("And")){
+        else if(logical.equals("and")){
             return conditions.stream().
                     allMatch(condition -> condition.evaluate(context));
         }

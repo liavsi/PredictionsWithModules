@@ -11,6 +11,6 @@ public interface Termination {
     // the time in seconds from the start has passed
     Boolean isTerminated(Integer currentTicks);
     public TerminationDTO createTerminationDTO();
-    Object getTerminateReason();
+    //Object getTerminateReason();
 
 }

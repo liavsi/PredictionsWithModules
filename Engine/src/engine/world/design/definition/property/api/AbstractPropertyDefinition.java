@@ -4,6 +4,8 @@ import DTOManager.impl.PropertyDefinitionDTO;
 import engine.world.design.definition.value.generator.api.ValueGenerator;
 import engine.world.design.definition.value.generator.fixed.FixedValueGenerator;
 import engine.world.design.definition.value.generator.random.impl.numeric.AbstractNumericRandomGenerator;
+import engine.world.design.definition.value.generator.random.impl.numeric.RandomFloatGenerator;
+import engine.world.design.definition.value.generator.random.impl.numeric.RandomIntegerGenerator;
 
 public abstract class AbstractPropertyDefinition<T>  implements PropertyDefinition {
 
@@ -17,22 +19,25 @@ public abstract class AbstractPropertyDefinition<T>  implements PropertyDefiniti
         this.valueGenerator = valueGenerator;
     }
     @Override
-    public PropertyDefinitionDTO createPropertyDefinitionTDO(){
+    public PropertyDefinitionDTO createPropertyDefinitionDTO() {
         Boolean isRandomInitializer;
-        Integer from = null;
-        Integer to = null;
+        Float from = null;
+        Float to = null;
 
-        if(valueGenerator instanceof FixedValueGenerator){
+        if (valueGenerator instanceof FixedValueGenerator) {
             isRandomInitializer = Boolean.FALSE;
-        }
-        else {
+        } else {
             isRandomInitializer = Boolean.TRUE;
-            if (valueGenerator instanceof AbstractNumericRandomGenerator){
-                from = (int) ((AbstractNumericRandomGenerator<T>) valueGenerator).getFrom();
-                to = (int) ((AbstractNumericRandomGenerator<T>) valueGenerator).getTo();
+            if (valueGenerator instanceof RandomFloatGenerator) {
+                from = ((RandomFloatGenerator) valueGenerator).getFrom();
+                to = ((RandomFloatGenerator) valueGenerator).getTo();
+            }else if (valueGenerator instanceof RandomIntegerGenerator) {
+                from = (float)((RandomIntegerGenerator) valueGenerator).getFrom();
+                to = (float)((RandomIntegerGenerator) valueGenerator).getTo();
             }
+
         }
-        return new PropertyDefinitionDTO(name,propertyType.name(),isRandomInitializer,from,to);
+        return new PropertyDefinitionDTO(name, propertyType.name(), isRandomInitializer, from, to);
     }
 
     @Override
