@@ -21,15 +21,13 @@ public class RuleImpl implements Rule{
     }
     @Override
     public RuleDTO createRuleDTO(){
-        int count = 0;
         int ticks = activation.getTicks();
         double probability = activation.getProbability();
         List<String> actionsNames = new ArrayList<>();
         for(Action action:actions){
             actionsNames.add(action.getActionType().name());
-            count++;
         }
-        return new RuleDTO(name,ticks,probability,actionsNames,count);
+        return new RuleDTO(name,ticks,probability,actionsNames);
     }
     @Override
     public String getName() {

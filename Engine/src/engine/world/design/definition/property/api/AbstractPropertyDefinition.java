@@ -19,8 +19,8 @@ public abstract class AbstractPropertyDefinition<T>  implements PropertyDefiniti
     @Override
     public PropertyDefinitionDTO createPropertyDefinitionTDO(){
         Boolean isRandomInitializer;
-        Integer from = null;
-        Integer to = null;
+        Float from = null;
+        Float to = null;
 
         if(valueGenerator instanceof FixedValueGenerator){
             isRandomInitializer = Boolean.FALSE;
@@ -28,8 +28,8 @@ public abstract class AbstractPropertyDefinition<T>  implements PropertyDefiniti
         else {
             isRandomInitializer = Boolean.TRUE;
             if (valueGenerator instanceof AbstractNumericRandomGenerator){
-                from = (int) ((AbstractNumericRandomGenerator<T>) valueGenerator).getFrom();
-                to = (int) ((AbstractNumericRandomGenerator<T>) valueGenerator).getTo();
+                from = (float)((AbstractNumericRandomGenerator<T>) valueGenerator).getFrom();
+                to = (float) ((AbstractNumericRandomGenerator<T>) valueGenerator).getTo();
             }
         }
         return new PropertyDefinitionDTO(name,propertyType.name(),isRandomInitializer,from,to);

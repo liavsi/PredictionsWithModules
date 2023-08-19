@@ -2,6 +2,7 @@ package userinterface;
 
 import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.PropertyDefinitionDTO;
+import DTOManager.impl.RuleDTO;
 import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.api.Engine;
@@ -122,6 +123,33 @@ public class UI {
             System.out.printf("Entity number " + i + "\n");
             System.out.println("--------------\n");
             showEntityDataToUser(entityDefinitionDTO);
+            i++;
+        }
+        System.out.println("Rules:\n");
+        i=1;
+        for (RuleDTO ruleDTO: worldDTO.getRulesDTO()){
+            System.out.println("Rule number " + i + ":\n");
+            System.out.println("--------------\n");
+            showRuleDataToUser(ruleDTO);
+            i++;
+        }
+        // TODO: 19/08/2023 list of termination 
+    }
+    private static void showRuleDataToUser(RuleDTO ruleDTO){
+        int i = 1;
+        System.out.println("- Name: " + ruleDTO.getName());
+        System.out.println("- This rule in activated every " + ruleDTO.getTicks() + "ticks ");
+        System.out.println("with a probability of " + ruleDTO.getProbability() + "\n");
+        int numOfActions = ruleDTO.getActionsNames().size();
+        System.out.println("- This rule performs " + numOfActions + " actions\n");
+        System.out.println("- The actions are:\n");
+        for (String actionName: ruleDTO.getActionsNames()){
+            if (i == numOfActions){
+                System.out.println(actionName + "\n");
+            }
+            else {
+                System.out.println(actionName + ",");
+            }
             i++;
         }
     }
