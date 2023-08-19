@@ -36,7 +36,7 @@ public class UI {
                     //Data Transfer Object
                     break;
                 case 3:
-
+                    runningSimulation(scanner,currEngine);
                     stage = Stage.AFTER_SIMULATION;
                     break;
                 case 4:
