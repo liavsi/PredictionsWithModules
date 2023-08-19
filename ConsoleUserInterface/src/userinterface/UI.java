@@ -32,7 +32,7 @@ public class UI {
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
                     catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println(FAILED_WHILE_RUNNING + e.getMessage());
                     }
                     break;
                 case 2:
@@ -41,7 +41,7 @@ public class UI {
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
                     catch (Exception e) {
-                        System.out.println( FAILED_WHILE_RUNNING +e.getMessage());
+                        System.out.println(FAILED_WHILE_RUNNING +e.getMessage());
                     }
                     break;
                 case 3:
@@ -51,7 +51,7 @@ public class UI {
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
                     catch (Exception e) {
-                        System.out.println(e.getMessage());
+                        System.out.println(FAILED_WHILE_RUNNING + e.getMessage());
                     }
                     break;
                 case 4:
@@ -87,7 +87,7 @@ public class UI {
     private static Optional<Integer> getSimulationNumberFromUser(List<Integer> simulationIds, Scanner scanner) {
         System.out.println("Please choose simulation to show:\n");
         simulationIds.forEach((id) -> System.out.println(id + "\n"));
-        Integer choice = scanner.nextInt();
+        Integer choice =Integer.parseInt(scanner.nextLine());
         if( choice > simulationIds.stream().max(Integer::compare).get() || choice < simulationIds.stream().min(Integer::compare).get()) {
             choice = null;
         }
