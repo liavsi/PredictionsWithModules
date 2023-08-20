@@ -101,13 +101,13 @@ public class UI {
             isDoneSettingEnvVars = showEnvironmentVarsToUser(envars,propertyNameToValueAsString, scanner);
         }
         try{
+            SimulationOutcomeDTO simulationOutcomeDTO = currEngine.runNewSimulation(propertyNameToValueAsString);
             int i = 1;
             System.out.println("Environment Vars:\n");
             for (PropertyDefinitionDTO propertyDefinitionDTO: currEngine.getWorldDTO().getEnvPropertiesDefinitionDTO()){
                 System.out.println(i + ") ");
                 showPropertyDataToUser(propertyDefinitionDTO);
             }
-            SimulationOutcomeDTO simulationOutcomeDTO = currEngine.runNewSimulation(propertyNameToValueAsString);
             showEndSimulationDataToUser(simulationOutcomeDTO);
         }
         catch (Exception e)
