@@ -1,14 +1,16 @@
 package engine.impl;
 
+import DTOManager.impl.EntityInstanceManagerDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
 import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.api.Engine;
 import engine.world.design.world.api.World;
-import engine.world.design.world.impl.WorldImpl;
 import engine.world.design.reader.api.Reader;
 import engine.world.design.reader.impl.ReaderImpl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,9 +32,12 @@ public class EngineImpl implements Engine {
     }
     @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
-        SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString, countId);
-        pastSimulations.put(countId, currSimulation);
-        countId++;
+        Map<Integer, EntityInstanceManagerDTO> currSimulationInstances = myWorld.runSimulation(propertyNameToValueAsString);
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy | HH.mm.ss");
+        String formattedDate = dateFormat.format(currentDate);
+        SimulationOutcome currSimulation = new SimulationOutcome(formattedDate,countId, myWorld.getTermination(),currSimulationInstances);
+        pastSimulations.put(countId++, currSimulation);
         return currSimulation.createSimulationOutcomeDTO();
     }
     @Override
