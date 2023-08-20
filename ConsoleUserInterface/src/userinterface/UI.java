@@ -176,30 +176,42 @@ public class UI {
 
     private static void displayEntityPropertiesHistogram(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, WorldDTO worldDTO, Scanner scanner) {
         System.out.println("Select an Entity to display its Properties:");
+
         int count = 1;
-        for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()) {
-            System.out.println(count + " " + entityDefinitionDTO.getName());
+        for (EntityDefinitionDTO entityDefinitionDTO : worldDTO.getNameToEntityDefinitionDTO().values()) {
+            System.out.println(count + ". " + entityDefinitionDTO.getName());
             count++;
         }
-        count = Integer.parseInt(scanner.nextLine());
+
+        int entityChoice = Integer.parseInt(scanner.nextLine());
         List<EntityDefinitionDTO> definitionDTOS = new ArrayList<>(worldDTO.getNameToEntityDefinitionDTO().values());
-        EntityDefinitionDTO entityDefinitionDTO = definitionDTOS.get(count-1);
+        EntityDefinitionDTO entityDefinitionDTO = definitionDTOS.get(entityChoice - 1);
+
+        System.out.println("Select a Property to display its histogram:");
         count = 1;
         for (PropertyDefinitionDTO propertyDefinitionDTO : entityDefinitionDTO.getPropertiesDTO()) {
-            System.out.println(count + " " + propertyDefinitionDTO.getName());
+            System.out.println(count + ". " + propertyDefinitionDTO.getName());
             count++;
         }
+
+        int propertyChoice = Integer.parseInt(scanner.nextLine());
+        PropertyDefinitionDTO selectedProperty = entityDefinitionDTO.getPropertiesDTO().get(propertyChoice - 1);
+
+        int counter = countEntitiesWithProperty(entityInstanceDTOS, selectedProperty);
+
+        System.out.println(selectedProperty.getName() + " appears in " + counter + " entities after the simulation");
+    }
+
+    private static int countEntitiesWithProperty(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, PropertyDefinitionDTO selectedProperty) {
         int counter = 0;
-        count = Integer.parseInt(scanner.nextLine());
-        PropertyDefinitionDTO resProperty = entityDefinitionDTO.getPropertiesDTO().get(count-1);
-        for (EntityInstanceDTO entityInstanceDTO: entityInstanceDTOS.get(1).getInstancesDTO().values()) {
-            if (entityInstanceDTO.getProperties().values().stream().anyMatch((propertyInstanceDTO -> propertyInstanceDTO.getPropertyDefinitionDTO().getName().equals(resProperty.getName())))) {
-                counter ++;
+        for (EntityInstanceDTO entityInstanceDTO : entityInstanceDTOS.get(1).getInstancesDTO().values()) {
+            if (entityInstanceDTO.getProperties().values().stream().anyMatch(propertyInstanceDTO -> propertyInstanceDTO.getPropertyDefinitionDTO().getName().equals(selectedProperty.getName()))) {
+                counter++;
             }
         }
-        System.out.println(resProperty.getName() + " appears in " + counter + " entities after the simulation");
-
+        return counter;
     }
+
 
     public static void displayEntityQuantities(Map<Integer,EntityInstanceManagerDTO> entities) {
         entities.forEach((Integer, entityManager) -> entityManager.getInstancesDTO().values().stream().collect(Collectors.groupingBy((EntityInstanceDTO::getName))).forEach(((s, entityInstanceDTOS) -> System.out.println("Entity Name: " +s +" Count: " +entityInstanceDTOS.size()))));
