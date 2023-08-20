@@ -60,8 +60,7 @@ public class ReaderImpl implements Reader {
                 prdWorld = deserializedFrom(JAXB_XML_PACKAGE_NAME, inputStream);
                 readPRDWorld();
             } else {
-                // Handle the case when the resource is not found
-                System.err.println("XML resource not found: " + XML_PATH);
+                throw new IllegalArgumentException("XML resource not found: " + XML_PATH);
             }
         } catch (JAXBException e) {
             // Handle JAXB exception

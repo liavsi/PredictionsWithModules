@@ -15,9 +15,8 @@ public class UI {
     private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..\n";
     private static final String SUCCEED_DOING_SOMETHING = "Action has been performed successfully";
     public static void main(String[] args) {
-        Engine currEngine = new EngineImpl();
+        Engine currEngine = null;
         Scanner scanner = new Scanner(System.in);
-        List<Integer> simulationIds = new ArrayList<>();
         boolean isRunning = true;
         Stage stage = Stage.FILE_NOT_LOADED;
         int choice;
@@ -25,9 +24,10 @@ public class UI {
             choice = stage.runMenu(scanner);
             switch (choice) {
                 case 1:
-                    //String XML_File_Path = getXmlPathFromUser(scanner);
+                    String XML_File_Path = getXmlPathFromUser(scanner);
                     try {
-                        currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
+                        currEngine = new EngineImpl();
+                        currEngine.readWorldFromXml(XML_File_Path, JAXB_XML_PACKAGE_NAME);
                         stage = Stage.FILE_LOADED;
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
