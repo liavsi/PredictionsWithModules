@@ -1,5 +1,6 @@
 package engine.world.design.execution.property;
 
+import DTOManager.impl.PropertyInstanceDTO;
 import engine.world.design.definition.property.api.PropertyDefinition;
 
 public interface PropertyInstance {
@@ -8,4 +9,5 @@ public interface PropertyInstance {
     void updateValue(Object val);
 
 
+    PropertyInstanceDTO createDTO();
 }
