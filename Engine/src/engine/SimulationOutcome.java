@@ -10,7 +10,6 @@ public class SimulationOutcome {
     private final String runDate;
     private final int id;
     private final Termination termination;
-
     private final Map<Integer, EntityInstanceManagerDTO> entityInstancDTOS;
 
     public SimulationOutcome(String runDate, int id, Termination termination, Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOMap) {
@@ -20,7 +19,7 @@ public class SimulationOutcome {
         this.entityInstancDTOS = entityInstanceDTOMap;
     }
     public SimulationOutcomeDTO createSimulationOutcomeDTO(){
-        return new SimulationOutcomeDTO(runDate,id,termination.createTerminationDTO());
+        return new SimulationOutcomeDTO(runDate,id,termination.createTerminationDTO(), entityInstancDTOS);
     }
 
 

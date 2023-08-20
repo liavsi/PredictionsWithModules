@@ -67,7 +67,6 @@ public class UI {
         }
         System.out.println("ended main loop");
     }
-
     private static String getXmlPathFromUser(Scanner scanner) {
         boolean validXml = false;
         String xmlPath = "";
@@ -83,7 +82,6 @@ public class UI {
         }
         return xmlPath;
     }
-
     private static Optional<Integer> getSimulationNumberFromUser(List<Integer> simulationIds, Scanner scanner) {
         System.out.println("Please choose simulation to show:\n");
         simulationIds.forEach((id) -> System.out.println(id + "\n"));
@@ -156,7 +154,6 @@ public class UI {
         // TODO: 18/08/2023 not let him change vars twice and stop when he finish
     }
     private static void showSimulationIdNumber(int simulationId) {
-
     }
     private static void showWorldDataToUser(WorldDTO worldDTO) {
         int i=1;

@@ -29,7 +29,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     public EntityInstanceManagerDTO createDTO() {
         Map<Integer, EntityInstanceDTO> instanceDTOMapToId = new HashMap<>();
         instances.forEach(((Id, entityInstance) -> instanceDTOMapToId.put(Id,entityInstance.createDTO())));
-        return null;
+        return new EntityInstanceManagerDTO(instanceDTOMapToId);
     }
 
     @Override
