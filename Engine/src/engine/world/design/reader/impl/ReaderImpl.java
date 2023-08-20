@@ -254,7 +254,7 @@ public class ReaderImpl implements Reader {
             calculationType = CalculationType.DIVIDE;
         }
         else {
-            throw new IllegalArgumentException(prdAction.toString() + "is Calculation but illegal property" +prdAction.getPRDDivide().toString() +prdAction.getPRDMultiply().toString());
+            throw new IllegalArgumentException(prdAction + "is Calculation but illegal property" +prdAction.getPRDDivide().toString() +prdAction.getPRDMultiply().toString());
         }
         res = new CalculationAction(mainEntity, property, arg1, arg2, calculationType);
         return res;

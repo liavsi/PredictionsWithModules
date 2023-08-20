@@ -12,4 +12,16 @@ public class EntityInstanceDTO {
         this.id = id;
         this.properties = properties;
     }
+
+    public EntityDefinitionDTO getEntityDefinitionDTO() {
+        return entityDefinitionDTO;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public Map<String, PropertyInstanceDTO> getProperties() {
+        return properties;
+    }
 }

@@ -5,8 +5,8 @@ import java.util.List;
 public class RuleDTO {
 
     private final String name;
-    private Integer ticks;
-    private Double probability;
+    private final Integer ticks;
+    private final Double probability;
     private final List<String> actionsNames;
 
     public RuleDTO(String name, Integer ticks, Double probability, List<String> actionsNames) {

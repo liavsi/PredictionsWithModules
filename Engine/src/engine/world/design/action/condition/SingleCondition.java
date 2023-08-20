@@ -14,11 +14,11 @@ import engine.world.design.expression.ExpressionType;
 import java.util.List;
 
 public class SingleCondition implements Condition{
-    private String property;
-    private EntityDefinition entity;
+    private final String property;
+    private final EntityDefinition entity;
     //private Operator operaton1;
-    private String operator;
-    private String value;
+    private final String operator;
+    private final String value;
 
     public SingleCondition(EntityDefinition entity, String property, String value, String operator) {// TODO: 15/08/2023
         this.property = property;
@@ -37,39 +37,19 @@ public class SingleCondition implements Condition{
         // TODO: 15/08/2023  boolean res = false;
         switch (operator){
             case ("="):{
-               if(propertyInstance.getValue() == propertyType.convert(realValue)){
-                   return true;
-               }
-               else {
-                   return false;
-               }
+                return propertyInstance.getValue() == propertyType.convert(realValue);
             //   return (operaton1.runOperator1(propertyInstance.getValue(),propertyInstance.getPropertyDefinition().getType().convert(value)));
             }
             case("!="):{
-                if(propertyInstance.getValue() != propertyType.convert(realValue)){
-                    return true;
-                }
-                else {
-                    return false;
-                }
+                return propertyInstance.getValue() != propertyType.convert(realValue);
             }
             case("bt"):{
                 if(verifyNumericPropertyType(propertyInstance)){
                     if (propertyType == PropertyType.DECIMAL) {
-                       if((int)propertyType.convert(propertyInstance.getValue()) > (int) propertyType.convert(realValue)) {
-                           return true;
-                       }
-                       else {
-                           return false;
-                       }
+                        return (int) propertyType.convert(propertyInstance.getValue()) > (int) propertyType.convert(realValue);
                     }
                     else
-                    if ((float) (propertyType.convert(propertyInstance.getValue())) >(float) propertyType.convert(realValue)) {
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                        return (float) (propertyType.convert(propertyInstance.getValue())) > (float) propertyType.convert(realValue);
                 }
                 else {
                     throw new RuntimeException("Bt can't be done on non numeric values");
@@ -77,12 +57,7 @@ public class SingleCondition implements Condition{
             }
             case ("lt"):{
                 if(verifyNumericPropertyType(propertyInstance)){
-                    if((float) propertyInstance.getValue() < (float) propertyType.convert(realValue)){
-                        return true;
-                    }
-                    else {
-                        return false;
-                    }
+                    return (float) propertyInstance.getValue() < (float) propertyType.convert(realValue);
                 }
                 else{
                     throw new RuntimeException("Lt can't be done on non numeric values");

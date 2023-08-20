@@ -22,7 +22,7 @@ public interface World {
     void setEnvVariablesManager(EnvVariablesManager envVariablesManager);
 
     void setRules(List<Rule> ruleList);
-    public void setTermination(Termination termination);
+    void setTermination(Termination termination);
 
     Map<String, EntityDefinition> getNameToEntityDefinition();
     Termination getTermination();

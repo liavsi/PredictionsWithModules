@@ -7,12 +7,7 @@ public enum Operator {
     EQUAL{
         @Override
         public boolean runOperator(PropertyInstance propertyInstance, String value) {
-            if (propertyInstance.getValue() == propertyInstance.getPropertyDefinition().getType().convert(value)){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return propertyInstance.getValue() == propertyInstance.getPropertyDefinition().getType().convert(value);
         }
         @Override
         public boolean runOperator1(Object val1, Object val2) {
@@ -21,12 +16,7 @@ public enum Operator {
     },DIFFERENT{
         @Override
         public boolean runOperator(PropertyInstance propertyInstance, String value) {
-            if(propertyInstance.getValue() != propertyInstance.getPropertyDefinition().getType().convert(value)){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return propertyInstance.getValue() != propertyInstance.getPropertyDefinition().getType().convert(value);
         }
 
         @Override
@@ -36,12 +26,7 @@ public enum Operator {
     },BT{
         @Override
         public boolean runOperator(PropertyInstance propertyInstance, String value) {
-            if((float) propertyInstance.getValue() > (float) propertyInstance.getPropertyDefinition().getType().convert(value)){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return (float) propertyInstance.getValue() > (float) propertyInstance.getPropertyDefinition().getType().convert(value);
         }
 
         @Override
@@ -51,12 +36,7 @@ public enum Operator {
     }, LT{
         @Override
         public boolean runOperator(PropertyInstance propertyInstance, String value) {
-            if((float) propertyInstance.getValue() < (float) propertyInstance.getPropertyDefinition().getType().convert(value)){
-                return true;
-            }
-            else {
-                return false;
-            }
+            return (float) propertyInstance.getValue() < (float) propertyInstance.getPropertyDefinition().getType().convert(value);
         }
 
         @Override

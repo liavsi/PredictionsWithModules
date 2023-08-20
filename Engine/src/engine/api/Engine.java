@@ -13,5 +13,8 @@ public interface Engine {
     void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME);
     WorldDTO getWorldDTO();
     SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber);
+
+    Map<Integer, SimulationOutcomeDTO> getPastSimulationMapDTO();
+
     // TODO: 10/08/2023 SimulationOutComeDTO getSimulationOutComeDTO();
 }

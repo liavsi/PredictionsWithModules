@@ -7,6 +7,11 @@ public class SimulationOutcomeDTO {
     private final String runDate;
     private final int id;
     private final TerminationDTO terminationDTO;
+
+    public Map<Integer, EntityInstanceManagerDTO> getEntityInstancDTOS() {
+        return entityInstancDTOS;
+    }
+
     private final Map<Integer, EntityInstanceManagerDTO> entityInstancDTOS;
 
     public SimulationOutcomeDTO(String runDate, int id, TerminationDTO terminationDTO, Map<Integer, EntityInstanceManagerDTO> entityInstancDTOS) {

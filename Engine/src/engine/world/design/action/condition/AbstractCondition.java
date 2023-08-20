@@ -11,8 +11,8 @@ import java.util.List;
 
 public abstract class AbstractCondition extends AbstractAction implements Condition {
 
-    private List<Action> thanActions;
-    private List<Action> elseActions;
+    private final List<Action> thanActions;
+    private final List<Action> elseActions;
 
     protected AbstractCondition(ActionType actionType, EntityDefinition entityDefinition) {// TODO: 15/08/2023  
         super(actionType, entityDefinition);

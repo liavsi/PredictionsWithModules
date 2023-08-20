@@ -10,7 +10,7 @@ public interface Termination {
     // checks if ticks passed the termination object ticks or
     // the time in seconds from the start has passed
     Boolean isTerminated(Integer currentTicks);
-    public TerminationDTO createTerminationDTO();
+    TerminationDTO createTerminationDTO();
     //Object getTerminateReason();
 
 }

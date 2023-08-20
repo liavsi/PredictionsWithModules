@@ -12,7 +12,7 @@ import java.util.Objects;
 
 public class MultipleCondition implements Condition{
 
-    private List<Condition> conditions;
+    private final List<Condition> conditions;
     String logical;
 
     public MultipleCondition(String logical) {

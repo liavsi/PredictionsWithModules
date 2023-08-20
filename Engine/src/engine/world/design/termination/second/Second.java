@@ -5,6 +5,6 @@ public interface Second {
     void setSeconds(Integer seconds);
 
     Integer getSeconds();
-    public boolean isTerminateReason();
-    public void setTerminateReason(boolean terminateReason);
+    boolean isTerminateReason();
+    void setTerminateReason(boolean terminateReason);
 }
