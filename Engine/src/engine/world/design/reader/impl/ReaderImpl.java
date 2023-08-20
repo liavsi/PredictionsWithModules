@@ -5,9 +5,6 @@ import engine.world.design.action.api.ActionType;
 import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.action.condition.*;
 import engine.world.design.action.impl.*;
-import engine.world.design.execution.property.PropertyInstance;
-import engine.world.design.expression.ExpressionType;
-import engine.world.design.reader.validator.api.Validator;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
 import engine.world.design.rule.activation.api.Activation;
@@ -284,7 +281,7 @@ public class ReaderImpl implements Reader {
     @Override
     public void readEnvironmentPropertiesFromUser(Map<String, Object> propertyNameToValueAsString) {
         for (Object value: propertyNameToValueAsString.values()){
-            createdWorld.getEnvVariables();// TODO: 20/08/2023 delete?
+            createdWorld.getEnvVariablesManager();// TODO: 20/08/2023 delete?
         }
     }
 
@@ -294,8 +291,8 @@ public class ReaderImpl implements Reader {
     private void buildEnvironmentFromPRD(PRDEvironment prdEvironment) {
         EnvVariablesManager envVariablesManager = new EnvVariablesManagerImpl();
         for(PRDEnvProperty prdEnvProperty: prdEvironment.getPRDEnvProperty()) {
-            if (createdWorld.getEnvVariables().getEnvVariables().contains(prdEnvProperty)) {
-                throw new IllegalArgumentException(prdEnvProperty + "is already exists in the simulation");
+            if (envVariablesManager.getEnvVariables().containsKey(prdEnvProperty.getPRDName())) {
+                throw new IllegalArgumentException(prdEnvProperty.getPRDName() + "is already exists in the simulation");
             }
             switch (prdEnvProperty.getType()) {
                 case "decimal":

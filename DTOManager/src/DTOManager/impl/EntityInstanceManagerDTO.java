@@ -12,6 +12,7 @@ public class EntityInstanceManagerDTO {
         this.instancesDTO = instancesDTO;
     }
 
+
     public Map<Integer, EntityInstanceDTO> getInstancesDTO() {
         return instancesDTO;
     }
