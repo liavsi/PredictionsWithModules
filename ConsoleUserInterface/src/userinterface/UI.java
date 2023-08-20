@@ -112,16 +112,6 @@ public class UI {
             throw e;
         }
     }
-    private static void showEndSimulationDataToUser(SimulationOutcomeDTO simulationOutcomeDTO){
-        System.out.println("------The simulation is over------\n");
-        System.out.println("ID number: " + simulationOutcomeDTO.getId() + "\n");
-        if(simulationOutcomeDTO.getTerminationDTO().isTicksTerminate()){
-            System.out.println("The number of ticks set for the simulation has passed\n");
-        }
-        if (simulationOutcomeDTO.getTerminationDTO().isSecondsTerminate()){
-            System.out.println("The seconds set for the simulation have passed\n");
-        }
-    }
     private static boolean showEnvironmentVarsToUser(List<PropertyDefinitionDTO> envars,Map<String, Object> propertyNameToValueAsString, Scanner scanner) {
         int counter = 1;
         if(envars.isEmpty())
@@ -173,7 +163,6 @@ public class UI {
             }
         }
     }
-
     private static void displayEntityPropertiesHistogram(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, WorldDTO worldDTO, Scanner scanner) {
         System.out.println("Select an Entity to display its Properties:");
 
@@ -202,7 +191,6 @@ public class UI {
         System.out.println(selectedProperty.getName() + " appears in " + counter + " entities after the simulation");
     }
 
-
     private static int countEntitiesWithProperty(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, PropertyDefinitionDTO selectedProperty) {
         int counter = 0;
         for (EntityInstanceDTO entityInstanceDTO : entityInstanceDTOS.get(1).getInstancesDTO().values()) {
@@ -212,8 +200,23 @@ public class UI {
         }
         return counter;
     }
+    private static void showSimulationDataWithChoose(Map<Integer, SimulationOutcomeDTO> simulationOutcomeDTOMap, WorldDTO worldDTO, Scanner scanner) {
+        System.out.println("Please choose simulation to show data about:");
+        simulationOutcomeDTOMap.forEach((id, simulationOutComeDTO) -> {
+            System.out.printf("Simulation Id: %d Run Date: %s%n", id, simulationOutComeDTO.getRunDate());
+        });
+        try {
+            int choice = Integer.parseInt(scanner.nextLine());
+            if (simulationOutcomeDTOMap.containsKey(choice)) {
+                showSimulation(simulationOutcomeDTOMap.get(choice), worldDTO, scanner);
+            } else {
+                throw new IllegalArgumentException(choice + "is not a valid simulation key");
+            }
+        } catch (Exception e)
+        { throw new IllegalArgumentException("illegal number format entered");}
 
 
+    }
     public static void displayEntityQuantities(Map<Integer, EntityInstanceManagerDTO> entities) {
         EntityInstanceManagerDTO before = entities.get(0);
         EntityInstanceManagerDTO after = entities.get(1);
@@ -242,95 +245,95 @@ public class UI {
             System.out.println("After running the simulation: Count: " + afterInstances.size());
         }
     }
-
     private static void showWorldDataToUser(WorldDTO worldDTO) {
-        int i=1;
-        System.out.println("Loaded World Details:\n");
+        System.out.println("Loaded World Details:");
         Map<String, EntityDefinitionDTO> entityDefinitionDTOMap = worldDTO.getNameToEntityDefinitionDTO();
-        System.out.println("The Entities:\n");
-        for (EntityDefinitionDTO entityDefinitionDTO:entityDefinitionDTOMap.values()){
-            System.out.printf("Entity number " + i + ":");
+        System.out.println("Entities:");
+
+        int entityNumber = 1;
+        for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionDTOMap.values()) {
+            System.out.println("Entity number " + entityNumber + ":");
             System.out.println("--------------");
             showEntityDefinitionDataToUser(entityDefinitionDTO);
-            i++;
+            entityNumber++;
         }
-        System.out.println("Rules:\n");
-        i=1;
-        for (RuleDTO ruleDTO: worldDTO.getRulesDTO()){
-            System.out.println("Rule number " + i + ":");
+
+        System.out.println("Rules:");
+        int ruleNumber = 1;
+        for (RuleDTO ruleDTO : worldDTO.getRulesDTO()) {
+            System.out.println("Rule number " + ruleNumber + ":");
             System.out.println("--------------");
             showRuleDataToUser(ruleDTO);
-            i++;
+            ruleNumber++;
         }
+
         showTerminationDataToUser(worldDTO.getTerminationDTO());
     }
-    private static void showTerminationDataToUser(TerminationDTO terminationDTO){
-        System.out.println("End conditions of the simulation: \n");
-        System.out.println("---------------------------------\n");
+    private static void showTerminationDataToUser(TerminationDTO terminationDTO) {
+        System.out.println("End conditions of the simulation:");
+        System.out.println("---------------------------------");
         Integer ticks = terminationDTO.getTicks();
         Integer seconds = terminationDTO.getSecondsToPast();
-        if (ticks != null){
+
+        if (ticks != null) {
             System.out.println("- The simulation will end after " + ticks + " ticks");
         }
-        if (seconds != null){
+
+        if (seconds != null) {
             System.out.println("- The simulation will end after " + seconds + " seconds");
         }
     }
     private static void showRuleDataToUser(RuleDTO ruleDTO){
-        int i = 1;
         System.out.println("- Name: " + ruleDTO.getName());
-        System.out.println("- This rule in activated every " + ruleDTO.getTicks() + " ticks ");
-        System.out.println("with a probability of " + ruleDTO.getProbability() + "\n");
+        System.out.println("- This rule is activated every " + ruleDTO.getTicks() + " ticks");
+        System.out.println("  with a probability of " + ruleDTO.getProbability());
+
         int numOfActions = ruleDTO.getActionsNames().size();
-        System.out.println("- This rule performs " + numOfActions + " actions\n");
-        System.out.println("- The actions are:\n");
-        for (String actionName: ruleDTO.getActionsNames()){
-            if (i == numOfActions){
-                System.out.println(actionName + "\n");
+        System.out.println("- This rule performs " + numOfActions + " actions");
+        System.out.println("- The actions are:");
+
+        int actionNumber = 1;
+        for (String actionName : ruleDTO.getActionsNames()) {
+            if (actionNumber == numOfActions) {
+                System.out.println(actionName);
+            } else {
+                System.out.print(actionName + ", ");
             }
-            else {
-                System.out.println(actionName + ",");
-            }
-            i++;
+            actionNumber++;
         }
     }
     private static void showEntityDefinitionDataToUser(EntityDefinitionDTO entityDefinitionDTO){
-        int i = 1;
-        System.out.println("Name: " + entityDefinitionDTO.getName() + "\n");
-        System.out.println("Amount in population: " + entityDefinitionDTO.getPopulation() + "\n");
-        System.out.println(entityDefinitionDTO.getName() + "'s Properties:\n");
-        for (PropertyDefinitionDTO propertyDefinitionDTO: entityDefinitionDTO.getPropertiesDTO()){
-            System.out.println(i+")\n");
+        System.out.println("Name: " + entityDefinitionDTO.getName());
+        System.out.println("Amount in population: " + entityDefinitionDTO.getPopulation());
+        System.out.println(entityDefinitionDTO.getName() + "'s Properties:");
+
+        int propertyNumber = 1;
+        for (PropertyDefinitionDTO propertyDefinitionDTO : entityDefinitionDTO.getPropertiesDTO()) {
+            System.out.println(propertyNumber + ")");
             showPropertyDefinitionDataToUser(propertyDefinitionDTO);
-            i++;
+            propertyNumber++;
         }
     }
-    private static void showPropertyDefinitionDataToUser(PropertyDefinitionDTO propertyDefinitionDTO){
-        System.out.println("Name:" + propertyDefinitionDTO.getName());
+    private static void showPropertyDefinitionDataToUser(PropertyDefinitionDTO propertyDefinitionDTO) {
+        System.out.println("Name: " + propertyDefinitionDTO.getName());
         System.out.println("Type: " + propertyDefinitionDTO.getPropertyType());
-        if(propertyDefinitionDTO.getFrom() != null && propertyDefinitionDTO.getTo() != null){
+
+        if (propertyDefinitionDTO.getFrom() != null && propertyDefinitionDTO.getTo() != null) {
             System.out.println("Property range value: " + propertyDefinitionDTO.getFrom() + " - " + propertyDefinitionDTO.getTo());
         }
-        System.out.println("The property value " + (propertyDefinitionDTO.getRandomInitializer()? "is":"isn't") + " initialized randomly");
-     }
-    private static void showSimulationDataWithChoose(Map<Integer, SimulationOutcomeDTO> simulationOutcomeDTOMap, WorldDTO worldDTO, Scanner scanner) {
-        System.out.println("Please choose simulation to show data about:");
-        simulationOutcomeDTOMap.forEach((id, simulationOutComeDTO) -> {
-            System.out.printf("Simulation Id: %d Run Date: %s%n", id, simulationOutComeDTO.getRunDate());
-        });
-        try {
-            int choice = Integer.parseInt(scanner.nextLine());
-            if (simulationOutcomeDTOMap.containsKey(choice)) {
-                showSimulation(simulationOutcomeDTOMap.get(choice), worldDTO, scanner);
-            } else {
-                throw new IllegalArgumentException(choice + "is not a valid simulation key");
-            }
-        } catch (Exception e)
-    { throw new IllegalArgumentException("illegal number format entered");}
 
-
-}
-
+        System.out.println("The property value is " + (propertyDefinitionDTO.getRandomInitializer() ? "initialized randomly" : "not initialized randomly"));
+    }
+    private static void showEndSimulationDataToUser(SimulationOutcomeDTO simulationOutcomeDTO){
+        System.out.println("------The simulation is over------\n");
+        System.out.println("ID number: " + simulationOutcomeDTO.getId() + "\n");
+        if(simulationOutcomeDTO.getTerminationDTO().isTicksTerminate()){
+            System.out.println("The number of ticks set for the simulation has passed\n");
+        }
+        if (simulationOutcomeDTO.getTerminationDTO().isSecondsTerminate()){
+            System.out.println("The seconds set for the simulation have passed\n");
+        }
+    }
 
 
 }
