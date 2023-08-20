@@ -55,7 +55,12 @@ public class UI {
                     }
                     break;
                 case 4:
-                    showSimulationDataWithChoose((currEngine.getPastSimulationMapDTO()),currEngine.getWorldDTO(), scanner);
+                    try {
+                        showSimulationDataWithChoose((currEngine.getPastSimulationMapDTO()),currEngine.getWorldDTO(), scanner);
+                    }
+                    catch (Exception e) {
+                        System.out.println(FAILED_WHILE_RUNNING + e.getMessage());
+                    }
                     break;
                 case 5:
                     isRunning = false;
