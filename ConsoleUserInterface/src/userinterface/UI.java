@@ -6,12 +6,13 @@ import engine.impl.EngineImpl;
 import userinterface.stage.Stage;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class UI {
     private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
-    private static final String XML_FILE_PATH = "resources/ex1-error-2.xml";
-
-    private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..";
+    private static final String XML_FILE_PATH = "resources/ex1-cigarets.xml";
+    private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..\n";
     private static final String SUCCEED_DOING_SOMETHING = "Action has been performed successfully";
     public static void main(String[] args) {
         Engine currEngine = new EngineImpl();
@@ -24,7 +25,7 @@ public class UI {
             choice = stage.runMenu(scanner);
             switch (choice) {
                 case 1:
-                    String XML_File_Path = getXmlPathFromUser(scanner);
+                    //String XML_File_Path = getXmlPathFromUser(scanner);
                     try {
                         currEngine.readWorldFromXml(XML_FILE_PATH, JAXB_XML_PACKAGE_NAME);
                         stage = Stage.FILE_LOADED;
@@ -45,7 +46,7 @@ public class UI {
                     break;
                 case 3:
                     try {
-                        runningSimulation(scanner,currEngine);
+                        runningSimulation(scanner, currEngine);
                         stage = Stage.AFTER_SIMULATION;
                         System.out.println(SUCCEED_DOING_SOMETHING);
                     }
@@ -54,10 +55,9 @@ public class UI {
                     }
                     break;
                 case 4:
-                    showSimulationDataWithChoose((currEngine.getPastSimulationMapDTO()), scanner);
+                    showSimulationDataWithChoose((currEngine.getPastSimulationMapDTO()),currEngine.getWorldDTO(), scanner);
                     break;
                 case 5:
-
                     isRunning = false;
                     break;
                 default:
@@ -103,7 +103,7 @@ public class UI {
             System.out.println("Environment Vars:\n");
             for (PropertyDefinitionDTO propertyDefinitionDTO: currEngine.getWorldDTO().getEnvPropertiesDefinitionDTO()){
                 System.out.println(i + ") ");
-                showPropertyDataToUser(propertyDefinitionDTO);
+                showPropertyDefinitionDataToUser(propertyDefinitionDTO);
             }
             showEndSimulationDataToUser(simulationOutcomeDTO);
         }
@@ -137,7 +137,7 @@ public class UI {
                 PropertyDefinitionDTO chosenProperty = envars.get(choice-1);
                 envars.remove(chosenProperty);
                 System.out.println("Please enter value that is suitable for: ");
-                showPropertyDataToUser(chosenProperty);
+                showPropertyDefinitionDataToUser(chosenProperty);
                 Object valueAsString = scanner.nextLine();
                 propertyNameToValueAsString.put(chosenProperty.getName(), valueAsString);
                 return false;
@@ -152,20 +152,19 @@ public class UI {
 
         // TODO: 18/08/2023 not let him change vars twice and stop when he finish
     }
-    private static void showSimulation(SimulationOutcomeDTO simulationOutcomeDTO) {
+    private static void showSimulation(SimulationOutcomeDTO simulationOutcomeDTO, WorldDTO worldDTO,Scanner scanner) {
 
-        Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("1. Display entity quantities");
             System.out.println("2. Display entity properties histogram");
             System.out.println("3. Exit");
             System.out.print("Enter your choice: ");
-            int choice = scanner.nextInt();
+            int choice = Integer.parseInt(scanner.nextLine());
 
             if (choice == 1) {
                 displayEntityQuantities(simulationOutcomeDTO.getEntityInstancDTOS());
             } else if (choice == 2) {
-                // displayEntityPropertiesHistogram(entities, scanner);
+                displayEntityPropertiesHistogram(simulationOutcomeDTO.getEntityInstancDTOS(),worldDTO, scanner);
             } else if (choice == 3) {
                 System.out.println("Exiting...");
                 break;
@@ -175,9 +174,73 @@ public class UI {
         }
     }
 
-    public static void displayEntityQuantities(Map<Integer,EntityInstanceManagerDTO> entities) {
+    private static void displayEntityPropertiesHistogram(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, WorldDTO worldDTO, Scanner scanner) {
+        System.out.println("Select an Entity to display its Properties:");
+
+        List<EntityDefinitionDTO> definitionDTOS = new ArrayList<>(worldDTO.getNameToEntityDefinitionDTO().values());
+
+        IntStream.range(0, definitionDTOS.size())
+                .mapToObj(i -> (i + 1) + ". " + definitionDTOS.get(i).getName())
+                .forEach(System.out::println);
+
+        int entityChoice = Integer.parseInt(scanner.nextLine());
+        EntityDefinitionDTO entityDefinitionDTO = definitionDTOS.get(entityChoice - 1);
+
+        System.out.println("Select a Property to display its histogram:");
+
+        List<PropertyDefinitionDTO> propertyDefinitionDTOs = entityDefinitionDTO.getPropertiesDTO();
+
+        IntStream.range(0, propertyDefinitionDTOs.size())
+                .mapToObj(i -> (i + 1) + ". " + propertyDefinitionDTOs.get(i).getName())
+                .forEach(System.out::println);
+
+        int propertyChoice = Integer.parseInt(scanner.nextLine());
+        PropertyDefinitionDTO selectedProperty = propertyDefinitionDTOs.get(propertyChoice - 1);
+
+        int counter = countEntitiesWithProperty(entityInstanceDTOS, selectedProperty);
+
+        System.out.println(selectedProperty.getName() + " appears in " + counter + " entities after the simulation");
+    }
 
 
+    private static int countEntitiesWithProperty(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, PropertyDefinitionDTO selectedProperty) {
+        int counter = 0;
+        for (EntityInstanceDTO entityInstanceDTO : entityInstanceDTOS.get(1).getInstancesDTO().values()) {
+            if (entityInstanceDTO.getProperties().values().stream().anyMatch(propertyInstanceDTO -> propertyInstanceDTO.getPropertyDefinitionDTO().getName().equals(selectedProperty.getName()))) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+
+    public static void displayEntityQuantities(Map<Integer, EntityInstanceManagerDTO> entities) {
+        EntityInstanceManagerDTO before = entities.get(0);
+        EntityInstanceManagerDTO after = entities.get(1);
+
+        // Collect entity counts before the simulation
+        Map<String, List<EntityInstanceDTO>> beforeCounts = before.getInstancesDTO().values()
+                .stream()
+                .collect(Collectors.groupingBy(EntityInstanceDTO::getName));
+
+        // Collect entity counts after the simulation
+        Map<String, List<EntityInstanceDTO>> afterCounts = after.getInstancesDTO().values()
+                .stream()
+                .collect(Collectors.groupingBy(EntityInstanceDTO::getName));
+
+        // Combine entity counts from before and after simulation
+        Set<String> allEntityNames = new HashSet<>();
+        allEntityNames.addAll(beforeCounts.keySet());
+        allEntityNames.addAll(afterCounts.keySet());
+
+        for (String entityName : allEntityNames) {
+            List<EntityInstanceDTO> beforeInstances = beforeCounts.getOrDefault(entityName, new ArrayList<>());
+            List<EntityInstanceDTO> afterInstances = afterCounts.getOrDefault(entityName, new ArrayList<>());
+
+            System.out.println("Entity Name: " + entityName);
+            System.out.println("Before running the simulation: Count: " + beforeInstances.size());
+            System.out.println("After running the simulation: Count: " + afterInstances.size());
+        }
     }
 
     private static void showWorldDataToUser(WorldDTO worldDTO) {
@@ -188,7 +251,7 @@ public class UI {
         for (EntityDefinitionDTO entityDefinitionDTO:entityDefinitionDTOMap.values()){
             System.out.printf("Entity number " + i + ":");
             System.out.println("--------------");
-            showEntityDataToUser(entityDefinitionDTO);
+            showEntityDefinitionDataToUser(entityDefinitionDTO);
             i++;
         }
         System.out.println("Rules:\n");
@@ -231,18 +294,18 @@ public class UI {
             i++;
         }
     }
-    private static void showEntityDataToUser(EntityDefinitionDTO entityDefinitionDTO){
+    private static void showEntityDefinitionDataToUser(EntityDefinitionDTO entityDefinitionDTO){
         int i = 1;
         System.out.println("Name: " + entityDefinitionDTO.getName() + "\n");
         System.out.println("Amount in population: " + entityDefinitionDTO.getPopulation() + "\n");
         System.out.println(entityDefinitionDTO.getName() + "'s Properties:\n");
         for (PropertyDefinitionDTO propertyDefinitionDTO: entityDefinitionDTO.getPropertiesDTO()){
             System.out.println(i+")\n");
-            showPropertyDataToUser(propertyDefinitionDTO);
+            showPropertyDefinitionDataToUser(propertyDefinitionDTO);
             i++;
         }
     }
-    private static void showPropertyDataToUser(PropertyDefinitionDTO propertyDefinitionDTO){
+    private static void showPropertyDefinitionDataToUser(PropertyDefinitionDTO propertyDefinitionDTO){
         System.out.println("Name:" + propertyDefinitionDTO.getName());
         System.out.println("Type: " + propertyDefinitionDTO.getPropertyType());
         if(propertyDefinitionDTO.getFrom() != null && propertyDefinitionDTO.getTo() != null){
@@ -250,15 +313,15 @@ public class UI {
         }
         System.out.println("The property value " + (propertyDefinitionDTO.getRandomInitializer()? "is":"isn't") + " initialized randomly");
      }
-    private static void showSimulationDataWithChoose(Map<Integer, SimulationOutcomeDTO> simulationOutcomeDTOMap, Scanner scanner) {
+    private static void showSimulationDataWithChoose(Map<Integer, SimulationOutcomeDTO> simulationOutcomeDTOMap, WorldDTO worldDTO, Scanner scanner) {
         System.out.println("Please choose simulation to show data about:");
         simulationOutcomeDTOMap.forEach((id, simulationOutComeDTO) -> {
-            System.out.printf("Simulation Id:{0} Run Date:{1}%n", id, simulationOutComeDTO.getRunDate());
+            System.out.printf("Simulation Id: %d Run Date: %s%n", id, simulationOutComeDTO.getRunDate());
         });
         try {
             int choice = Integer.parseInt(scanner.nextLine());
             if (simulationOutcomeDTOMap.containsKey(choice)) {
-                showSimulation(simulationOutcomeDTOMap.get(choice));
+                showSimulation(simulationOutcomeDTOMap.get(choice), worldDTO, scanner);
             } else {
                 throw new IllegalArgumentException(choice + "is not a valid simulation key");
             }

@@ -17,6 +17,9 @@ public class EntityInstanceDTO {
         return entityDefinitionDTO;
     }
 
+    public String getName() {
+        return getEntityDefinitionDTO().getName();
+    }
     public Integer getId() {
         return id;
     }

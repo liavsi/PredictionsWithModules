@@ -17,6 +17,7 @@ public class DecreaseAction extends AbstractAction {
         super(ActionType.DECREASE, entityDefinition);
         this.property = property;
         this.byExpression = byExpression;
+
     }
 
     @Override
