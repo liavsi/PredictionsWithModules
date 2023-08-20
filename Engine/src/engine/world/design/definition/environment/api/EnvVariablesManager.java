@@ -4,11 +4,11 @@ import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.execution.environment.api.ActiveEnvironment;
 
 import java.util.Collection;
+import java.util.Map;
 
 public interface EnvVariablesManager {
     void addEnvironmentVariable(PropertyDefinition propertyDefinition);
     ActiveEnvironment createActiveEnvironment();
-    Collection<PropertyDefinition> getEnvVariables();
-    public PropertyDefinition getEnvPropertyByName(String envProperty);
+    Map<String, PropertyDefinition> getEnvVariables();
 
 }

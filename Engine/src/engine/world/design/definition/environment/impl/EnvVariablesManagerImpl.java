@@ -29,8 +29,8 @@ public class EnvVariablesManagerImpl implements EnvVariablesManager {
     }
 
     @Override
-    public Collection<PropertyDefinition> getEnvVariables() {
-        return propNameToPropDefinition.values();
+    public Map<String, PropertyDefinition> getEnvVariables() {
+        return propNameToPropDefinition;
     }
     @Override
     public PropertyDefinition getEnvPropertyByName(String envProperty){

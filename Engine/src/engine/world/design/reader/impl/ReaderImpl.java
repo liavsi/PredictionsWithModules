@@ -5,10 +5,6 @@ import engine.world.design.action.api.ActionType;
 import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.action.condition.*;
 import engine.world.design.action.impl.*;
-import engine.world.design.execution.environment.api.ActiveEnvironment;
-import engine.world.design.execution.property.PropertyInstance;
-import engine.world.design.expression.ExpressionType;
-import engine.world.design.reader.validator.api.Validator;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
 import engine.world.design.rule.activation.api.Activation;
@@ -257,8 +253,6 @@ public class ReaderImpl implements Reader {
         else {
             throw new IllegalArgumentException(prdAction + "is Calculation but illegal property" +prdAction.getPRDDivide().toString() +prdAction.getPRDMultiply().toString());
         }
-        checkIfArgNumeric(arg1,property,mainEntity,"CALCULATION");
-        checkIfArgNumeric(arg2,property,mainEntity,"CALCULATION");
         res = new CalculationAction(mainEntity, property, arg1, arg2, calculationType);
         return res;
     }
@@ -268,57 +262,18 @@ public class ReaderImpl implements Reader {
         return res;
     }
     private Action createIncreaseOrDecreaseAction(PRDAction prdAction, ActionType type) {
-        Action res = null;
+        Action res = null ;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
         String propertyName = prdAction.getProperty();
         String byExpression = prdAction.getBy();
         if(type == ActionType.INCREASE) {
-            int val = checkIfArgNumeric(byExpression,propertyName,mainEntity,"INCREASE");
             res = new IncreaseAction(mainEntity,propertyName,byExpression);
         }
         else if (type == ActionType.DECREASE) {
-            int val = checkIfArgNumeric(byExpression,propertyName,mainEntity,"DECREASE");
             res = new DecreaseAction(mainEntity,propertyName,byExpression);
         }
         return res;
     }
-    private int checkIfArgNumeric(String byExpression,String propertyName,EntityDefinition mainEntity,String type) {
-        int openingParen = byExpression.indexOf("(");
-        int closingParen = byExpression.indexOf(")");
-        if(openingParen != -1 && closingParen != -1) {
-            String envFunc = byExpression.substring(0,openingParen);
-            String envFuncArg = byExpression.substring(openingParen + 1,closingParen);
-            switch (envFunc) {
-                case ("environment"): {
-                    PropertyDefinition propertyDefinition = createdWorld.getEnvVariables().getEnvPropertyByName(envFuncArg);
-                    if (propertyDefinition.getType() != PropertyType.DECIMAL && propertyDefinition.getType() != PropertyType.FLOAT)
-                    {
-                        throw new IllegalArgumentException("The " + type + " action argument is not a numeric number");
-                    }
-                    return 0;
-                }
-                case ("random"): {
-                    int randomVal = checkIfArgNumeric(envFuncArg,propertyName,mainEntity,type);
-                    Random random = new Random();
-                    int res = random.nextInt(randomVal + 1);
-                    return res;
-                }
-                default:
-                    throw new RuntimeException("There is no such environment function");
-            }
-        }
-        try {
-            int freeVal = Integer.parseInt(byExpression);
-        }catch (NumberFormatException e1) {
-            try {
-                float freeVal = Float.parseFloat(byExpression);
-            }catch (NumberFormatException e2){
-                throw new IllegalArgumentException("The " + type + " action argument is not a numeric number");
-            }
-        }
-        return 0;
-    }
-
     @Override
     public World getWorld() {
         return createdWorld;
@@ -326,7 +281,7 @@ public class ReaderImpl implements Reader {
     @Override
     public void readEnvironmentPropertiesFromUser(Map<String, Object> propertyNameToValueAsString) {
         for (Object value: propertyNameToValueAsString.values()){
-            createdWorld.getEnvVariables();// TODO: 20/08/2023 delete?
+            createdWorld.getEnvVariablesManager();// TODO: 20/08/2023 delete?
         }
     }
 
@@ -336,8 +291,8 @@ public class ReaderImpl implements Reader {
     private void buildEnvironmentFromPRD(PRDEvironment prdEvironment) {
         EnvVariablesManager envVariablesManager = new EnvVariablesManagerImpl();
         for(PRDEnvProperty prdEnvProperty: prdEvironment.getPRDEnvProperty()) {
-            if (envVariablesManager.getEnvVariables().contains(prdEnvProperty)) {
-                throw new IllegalArgumentException(prdEnvProperty + "is already exists in the simulation");
+            if (envVariablesManager.getEnvVariables().containsKey(prdEnvProperty.getPRDName())) {
+                throw new IllegalArgumentException(prdEnvProperty.getPRDName() + "is already exists in the simulation");
             }
             switch (prdEnvProperty.getType()) {
                 case "decimal":

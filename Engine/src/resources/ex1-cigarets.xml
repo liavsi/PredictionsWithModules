@@ -30,7 +30,7 @@
 				</PRD-property>		
 				<PRD-property type="decimal">
 					<PRD-name>cigarets-per-month</PRD-name>
-					<PRD-range to="0" from="500"/>
+					<PRD-range to="500" from="0"/>
 					<PRD-value random-initialize="true"/>
 				</PRD-property>							
 			</PRD-properties>
@@ -82,7 +82,7 @@
 		</PRD-rule>
 	</PRD-rules>
 	<PRD-termination>	
-		<PRD-by-ticks count="840"/>
-		<PRD-by-second count="10"/>
+		<PRD-by-ticks count="500"/>
+		<PRD-by-second count="100000000"/>
 	</PRD-termination>
 </PRD-world>

@@ -57,14 +57,14 @@ public class WorldImpl implements World {
         }
         TerminationDTO terminationDTO = termination.createTerminationDTO();
         List<PropertyDefinitionDTO> envPropertiesDefinitionDTO = new ArrayList<>();
-        for (PropertyDefinition propertyDefinition : envVariablesManager.getEnvVariables()){
+        for (PropertyDefinition propertyDefinition : envVariablesManager.getEnvVariables().values()){
             envPropertiesDefinitionDTO.add(propertyDefinition.createPropertyDefinitionDTO());
         }
         return new WorldDTO(entityDefinitionDTOMap,rulesDTO,terminationDTO,envPropertiesDefinitionDTO);
     }
 
     @Override
-    public EnvVariablesManager getEnvVariables() {
+    public EnvVariablesManager getEnvVariablesManager() {
         return envVariablesManager;
     }
 
@@ -72,7 +72,7 @@ public class WorldImpl implements World {
     public Map<Integer, EntityInstanceManagerDTO> runSimulation(Map<String, Object> propertyNameToValueAsString) {
         // creating the Active Environment - if the user gave the property its value we will use it otherwise generate value
         ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
-        for (PropertyDefinition envVarDefinition: envVariablesManager.getEnvVariables()) {
+        for (PropertyDefinition envVarDefinition: envVariablesManager.getEnvVariables().values()) {
             String envName = envVarDefinition.getName();
             if(propertyNameToValueAsString.containsKey(envName)) {
                 Object value = envVarDefinition.getType().convert(propertyNameToValueAsString.get(envName));
