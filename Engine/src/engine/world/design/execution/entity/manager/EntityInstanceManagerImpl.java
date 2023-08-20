@@ -1,5 +1,7 @@
 package engine.world.design.execution.entity.manager;
 
+import DTOManager.impl.EntityInstanceDTO;
+import DTOManager.impl.EntityInstanceManagerDTO;
 import com.sun.javaws.exceptions.InvalidArgumentException;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyDefinition;
@@ -21,6 +23,13 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager {
     public EntityInstanceManagerImpl() {
         count = 0;
         instances = new HashMap<>();
+    }
+
+    @Override
+    public EntityInstanceManagerDTO createDTO() {
+        Map<Integer, EntityInstanceDTO> instanceDTOMapToId = new HashMap<>();
+        instances.forEach(((Id, entityInstance) -> instanceDTOMapToId.put(Id,entityInstance.createDTO())));
+        return null;
     }
 
     @Override

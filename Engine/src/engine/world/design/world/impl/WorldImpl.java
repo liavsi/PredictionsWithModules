@@ -1,7 +1,6 @@
 package engine.world.design.world.impl;
 
 import DTOManager.impl.*;
-import engine.SimulationOutcome;
 import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.execution.context.Context;
 import engine.world.design.execution.context.ContextImpl;
@@ -16,7 +15,6 @@ import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.environment.api.EnvVariablesManager;
 import engine.world.design.rule.Rule;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WorldImpl implements World {
@@ -71,7 +69,7 @@ public class WorldImpl implements World {
     }
 
     @Override
-    public SimulationOutcome runSimulation(Map<String, Object> propertyNameToValueAsString, Integer countId) {
+    public Map<Integer, EntityInstanceManagerDTO> runSimulation(Map<String, Object> propertyNameToValueAsString) {
         // creating the Active Environment - if the user gave the property its value we will use it otherwise generate value
         ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
         for (PropertyDefinition envVarDefinition: envVariablesManager.getEnvVariables()) {
@@ -92,8 +90,10 @@ public class WorldImpl implements World {
                 entityInstanceManager.create(entityDefinition);
             }
         }
+        Map<Integer, EntityInstanceManagerDTO> informationAboutInstance = new HashMap();
         // take a picture
-        int ticks = 0; // TODO: 19/08/2023 if ticks = 1 
+        int ticks = 0; // TODO: 19/08/2023 if ticks = 1
+        informationAboutInstance.put(0, entityInstanceManager.createDTO());
         termination.startTerminationClock();
         while (!termination.isTerminated(ticks)) {
             for (EntityInstance entityInstance: entityInstanceManager.getInstances().values()) {
@@ -107,11 +107,9 @@ public class WorldImpl implements World {
             entityInstanceManager.killEntities();
             ticks++;
         }
-        // take second picture
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy | HH.mm.ss");
-        String formattedDate = dateFormat.format(currentDate);
-        return new SimulationOutcome(formattedDate,countId,termination);
+        informationAboutInstance.put(1, entityInstanceManager.createDTO());
+
+        return informationAboutInstance;
     }
     @Override
     public void setEntities(Map<String, EntityDefinition> entities) {

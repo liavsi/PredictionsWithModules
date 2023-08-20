@@ -1,5 +1,7 @@
 package engine.world.design.execution.entity.impl;
 
+import DTOManager.impl.EntityInstanceDTO;
+import DTOManager.impl.PropertyInstanceDTO;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.property.PropertyInstance;
@@ -36,5 +38,12 @@ public class EntityInstanceImpl implements EntityInstance {
     @Override
     public void addPropertyInstance(PropertyInstance propertyInstance) {
         properties.put(propertyInstance.getPropertyDefinition().getName(), propertyInstance);
+    }
+
+    @Override
+    public EntityInstanceDTO createDTO() {
+        Map<String, PropertyInstanceDTO> propertyInstanceToNameDTO = new HashMap<>();
+        properties.forEach((name, propertyInstance) -> propertyInstanceToNameDTO.put(name,propertyInstance.createDTO()));
+        return new EntityInstanceDTO(entityDefinition.createEntityDefinitionDTO(), id,propertyInstanceToNameDTO);
     }
 }

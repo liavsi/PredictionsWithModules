@@ -1,5 +1,6 @@
 package engine.world.design.execution.property;
 
+import DTOManager.impl.PropertyInstanceDTO;
 import engine.world.design.definition.property.api.PropertyDefinition;
 
 public class PropertyInstanceImpl implements PropertyInstance {
@@ -25,5 +26,10 @@ public class PropertyInstanceImpl implements PropertyInstance {
     @Override
     public void updateValue(Object val) {
         this.value = propertyDefinition.getType().convert(val);
+    }
+
+    @Override
+    public PropertyInstanceDTO createDTO() {
+        return new PropertyInstanceDTO(propertyDefinition.createPropertyDefinitionDTO(), value.toString());
     }
 }
