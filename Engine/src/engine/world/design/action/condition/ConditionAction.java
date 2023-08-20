@@ -11,10 +11,10 @@ import java.util.List;
 
 public class ConditionAction extends AbstractAction{
 
-    private List<Action> thanActions;
-    private List<Action> elseActions;
+    private final List<Action> thanActions;
+    private final List<Action> elseActions;
 
-    private Condition condition;
+    private final Condition condition;
     public ConditionAction(EntityDefinition entityDefinition,Condition condition) {
         super(ActionType.CONDITION, entityDefinition);
         this.condition = condition;

@@ -18,7 +18,7 @@ import java.util.Map;
 public class EntityInstanceManagerImpl implements EntityInstanceManager {
 
     private int count;
-    private Map<Integer, EntityInstance> instances;
+    private final Map<Integer, EntityInstance> instances;
     List <Integer> instanceToKill = new ArrayList<>();
     public EntityInstanceManagerImpl() {
         count = 0;

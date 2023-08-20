@@ -7,7 +7,7 @@ public class ActivationImpl implements Activation {
 
     private Integer ticks = 1;
     private Double probability = 1d;
-    private RandomFloatGenerator randomFloatGenerator = new RandomFloatGenerator(0f, 1f);
+    private final RandomFloatGenerator randomFloatGenerator = new RandomFloatGenerator(0f, 1f);
 
 
     public ActivationImpl(){}
@@ -40,9 +40,6 @@ public class ActivationImpl implements Activation {
 
     @Override
     public Boolean isActive(int tickNumber) {
-        if(tickNumber % ticks == 0 && randomFloatGenerator.generateValue() < probability ) {
-            return true;
-        }
-        return false;
+        return tickNumber % ticks == 0 && randomFloatGenerator.generateValue() < probability;
     }
 }

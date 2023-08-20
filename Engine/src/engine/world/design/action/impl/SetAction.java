@@ -10,8 +10,8 @@ import engine.world.design.expression.ExpressionType;
 
 public class SetAction extends AbstractAction {
 
-    private String property;
-    private String value;
+    private final String property;
+    private final String value;
 
     public SetAction(EntityDefinition entityDefinition, String property, String value) {
         super(ActionType.SET, entityDefinition);

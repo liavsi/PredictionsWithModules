@@ -11,9 +11,10 @@ import engine.world.design.expression.ExpressionType;
 
 public class CalculationAction extends AbstractAction {
 
-    private CalculationType calculationType;
-    private String property;
-    private String arg1, arg2;
+    private final CalculationType calculationType;
+    private final String property;
+    private final String arg1;
+    private final String arg2;
 
 
     public CalculationAction(EntityDefinition entityDefinition, String property, String arg1, String arg2,CalculationType calculationType) {

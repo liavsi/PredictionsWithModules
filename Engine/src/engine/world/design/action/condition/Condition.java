@@ -7,6 +7,6 @@ import engine.world.design.execution.property.PropertyInstance;
 
 public interface Condition {
 
-    public boolean evaluate(Context context);
+    boolean evaluate(Context context);
 
 }

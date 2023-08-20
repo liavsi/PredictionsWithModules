@@ -4,7 +4,7 @@ public interface Tick {
 
     void setTicks(Integer ticks);
     Integer getTicks();
-    public boolean isTerminateReason();
-    public void setTerminateReason(boolean terminateReason);
+    boolean isTerminateReason();
+    void setTerminateReason(boolean terminateReason);
 
 }

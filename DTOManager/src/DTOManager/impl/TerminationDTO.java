@@ -3,8 +3,8 @@ package DTOManager.impl;
 public class TerminationDTO {
     private Integer ticks = null;
     private Integer secondsToPast = null;
-    private boolean isTicksTerminate;
-    private boolean isSecondsTerminate;
+    private final boolean isTicksTerminate;
+    private final boolean isSecondsTerminate;
 
     public TerminationDTO(Integer ticks, Integer secondsToPast, boolean isTicksTerminate, boolean isSecondsTerminate) {
         this.ticks = ticks;

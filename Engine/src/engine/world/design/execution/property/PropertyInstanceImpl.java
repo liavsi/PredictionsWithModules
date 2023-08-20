@@ -5,7 +5,7 @@ import engine.world.design.definition.property.api.PropertyDefinition;
 
 public class PropertyInstanceImpl implements PropertyInstance {
 
-    private PropertyDefinition propertyDefinition;
+    private final PropertyDefinition propertyDefinition;
     private Object value;
 
     public PropertyInstanceImpl(PropertyDefinition propertyDefinition, Object value) {

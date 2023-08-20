@@ -18,10 +18,10 @@ import java.util.Map;
 
 public class EngineImpl implements Engine {
 
-    private Reader myReader;
+    private final Reader myReader;
     private World myWorld; // TODO: 19/08/2023 static?
     private Integer countId = 1;
-    private Map<Integer, SimulationOutcome> pastSimulations;
+    private final Map<Integer, SimulationOutcome> pastSimulations;
 
     public World getWorld() {
         return myWorld;
@@ -54,7 +54,12 @@ public class EngineImpl implements Engine {
         return pastSimulations.get(wantedSimulationNumber).createSimulationOutcomeDTO();
     }
 
-
+    @Override
+    public Map<Integer, SimulationOutcomeDTO> getPastSimulationMapDTO() {
+        Map<Integer,SimulationOutcomeDTO> res = new HashMap<>();
+        pastSimulations.forEach((id,pastSimulationOutCome) -> res.put(id, pastSimulationOutCome.createSimulationOutcomeDTO()));
+        return res;
+    }
 
 
 }

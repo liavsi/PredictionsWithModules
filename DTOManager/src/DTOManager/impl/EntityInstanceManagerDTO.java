@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class EntityInstanceManagerDTO {
 
-    private Map<Integer, EntityInstanceDTO> instancesDTO;
+    private final Map<Integer, EntityInstanceDTO> instancesDTO;
 
     public EntityInstanceManagerDTO(Map<Integer, EntityInstanceDTO> instancesDTO) {
         this.instancesDTO = instancesDTO;
