@@ -5,6 +5,8 @@ import engine.world.design.action.api.ActionType;
 import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.action.condition.*;
 import engine.world.design.action.impl.*;
+import engine.world.design.execution.property.PropertyInstance;
+import engine.world.design.expression.ExpressionType;
 import engine.world.design.reader.validator.api.Validator;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
@@ -35,10 +37,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ReaderImpl implements Reader {
 
@@ -99,7 +98,6 @@ public class ReaderImpl implements Reader {
         buildRulesFromPRD(prdWorld.getPRDRules());
         buildTerminationFromPRD(prdWorld.getPRDTermination());
     }
-
     private void buildTerminationFromPRD(PRDTermination prdTermination) {
         TerminationImpl termination = new TerminationImpl();
         for (Object prdTicksOrSeconds :prdTermination.getPRDByTicksOrPRDBySecond()) {
@@ -286,7 +284,7 @@ public class ReaderImpl implements Reader {
     @Override
     public void readEnvironmentPropertiesFromUser(Map<String, Object> propertyNameToValueAsString) {
         for (Object value: propertyNameToValueAsString.values()){
-            createdWorld.getEnvVariables();
+            createdWorld.getEnvVariables();// TODO: 20/08/2023 delete?
         }
     }
 
@@ -296,6 +294,9 @@ public class ReaderImpl implements Reader {
     private void buildEnvironmentFromPRD(PRDEvironment prdEvironment) {
         EnvVariablesManager envVariablesManager = new EnvVariablesManagerImpl();
         for(PRDEnvProperty prdEnvProperty: prdEvironment.getPRDEnvProperty()) {
+            if (createdWorld.getEnvVariables().getEnvVariables().contains(prdEnvProperty)) {
+                throw new IllegalArgumentException(prdEnvProperty + "is already exists in the simulation");
+            }
             switch (prdEnvProperty.getType()) {
                 case "decimal":
                     envVariablesManager.addEnvironmentVariable(createDecimalPropertyDefinition(prdEnvProperty));
@@ -426,6 +427,9 @@ public class ReaderImpl implements Reader {
         for (PRDEntity prdEntity: prdEntities.getPRDEntity()){
             EntityDefinition currEntity = new EntityDefinitionImpl(prdEntity.getName(), prdEntity.getPRDPopulation());
             for (PRDProperty prdProperty : prdEntity.getPRDProperties().getPRDProperty()) {
+                if (currEntity.getProps().contains(prdProperty)) {
+                    throw new IllegalArgumentException("Property " + prdProperty + " already exists in the Entity " + currEntity.getName());
+                }
                 switch (prdProperty.getType()) {
                     case "decimal":
                         currEntity.getProps().add(createDecimalPropertyDefinition(prdProperty));
