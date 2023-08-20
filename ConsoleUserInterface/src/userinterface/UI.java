@@ -7,11 +7,11 @@ import userinterface.stage.Stage;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class UI {
     private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
-    private static final String XML_FILE_PATH = "resources/master-ex1.xml";
-
+    private static final String XML_FILE_PATH = "resources/ex1-cigarets.xml";
     private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..\n";
     private static final String SUCCEED_DOING_SOMETHING = "Action has been performed successfully";
     public static void main(String[] args) {
@@ -177,30 +177,31 @@ public class UI {
     private static void displayEntityPropertiesHistogram(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, WorldDTO worldDTO, Scanner scanner) {
         System.out.println("Select an Entity to display its Properties:");
 
-        int count = 1;
-        for (EntityDefinitionDTO entityDefinitionDTO : worldDTO.getNameToEntityDefinitionDTO().values()) {
-            System.out.println(count + ". " + entityDefinitionDTO.getName());
-            count++;
-        }
+        List<EntityDefinitionDTO> definitionDTOS = new ArrayList<>(worldDTO.getNameToEntityDefinitionDTO().values());
+
+        IntStream.range(0, definitionDTOS.size())
+                .mapToObj(i -> (i + 1) + ". " + definitionDTOS.get(i).getName())
+                .forEach(System.out::println);
 
         int entityChoice = Integer.parseInt(scanner.nextLine());
-        List<EntityDefinitionDTO> definitionDTOS = new ArrayList<>(worldDTO.getNameToEntityDefinitionDTO().values());
         EntityDefinitionDTO entityDefinitionDTO = definitionDTOS.get(entityChoice - 1);
 
         System.out.println("Select a Property to display its histogram:");
-        count = 1;
-        for (PropertyDefinitionDTO propertyDefinitionDTO : entityDefinitionDTO.getPropertiesDTO()) {
-            System.out.println(count + ". " + propertyDefinitionDTO.getName());
-            count++;
-        }
+
+        List<PropertyDefinitionDTO> propertyDefinitionDTOs = entityDefinitionDTO.getPropertiesDTO();
+
+        IntStream.range(0, propertyDefinitionDTOs.size())
+                .mapToObj(i -> (i + 1) + ". " + propertyDefinitionDTOs.get(i).getName())
+                .forEach(System.out::println);
 
         int propertyChoice = Integer.parseInt(scanner.nextLine());
-        PropertyDefinitionDTO selectedProperty = entityDefinitionDTO.getPropertiesDTO().get(propertyChoice - 1);
+        PropertyDefinitionDTO selectedProperty = propertyDefinitionDTOs.get(propertyChoice - 1);
 
         int counter = countEntitiesWithProperty(entityInstanceDTOS, selectedProperty);
 
         System.out.println(selectedProperty.getName() + " appears in " + counter + " entities after the simulation");
     }
+
 
     private static int countEntitiesWithProperty(Map<Integer, EntityInstanceManagerDTO> entityInstanceDTOS, PropertyDefinitionDTO selectedProperty) {
         int counter = 0;
@@ -213,8 +214,33 @@ public class UI {
     }
 
 
-    public static void displayEntityQuantities(Map<Integer,EntityInstanceManagerDTO> entities) {
-        entities.forEach((Integer, entityManager) -> entityManager.getInstancesDTO().values().stream().collect(Collectors.groupingBy((EntityInstanceDTO::getName))).forEach(((s, entityInstanceDTOS) -> System.out.println("Entity Name: " +s +" Count: " +entityInstanceDTOS.size()))));
+    public static void displayEntityQuantities(Map<Integer, EntityInstanceManagerDTO> entities) {
+        EntityInstanceManagerDTO before = entities.get(0);
+        EntityInstanceManagerDTO after = entities.get(1);
+
+        // Collect entity counts before the simulation
+        Map<String, List<EntityInstanceDTO>> beforeCounts = before.getInstancesDTO().values()
+                .stream()
+                .collect(Collectors.groupingBy(EntityInstanceDTO::getName));
+
+        // Collect entity counts after the simulation
+        Map<String, List<EntityInstanceDTO>> afterCounts = after.getInstancesDTO().values()
+                .stream()
+                .collect(Collectors.groupingBy(EntityInstanceDTO::getName));
+
+        // Combine entity counts from before and after simulation
+        Set<String> allEntityNames = new HashSet<>();
+        allEntityNames.addAll(beforeCounts.keySet());
+        allEntityNames.addAll(afterCounts.keySet());
+
+        for (String entityName : allEntityNames) {
+            List<EntityInstanceDTO> beforeInstances = beforeCounts.getOrDefault(entityName, new ArrayList<>());
+            List<EntityInstanceDTO> afterInstances = afterCounts.getOrDefault(entityName, new ArrayList<>());
+
+            System.out.println("Entity Name: " + entityName);
+            System.out.println("Before running the simulation: Count: " + beforeInstances.size());
+            System.out.println("After running the simulation: Count: " + afterInstances.size());
+        }
     }
 
     private static void showWorldDataToUser(WorldDTO worldDTO) {
