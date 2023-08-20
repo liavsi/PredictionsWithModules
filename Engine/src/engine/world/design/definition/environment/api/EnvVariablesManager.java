@@ -10,5 +10,6 @@ public interface EnvVariablesManager {
     void addEnvironmentVariable(PropertyDefinition propertyDefinition);
     ActiveEnvironment createActiveEnvironment();
     Map<String, PropertyDefinition> getEnvVariables();
+    public PropertyDefinition getEnvPropertyByName(String envProperty);
 
 }

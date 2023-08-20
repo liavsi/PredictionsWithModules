@@ -34,7 +34,7 @@ public class EnvVariablesManagerImpl implements EnvVariablesManager {
     }
     @Override
     public PropertyDefinition getEnvPropertyByName(String envProperty){
-        for (PropertyDefinition propertyDefinition: getEnvVariables()){
+        for (PropertyDefinition propertyDefinition: getEnvVariables().values()){
             if (envProperty.equals(propertyDefinition.getName())){
                 return propertyDefinition;
             }
