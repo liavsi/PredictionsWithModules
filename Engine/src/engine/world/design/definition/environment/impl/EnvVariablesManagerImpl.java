@@ -32,4 +32,13 @@ public class EnvVariablesManagerImpl implements EnvVariablesManager {
     public Collection<PropertyDefinition> getEnvVariables() {
         return propNameToPropDefinition.values();
     }
+    @Override
+    public PropertyDefinition getEnvPropertyByName(String envProperty){
+        for (PropertyDefinition propertyDefinition: getEnvVariables()){
+            if (envProperty.equals(propertyDefinition.getName())){
+                return propertyDefinition;
+            }
+        }
+        throw new RuntimeException("Environment variable" + envProperty + "doesn't exist");
+    }
 }

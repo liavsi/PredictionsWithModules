@@ -9,8 +9,7 @@ import java.util.*;
 
 public class UI {
     private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
-    private static final String XML_FILE_PATH = "resources/ex1-error-2.xml";
-
+    private static final String XML_FILE_PATH = "resources/ex1-cigarets.xml";
     private static final String FAILED_WHILE_RUNNING = "Something went wrong during this Action..";
     private static final String SUCCEED_DOING_SOMETHING = "Action has been performed successfully";
     public static void main(String[] args) {
@@ -82,8 +81,8 @@ public class UI {
         return xmlPath;
     }
     private static Optional<Integer> getSimulationNumberFromUser(List<Integer> simulationIds, Scanner scanner) {
-        System.out.println("Please choose simulation to show:\n");
-        simulationIds.forEach((id) -> System.out.println(id + "\n"));
+        System.out.println("Please choose simulation to show:");
+        simulationIds.forEach((id) -> System.out.println(id));
         Integer choice =Integer.parseInt(scanner.nextLine());
         if( choice > simulationIds.stream().max(Integer::compare).get() || choice < simulationIds.stream().min(Integer::compare).get()) {
             choice = null;
@@ -182,16 +181,16 @@ public class UI {
 
     private static void showWorldDataToUser(WorldDTO worldDTO) {
         int i=1;
-        System.out.println("Loaded World Details:\n");
+        System.out.println("Loaded World Details:");
         Map<String, EntityDefinitionDTO> entityDefinitionDTOMap = worldDTO.getNameToEntityDefinitionDTO();
-        System.out.println("The Entities:\n");
+        System.out.println("The Entities:");
         for (EntityDefinitionDTO entityDefinitionDTO:entityDefinitionDTOMap.values()){
             System.out.printf("Entity number " + i + ":");
             System.out.println("--------------");
             showEntityDataToUser(entityDefinitionDTO);
             i++;
         }
-        System.out.println("Rules:\n");
+        System.out.println("Rules:");
         i=1;
         for (RuleDTO ruleDTO: worldDTO.getRulesDTO()){
             System.out.println("Rule number " + i + ":");
@@ -202,8 +201,8 @@ public class UI {
         showTerminationDataToUser(worldDTO.getTerminationDTO());
     }
     private static void showTerminationDataToUser(TerminationDTO terminationDTO){
-        System.out.println("End conditions of the simulation: \n");
-        System.out.println("---------------------------------\n");
+        System.out.println("End conditions of the simulation: ");
+        System.out.println("---------------------------------");
         Integer ticks = terminationDTO.getTicks();
         Integer seconds = terminationDTO.getSecondsToPast();
         if (ticks != null){
@@ -217,13 +216,13 @@ public class UI {
         int i = 1;
         System.out.println("- Name: " + ruleDTO.getName());
         System.out.println("- This rule in activated every " + ruleDTO.getTicks() + " ticks ");
-        System.out.println("with a probability of " + ruleDTO.getProbability() + "\n");
+        System.out.println("with a probability of " + ruleDTO.getProbability());
         int numOfActions = ruleDTO.getActionsNames().size();
-        System.out.println("- This rule performs " + numOfActions + " actions\n");
-        System.out.println("- The actions are:\n");
+        System.out.println("- This rule performs " + numOfActions + " actions");
+        System.out.println("- The actions are:");
         for (String actionName: ruleDTO.getActionsNames()){
             if (i == numOfActions){
-                System.out.println(actionName + "\n");
+                System.out.println(actionName);
             }
             else {
                 System.out.println(actionName + ",");
@@ -233,11 +232,11 @@ public class UI {
     }
     private static void showEntityDataToUser(EntityDefinitionDTO entityDefinitionDTO){
         int i = 1;
-        System.out.println("Name: " + entityDefinitionDTO.getName() + "\n");
-        System.out.println("Amount in population: " + entityDefinitionDTO.getPopulation() + "\n");
-        System.out.println(entityDefinitionDTO.getName() + "'s Properties:\n");
+        System.out.println("Name: " + entityDefinitionDTO.getName());
+        System.out.println("Amount in population: " + entityDefinitionDTO.getPopulation());
+        System.out.println(entityDefinitionDTO.getName() + "'s Properties:");
         for (PropertyDefinitionDTO propertyDefinitionDTO: entityDefinitionDTO.getPropertiesDTO()){
-            System.out.println(i+")\n");
+            System.out.println(i+")");
             showPropertyDataToUser(propertyDefinitionDTO);
             i++;
         }

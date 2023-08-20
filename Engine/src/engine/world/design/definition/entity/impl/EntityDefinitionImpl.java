@@ -4,6 +4,7 @@ import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.PropertyDefinitionDTO;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyDefinition;
+import engine.world.design.execution.property.PropertyInstance;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -42,5 +43,14 @@ public class EntityDefinitionImpl implements EntityDefinition, Cloneable{
             propertiesDefinitionDTO.add(propertyDefinition.createPropertyDefinitionDTO());
         }
         return new EntityDefinitionDTO(name,population,propertiesDefinitionDTO);
+    }
+    @Override
+    public PropertyDefinition getPropertyByName(String name) {
+        for (PropertyDefinition propertyDefinition: properties){
+            if (propertyDefinition.getName().equals(name)){
+                return propertyDefinition;
+            }
+        }
+        throw new IllegalArgumentException("for entity of type " + getName() + " has no property named " + name);
     }
 }
