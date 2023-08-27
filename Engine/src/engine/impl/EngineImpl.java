@@ -8,6 +8,7 @@ import engine.api.Engine;
 import engine.world.design.world.api.World;
 import engine.world.design.reader.api.Reader;
 import engine.world.design.reader.impl.ReaderImpl;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 public class EngineImpl implements Engine {
 
+    private SimpleStringProperty fileName = new SimpleStringProperty();
     private final Reader myReader;
     private World myWorld; // TODO: 19/08/2023 static?
     private Integer countId = 1;
@@ -46,7 +48,7 @@ public class EngineImpl implements Engine {
     }
     @Override
     public void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME) {
-        myReader.readWorldFromXml(XML_PATH, JAXB_XML_PACKAGE_NAME);
+        myReader.readWorldFromXml(fileName.get(), JAXB_XML_PACKAGE_NAME);
         myWorld = myReader.getWorld();
     }
     @Override
@@ -59,6 +61,11 @@ public class EngineImpl implements Engine {
         Map<Integer,SimulationOutcomeDTO> res = new HashMap<>();
         pastSimulations.forEach((id,pastSimulationOutCome) -> res.put(id, pastSimulationOutCome.createSimulationOutcomeDTO()));
         return res;
+    }
+
+    @Override
+    public SimpleStringProperty fileNameProperty() {
+        return fileName;
     }
 
 

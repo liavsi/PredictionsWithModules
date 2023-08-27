@@ -3,6 +3,7 @@ package engine.api;
 import DTOManager.impl.SimulationOutcomeDTO;
 import engine.SimulationOutcome;
 import DTOManager.impl.WorldDTO;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Map;
 
@@ -15,6 +16,8 @@ public interface Engine {
     SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber);
 
     Map<Integer, SimulationOutcomeDTO> getPastSimulationMapDTO();
+
+    SimpleStringProperty fileNameProperty();
 
     // TODO: 10/08/2023 SimulationOutComeDTO getSimulationOutComeDTO();
 }
