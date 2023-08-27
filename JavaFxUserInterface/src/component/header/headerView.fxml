@@ -9,12 +9,11 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
-
-<ScrollPane xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<ScrollPane stylesheets="@headerStyle.css" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.header.HeaderController">
    <content>
       <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="215.0" prefWidth="600.0">
          <children>
-            <GridPane layoutX="-124.0" layoutY="47.0" prefHeight="215.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <GridPane layoutX="-124.0" layoutY="-2.0" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-2.0" AnchorPane.topAnchor="-2.0">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="193.0" minWidth="10.0" prefWidth="84.0" />
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="316.0" minWidth="10.0" prefWidth="316.0" />
@@ -26,14 +25,14 @@
                 <RowConstraints maxHeight="83.0" minHeight="10.0" prefHeight="71.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <Button fx:id="ButtonLoadFile" mnemonicParsing="false" prefHeight="42.0" prefWidth="134.0" text="Load File" GridPane.rowIndex="1" />
-                  <Label fx:id="LabelFilePath" minHeight="-Infinity" minWidth="-Infinity" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Button fx:id="ButtonLoadFile" mnemonicParsing="false" onAction="#onClickLoadFile" prefHeight="48.0" prefWidth="134.0" styleClass="my-button" text="Load File" GridPane.rowIndex="1" />
+                  <Label fx:id="LabelFilePath" minHeight="-Infinity" minWidth="-Infinity" prefHeight="33.0" prefWidth="313.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                   <Button fx:id="ButtonQueueManage" mnemonicParsing="false" prefHeight="57.0" prefWidth="161.0" text="Queue Management" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                   <HBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <children>
-                        <Button fx:id="ButtonDetails" mnemonicParsing="false" text="Button" />
-                        <Button fx:id="ButtonNewExec" mnemonicParsing="false" text="Button" />
-                        <Button fx:id="ButtonResults" mnemonicParsing="false" text="Button" />
+                        <Button fx:id="ButtonDetails" mnemonicParsing="false" onAction="#onDetailsClicked" text="Details" />
+                        <Button fx:id="ButtonNewExec" mnemonicParsing="false" onAction="#onNewExecutionClicked" text="New Execution" />
+                        <Button fx:id="ButtonResults" mnemonicParsing="false" text="Results" />
                      </children>
                   </HBox>
                </children>
