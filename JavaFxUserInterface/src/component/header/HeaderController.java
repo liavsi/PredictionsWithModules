@@ -61,7 +61,7 @@ public class HeaderController {
         LabelFilePath.textProperty().bind(filePath);
         ButtonDetails.disableProperty().bind(isFileSelected.not());
         ButtonNewExec.disableProperty().bind(isFileSelected.not());
-        ButtonResults.disableProperty().bind(isNewExecutionPressed);
+        ButtonResults.disableProperty().bind(isNewExecutionPressed.not());
     }
 
     @FXML
@@ -84,8 +84,10 @@ public class HeaderController {
         }
     }
 
+    @FXML
     private void onNewExecutionClicked(ActionEvent event) {
         appController.moveToNewExecutionScreen();
+        isNewExecutionPressed.set(true);
     }
 
 

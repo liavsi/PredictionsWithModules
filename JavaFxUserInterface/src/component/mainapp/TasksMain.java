@@ -25,13 +25,13 @@ public class TasksMain extends Application {
         fxmlLoader.setLocation(url);
         Parent root = null;
         // give the controllers access to the engine
-        AppController controller = fxmlLoader.getController();
-        controller.setEngine(new EngineImpl());
         try {
             root = fxmlLoader.load(url.openStream());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        AppController controller = fxmlLoader.getController();
+        controller.setEngine(new EngineImpl());
         Scene scene = new Scene(root, 500, 600);
         // Set the Scene and show the Stage
         primaryStage.setTitle(PRIMARY_STAGE_NAME);
