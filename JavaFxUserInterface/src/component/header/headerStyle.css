@@ -41,5 +41,9 @@
 /*}*/
 
 #dynamic-VBox{
-    -fx-background-color: #c999c9;
+    -fx-background-color: #81a2c5;
+}
+
+.root{
+    -fx-background-image: url("clouds.jpg");
 }
