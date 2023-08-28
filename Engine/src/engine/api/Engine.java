@@ -11,11 +11,13 @@ public interface Engine {
 
 
     SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString);
+    void readWorldFromXml();
     void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME);
     WorldDTO getWorldDTO();
     SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber);
 
     Map<Integer, SimulationOutcomeDTO> getPastSimulationMapDTO();
+    public boolean getIsLoadedWorld();
 
     SimpleStringProperty fileNameProperty();
 
