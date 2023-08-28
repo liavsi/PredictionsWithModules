@@ -1,0 +1,6 @@
+.execute-button{
+    -fx-text-fill: BLUE;
+}
+#file-path-label{
+    -fx-background-color: #afaff1;
+}

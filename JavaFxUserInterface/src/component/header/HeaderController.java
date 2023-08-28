@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 
 public class HeaderController {
 
@@ -85,7 +86,7 @@ public class HeaderController {
     }
 
     @FXML
-    private void onNewExecutionClicked(ActionEvent event) {
+    private void onNewExecutionClicked(ActionEvent event) throws IOException {
         appController.moveToNewExecutionScreen();
         isNewExecutionPressed.set(true);
     }

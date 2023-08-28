@@ -1,41 +1,45 @@
 /* styles.css */
 
-/* Body background */
-.root {
-    -fx-background-color: #f4f4f4;
-}
+/*!* Body background *!*/
+/*.root {*/
+/*    -fx-background-color: #f4f4f4;*/
+/*}*/
 
-/* Buttons */
-.button {
-    -fx-background-color: #3498db;
-    -fx-text-fill: white;
-    -fx-font-size: 14px;
-    -fx-pref-width: 100px;
-    -fx-pref-height: 30px;
-}
+/*!* Buttons *!*/
+/*.button {*/
+/*    -fx-background-color: #3498db;*/
+/*    -fx-text-fill: white;*/
+/*    -fx-font-size: 14px;*/
+/*    -fx-pref-width: 100px;*/
+/*    -fx-pref-height: 30px;*/
+/*}*/
 
-/* Hover effect for buttons */
-.button:hover {
-    -fx-background-color: #2980b9;
-}
+/*!* Hover effect for buttons *!*/
+/*.button:hover {*/
+/*    -fx-background-color: #2980b9;*/
+/*}*/
 
-/* Labels */
-.label {
-    -fx-font-size: 16px;
-    -fx-text-fill: #333;
-}
+/*!* Labels *!*/
+/*.label {*/
+/*    -fx-font-size: 16px;*/
+/*    -fx-text-fill: #333;*/
+/*}*/
 
-/* Title label */
-.title-label {
-    -fx-font-size: 24px;
-    -fx-font-weight: bold;
-}
+/*!* Title label *!*/
+/*.title-label {*/
+/*    -fx-font-size: 24px;*/
+/*    -fx-font-weight: bold;*/
+/*}*/
 
-/* Apply custom styles to specific components */
-.my-button {
-    -fx-background-color: #e74c3c;
-}
+/*!* Apply custom styles to specific components *!*/
+/*.my-button {*/
+/*    -fx-background-color: #e74c3c;*/
+/*}*/
 
-.my-label {
-    -fx-text-fill: #e67e22;
+/*.my-label {*/
+/*    -fx-text-fill: #e67e22;*/
+/*}*/
+
+#dynamic-VBox{
+    -fx-background-color: #c999c9;
 }

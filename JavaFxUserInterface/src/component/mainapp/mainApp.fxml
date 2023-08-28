@@ -1,14 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
 
-<BorderPane fx:id="BorderPaneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.mainapp.AppController">
+<BorderPane fx:id="BorderPaneMain" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="450.0" stylesheets="@../header/headerStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.mainapp.AppController">
    <top>
-      <AnchorPane prefHeight="211.0" prefWidth="602.0" BorderPane.alignment="CENTER">
-         <children>
-            <fx:include source="../header/headerView.fxml" />
-         </children>
-      </AnchorPane>
+      <fx:include source="../header/headerView.fxml" />
    </top>
+   <center>
+      <VBox id="dynamic-VBox" prefHeight="320.0" prefWidth="517.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
 </BorderPane>
