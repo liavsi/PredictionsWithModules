@@ -18,7 +18,10 @@ import java.util.Map;
 // TODO: 10/08/2023 After deleting old World Change to World
 
 public class EngineImpl implements Engine {
+    private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
 
+
+    private boolean isLoadedWorld = false;
     private SimpleStringProperty fileName = new SimpleStringProperty();
     private final Reader myReader;
     private World myWorld; // TODO: 19/08/2023 static?
@@ -46,10 +49,23 @@ public class EngineImpl implements Engine {
     public WorldDTO getWorldDTO() {
          return myWorld.createWorldDTO();
     }
+
     @Override
-    public void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME) {
+    public void readWorldFromXml() {
         myReader.readWorldFromXml(fileName.get(), JAXB_XML_PACKAGE_NAME);
         myWorld = myReader.getWorld();
+        isLoadedWorld = true;
+    }
+
+    @Override
+    public void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME) {
+        myReader.readWorldFromXml(XML_PATH, JAXB_XML_PACKAGE_NAME);
+        myWorld = myReader.getWorld();
+        isLoadedWorld = true;
+    }
+
+    public boolean getIsLoadedWorld() {
+        return isLoadedWorld;
     }
     @Override
     public SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber) {
