@@ -1,6 +1,8 @@
 package component.body.detailspage;
 
 import DTOManager.impl.EntityDefinitionDTO;
+import DTOManager.impl.PropertyDefinitionDTO;
+import DTOManager.impl.RuleDTO;
 import DTOManager.impl.WorldDTO;
 import component.mainapp.AppController;
 import engine.api.Engine;
@@ -39,7 +41,7 @@ public class DetailsPageController implements Initializable {
         this.engine = (Engine) resources.getObject("Engine");
     }
     public void worldMenu(){
-        //WorldDTO worldDTO = engine.getWorldDTO();
+        WorldDTO worldDTO = engine.getWorldDTO();
         TreeItem<String> world = new TreeItem<>("World");
         TreeItem<String> entities = new TreeItem<>("Entities");
         TreeItem<String> envVars = new TreeItem<>("Environment Variables");
@@ -47,10 +49,19 @@ public class DetailsPageController implements Initializable {
         TreeItem<String> termination = new TreeItem<>("Terminations");
         treeView.setRoot(world);
         world.getChildren().addAll(entities,envVars,rules,termination);
-//        for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()){
-//            TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
-//            entities.getChildren().add(entity);
-//        }
-        //////
+        for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()){
+            TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
+            entities.getChildren().add(entity);
+        }
+        for (PropertyDefinitionDTO propertyDefinitionDTO: worldDTO.getEnvPropertiesDefinitionDTO()){
+            TreeItem<String> envVar = new TreeItem<>(propertyDefinitionDTO.getName());
+            envVars.getChildren().add(envVar);
+        }
+        for (RuleDTO ruleDTO:worldDTO.getRulesDTO()){
+            TreeItem<String> rule = new TreeItem<>(ruleDTO.getName());
+            rules.getChildren().add(rule);
+        }
+
+        //
     }
 }
