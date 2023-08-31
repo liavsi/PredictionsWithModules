@@ -35,7 +35,7 @@ public class DetailsPageController implements Initializable {
         this.engine = (Engine) resources.getObject("Engine");
     }
     public void worldMenu(){
-        WorldDTO worldDTO = engine.getWorldDTO();
+        //WorldDTO worldDTO = engine.getWorldDTO();
         TreeItem<String> world = new TreeItem<>("World");
         TreeItem<String> entities = new TreeItem<>("Entities");
         TreeItem<String> envVars = new TreeItem<>("Environment Variables");
@@ -43,10 +43,10 @@ public class DetailsPageController implements Initializable {
         TreeItem<String> termination = new TreeItem<>("Terminations");
         treeView.setRoot(world);
         world.getChildren().addAll(entities,envVars,rules,termination);
-        for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()){
-            TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
-            entities.getChildren().add(entity);
-        }
+//        for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()){
+//            TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
+//            entities.getChildren().add(entity);
+//        }
         //////
     }
 }
