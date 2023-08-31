@@ -1,67 +1,51 @@
 package component.body.detailspage;
 
-import DTOManager.impl.*;
+import DTOManager.impl.WorldDTO;
 import component.mainapp.AppController;
 import engine.api.Engine;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.FlowPane;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
-public class DetailsPageController implements Initializable {
+public class DetailsPageController {
     
     @FXML private AppController mainAppController;
     @FXML private FlowPane details;
     @FXML private TreeView<String> treeView;
 
-    private Engine engine;
+    private WorldDTO world;
 
     public void setMainController(AppController appController) {
         this.mainAppController = appController;
     }
 
-    public void setEngine(Engine engine) {
-        this.engine = engine;
+
+
+
+    @FXML
+    public void initialize() {
     }
 
-    public void showDetailsForWorld() {
-        WorldDTO worldDTO = engine.getWorldDTO();
-        // TODO: 28/08/2023 implement this method 
-    }
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        //bindings
-        this.engine = (Engine) resources.getObject("Engine");
-    }
+
     public void worldMenu(){
-        WorldDTO worldDTO = engine.getWorldDTO();
-        TreeItem<String> world = new TreeItem<>("World");
-        TreeItem<String> entities = new TreeItem<>("Entities");
-        TreeItem<String> envVars = new TreeItem<>("Environment Variables");
-        TreeItem<String> rules = new TreeItem<>("Rules");
-        TreeItem<String> termination = new TreeItem<>("Generals");
-        treeView.setRoot(world);
-        world.getChildren().addAll(entities,envVars,rules,termination);
-        for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()){
-            TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
-            entities.getChildren().add(entity);
-            for (PropertyDefinitionDTO propertyDefinitionDTO: entityDefinitionDTO.getPropertiesDTO()){
-                TreeItem<String> property = new TreeItem<>(propertyDefinitionDTO.getName());
-                entity.getChildren().add(property);
-            }
-        }
-        for (PropertyDefinitionDTO envPropertyDTO: worldDTO.getEnvPropertiesDefinitionDTO()){
-            TreeItem<String> envVar = new TreeItem<>(envPropertyDTO.getName());
-            envVars.getChildren().add(envVar);
-        }
-        for (RuleDTO ruleDTO:worldDTO.getRulesDTO()){
-            TreeItem<String> rule = new TreeItem<>(ruleDTO.getName());
-            rules.getChildren().add(rule);
-            //ActionDTO
-        }
+        TreeItem<String> worldTreeView = new TreeItem<>("World");
+        TreeItem<String> entitiesTreeView = new TreeItem<>("Entities");
+        TreeItem<String> envVarsTreeView = new TreeItem<>("Environment Variables");
+        TreeItem<String> rulesTreeView = new TreeItem<>("Rules");
+        TreeItem<String> terminationTreeView = new TreeItem<>("Terminations");
+        treeView.setRoot(worldTreeView);
+        worldTreeView.getChildren().addAll(entitiesTreeView,envVarsTreeView,rulesTreeView,terminationTreeView);
+
+//        for (EntityDefinitionDTO entityDefinitionDTO: world.getNameToEntityDefinitionDTO().values()){
+//            TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
+//            entities.getChildren().add(entity);
+//        }
+        //////
+    }
+
+
+    public void setWorld(WorldDTO worldDTO) {
+        this.world = worldDTO;
     }
 }
