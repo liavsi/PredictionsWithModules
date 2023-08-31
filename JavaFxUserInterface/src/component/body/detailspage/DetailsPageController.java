@@ -1,9 +1,6 @@
 package component.body.detailspage;
 
-import DTOManager.impl.EntityDefinitionDTO;
-import DTOManager.impl.PropertyDefinitionDTO;
-import DTOManager.impl.RuleDTO;
-import DTOManager.impl.WorldDTO;
+import DTOManager.impl.*;
 import component.mainapp.AppController;
 import engine.api.Engine;
 import javafx.fxml.FXML;
@@ -46,22 +43,25 @@ public class DetailsPageController implements Initializable {
         TreeItem<String> entities = new TreeItem<>("Entities");
         TreeItem<String> envVars = new TreeItem<>("Environment Variables");
         TreeItem<String> rules = new TreeItem<>("Rules");
-        TreeItem<String> termination = new TreeItem<>("Terminations");
+        TreeItem<String> termination = new TreeItem<>("Generals");
         treeView.setRoot(world);
         world.getChildren().addAll(entities,envVars,rules,termination);
         for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()){
             TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
             entities.getChildren().add(entity);
+            for (PropertyDefinitionDTO propertyDefinitionDTO: entityDefinitionDTO.getPropertiesDTO()){
+                TreeItem<String> property = new TreeItem<>(propertyDefinitionDTO.getName());
+                entity.getChildren().add(property);
+            }
         }
-        for (PropertyDefinitionDTO propertyDefinitionDTO: worldDTO.getEnvPropertiesDefinitionDTO()){
-            TreeItem<String> envVar = new TreeItem<>(propertyDefinitionDTO.getName());
+        for (PropertyDefinitionDTO envPropertyDTO: worldDTO.getEnvPropertiesDefinitionDTO()){
+            TreeItem<String> envVar = new TreeItem<>(envPropertyDTO.getName());
             envVars.getChildren().add(envVar);
         }
         for (RuleDTO ruleDTO:worldDTO.getRulesDTO()){
             TreeItem<String> rule = new TreeItem<>(ruleDTO.getName());
             rules.getChildren().add(rule);
+            //ActionDTO
         }
-
-        //
     }
 }
