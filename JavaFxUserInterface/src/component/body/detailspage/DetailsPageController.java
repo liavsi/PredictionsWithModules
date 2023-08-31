@@ -19,6 +19,10 @@ public class DetailsPageController implements Initializable {
         this.mainAppController = appController;
     }
 
+    public void setEngine(Engine engine) {
+        this.engine = engine;
+    }
+
     public void showDetailsForWorld() {
         WorldDTO worldDTO = engine.getWorldDTO();
         // TODO: 28/08/2023 implement this method 

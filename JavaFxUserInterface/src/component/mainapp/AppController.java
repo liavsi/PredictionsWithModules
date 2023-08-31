@@ -7,23 +7,18 @@ import component.header.HeaderController;
 import engine.api.Engine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.Enumeration;
 import java.util.List;
-import java.util.ResourceBundle;
 
 
-public class AppController extends ResourceBundle {
-    @FXML private VBox dynamicBox;
+public class AppController {
     @FXML private ScrollPane headerComponent;
     @FXML private HeaderController headerComponentController;
+
     @FXML private DetailsPageController detailsPageComponentController;
+
     @FXML private ScrollPane detailsPageComponent;
 
     @FXML private BorderPane BorderPaneMain;
@@ -33,9 +28,8 @@ public class AppController extends ResourceBundle {
 
 
     @FXML public void initialize() {
-        if (headerComponentController != null && detailsPageComponentController != null) {
+        if (headerComponentController != null) {
            headerComponentController.setMainController(this);
-           detailsPageComponentController.setMainController(this);
            // add all controllers here..
         }
     }
@@ -46,7 +40,10 @@ public class AppController extends ResourceBundle {
     public void setFileNameToEngine(SimpleStringProperty filePath) {
         engine.fileNameProperty().bind(filePath);
     }
+
+
     public void onDetailsChosen() {
+        WorldDTO worldDTO = engine.getWorldDTO();
         detailsPageComponentController.showDetailsForWorld();
         BorderPaneMain.setCenter(detailsPageComponent);
         // TODO: 28/08/2023 implement the World details screen
@@ -56,34 +53,9 @@ public class AppController extends ResourceBundle {
         engine.readWorldFromXml();
     }
 
-    public void moveToNewExecutionScreen() throws IOException {
+    public void moveToNewExecutionScreen() {
         WorldDTO worldDTO = engine.getWorldDTO();
         List<PropertyDefinitionDTO> environmentVarsAskToFill = worldDTO.getEnvPropertiesDefinitionDTO();
-        changeDynamicDetailsScreen();
         // TODO: 28/08/2023 implement the new execution screen
-    }
-    private void changeDynamicDetailsScreen() throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        URL mainFxml = getClass().getResource("body/detailspage/detailsPageView.fxml");
-        fxmlLoader.setLocation(mainFxml);
-        fxmlLoader.setResources(this);
-        VBox detailsBox = fxmlLoader.load();
-        DetailsPageController detailsPageController = fxmlLoader.getController();
-        dynamicBox.getChildren().clear();
-        detailsBox.getChildren().add(detailsBox);
-    }
-    @Override
-    protected Object handleGetObject(String key) {
-        switch (key){
-            case "Engine":
-                return engine;
-            default:
-                return null;
-        }
-    }
-
-    @Override
-    public Enumeration<String> getKeys() {
-        return null;
     }
 }
