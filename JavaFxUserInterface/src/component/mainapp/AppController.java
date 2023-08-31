@@ -8,8 +8,11 @@ import engine.api.Engine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -30,6 +33,7 @@ public class AppController extends ResourceBundle {
 
     private Engine engine;
 
+    private static String Details_FXML_RESOURCE = "/component/body/detailsPage/detailsPageView.fxml";
 
 
     @FXML public void initialize() {
@@ -46,22 +50,6 @@ public class AppController extends ResourceBundle {
     public void setFileNameToEngine(SimpleStringProperty filePath) {
         engine.fileNameProperty().bind(filePath);
     }
-    public void onDetailsChosen() {
-        detailsPageComponentController.showDetailsForWorld();
-        BorderPaneMain.setCenter(detailsPageComponent);
-        // TODO: 28/08/2023 implement the World details screen
-    }
-
-    public void readWorld() {
-        engine.readWorldFromXml();
-    }
-
-    public void moveToNewExecutionScreen() throws IOException {
-        WorldDTO worldDTO = engine.getWorldDTO();
-        List<PropertyDefinitionDTO> environmentVarsAskToFill = worldDTO.getEnvPropertiesDefinitionDTO();
-        changeDynamicDetailsScreen();
-        // TODO: 28/08/2023 implement the new execution screen
-    }
     private void changeDynamicDetailsScreen() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL mainFxml = getClass().getResource("body/detailspage/detailsPageView.fxml");
@@ -70,7 +58,35 @@ public class AppController extends ResourceBundle {
         VBox detailsBox = fxmlLoader.load();
         DetailsPageController detailsPageController = fxmlLoader.getController();
         dynamicBox.getChildren().clear();
-        detailsBox.getChildren().add(detailsBox);
+        dynamicBox.getChildren().add(detailsBox);
+    }
+
+    public void onDetailsChosen() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(Details_FXML_RESOURCE));
+            loader.setResources(this);
+            VBox detailsBox = loader.load();
+            DetailsPageController detailsPageController = loader.getController();
+            dynamicBox.getChildren().clear();
+            dynamicBox.getChildren().add(detailsBox);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        detailsPageComponentController.worldMenu();
+        detailsPageComponentController.showDetailsForWorld();
+        BorderPaneMain.setCenter(detailsPageComponent);
+        // TODO: 28/08/2023 implement the World details screen
+    }
+
+    public void readWorld() {
+        engine.readWorldFromXml();
+    }
+    public void moveToNewExecutionScreen() throws IOException {
+        WorldDTO worldDTO = engine.getWorldDTO();
+        List<PropertyDefinitionDTO> environmentVarsAskToFill = worldDTO.getEnvPropertiesDefinitionDTO();
+        changeDynamicDetailsScreen();
+        // TODO: 28/08/2023 implement the new execution screen
     }
     @Override
     protected Object handleGetObject(String key) {

@@ -77,7 +77,7 @@ public class HeaderController {
         filePath.set(absolutePath);
         isFileSelected.set(true);
         try {
-            appController.readWorld();
+            //appController.readWorld();
         }
         catch (IllegalArgumentException e) {
             filePath.set(e.getMessage());

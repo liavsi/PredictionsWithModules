@@ -1,10 +1,14 @@
 package component.body.detailspage;
 
+import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.WorldDTO;
 import component.mainapp.AppController;
 import engine.api.Engine;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TreeItem;
+import javafx.scene.control.TreeView;
+import javafx.scene.layout.FlowPane;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -12,6 +16,8 @@ import java.util.ResourceBundle;
 public class DetailsPageController implements Initializable {
     
     @FXML private AppController mainAppController;
+    @FXML private FlowPane details;
+    @FXML private TreeView<String> treeView;
 
     private Engine engine;
 
@@ -27,5 +33,20 @@ public class DetailsPageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         //bindings
         this.engine = (Engine) resources.getObject("Engine");
+    }
+    public void worldMenu(){
+        WorldDTO worldDTO = engine.getWorldDTO();
+        TreeItem<String> world = new TreeItem<>("World");
+        TreeItem<String> entities = new TreeItem<>("Entities");
+        TreeItem<String> envVars = new TreeItem<>("Environment Variables");
+        TreeItem<String> rules = new TreeItem<>("Rules");
+        TreeItem<String> termination = new TreeItem<>("Terminations");
+        treeView.setRoot(world);
+        world.getChildren().addAll(entities,envVars,rules,termination);
+        for (EntityDefinitionDTO entityDefinitionDTO: worldDTO.getNameToEntityDefinitionDTO().values()){
+            TreeItem<String> entity = new TreeItem<>(entityDefinitionDTO.getName());
+            entities.getChildren().add(entity);
+        }
+        //////
     }
 }

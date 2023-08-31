@@ -26,17 +26,19 @@ public class TasksMain extends Application {
         Parent root = null;
         // give the controllers access to the engine
         try {
-            root = fxmlLoader.load(url.openStream());
+            root = fxmlLoader.load(url.openStream());//
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         AppController controller = fxmlLoader.getController();
         controller.setEngine(new EngineImpl());
-        Scene scene = new Scene(root, 500, 600);
+        //setPrimeryStage?
+        Scene scene = new Scene(root, 500, 600);//
         // Set the Scene and show the Stage
         primaryStage.setTitle(PRIMARY_STAGE_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
+        //engine needs to know the controllers?
     }
 
     public static void main(String[] args) {
