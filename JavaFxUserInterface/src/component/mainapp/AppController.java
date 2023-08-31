@@ -9,7 +9,9 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
@@ -24,18 +26,21 @@ import java.util.ResourceBundle;
 
 
 public class AppController extends ResourceBundle {
-    @FXML private VBox dynamicBox;
+    public VBox dynamicVBox;
+
     @FXML private GridPane headerComponent;
     @FXML private HeaderController headerComponentController;
     @FXML private DetailsPageController detailsPageComponentController;
-    @FXML private ScrollPane detailsPageComponent;
 
     @FXML private BorderPane BorderPaneMain;
 
     private Engine engine;
 
-    private static String Details_FXML_RESOURCE = "/component/body/detailsPage/detailsPageView.fxml";
+    private static String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
 
+
+    public AppController() {
+    }
 
     @FXML public void initialize() {
         if (headerComponentController != null) {
@@ -45,7 +50,9 @@ public class AppController extends ResourceBundle {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+        this.engine.fileNameProperty().bind(headerComponentController.getFilePath());
     }
+
     public void setFileNameToEngine(SimpleStringProperty filePath) {
         engine.fileNameProperty().bind(filePath);
     }
@@ -56,25 +63,23 @@ public class AppController extends ResourceBundle {
         fxmlLoader.setResources(this);
         VBox detailsBox = fxmlLoader.load();
         DetailsPageController detailsPageController = fxmlLoader.getController();
-        dynamicBox.getChildren().clear();
-        dynamicBox.getChildren().add(detailsBox);
+        dynamicVBox.getChildren().clear();
+        dynamicVBox.getChildren().add(detailsBox);
     }
 
     public void onDetailsChosen() {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(Details_FXML_RESOURCE));
-            loader.setResources(this);
-            VBox detailsBox = loader.load();
-            DetailsPageController detailsPageController = loader.getController();
-            dynamicBox.getChildren().clear();
-            dynamicBox.getChildren().add(detailsBox);
+            SplitPane detailsBox = loader.load();
+            detailsPageComponentController = loader.getController();
+            detailsPageComponentController.setWorld(engine.getWorldDTO());
+            dynamicVBox.getChildren().clear();
+            dynamicVBox.getChildren().add(detailsBox);
         } catch (IOException e) {
             e.printStackTrace();
         }
         detailsPageComponentController.worldMenu();
-        detailsPageComponentController.showDetailsForWorld();
-        BorderPaneMain.setCenter(detailsPageComponent);
         // TODO: 28/08/2023 implement the World details screen
     }
 
