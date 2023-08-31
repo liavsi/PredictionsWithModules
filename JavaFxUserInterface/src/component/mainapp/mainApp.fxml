@@ -9,7 +9,7 @@
       <fx:include source="/component/header/headerView.fxml" fx:id="headerComponent"/>
    </top>
    <center>
-      <VBox id="dynamic-VBox" prefHeight="320.0" prefWidth="517.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="dynamicVBox" prefHeight="320.0" prefWidth="517.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets bottom="5.0" left="5.0" right="5.0" />
          </BorderPane.margin>

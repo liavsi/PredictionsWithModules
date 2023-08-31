@@ -33,6 +33,9 @@ import schema.generated.*;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.*;
 
@@ -55,14 +58,15 @@ public class ReaderImpl implements Reader {
     public void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME) {
         createdWorld = new WorldImpl();
         try {
-            InputStream inputStream = getClass().getClassLoader().getResourceAsStream(XML_PATH);
-            if (inputStream != null) {
-                prdWorld = deserializedFrom(JAXB_XML_PACKAGE_NAME, inputStream);
+            File xmlFile = new File(XML_PATH);
+
+            if (xmlFile.exists()) {
+                prdWorld = deserializedFrom(JAXB_XML_PACKAGE_NAME, new FileInputStream(xmlFile));
                 readPRDWorld();
             } else {
-                throw new IllegalArgumentException("XML resource not found: " + XML_PATH);
+                throw new IllegalArgumentException("XML file not found: " + XML_PATH);
             }
-        } catch (JAXBException e) {
+        } catch (JAXBException | FileNotFoundException e) {
             // Handle JAXB exception
             e.printStackTrace();
         }

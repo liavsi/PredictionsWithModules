@@ -4,6 +4,7 @@ import component.mainapp.AppController;
 import engine.api.Engine;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -36,7 +37,6 @@ public class HeaderController {
     private SimpleBooleanProperty isQueueManage;
     private SimpleBooleanProperty isFileSelected;
 
-    private Engine engine;
     private Stage primaryStage;
 
 
@@ -49,13 +49,8 @@ public class HeaderController {
         this.isFileSelected = new SimpleBooleanProperty(false);
     }
 
-    public void bindFileNameToEngine() {
-        appController.setFileNameToEngine(filePath);
-    }
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
+
 
     @FXML
     private void initialize() {
@@ -77,7 +72,7 @@ public class HeaderController {
         filePath.set(absolutePath);
         isFileSelected.set(true);
         try {
-            //appController.readWorld();
+            appController.readWorld();
         }
         catch (IllegalArgumentException e) {
             filePath.set(e.getMessage());
@@ -99,5 +94,9 @@ public class HeaderController {
     @FXML
     public void onDetailsClicked(ActionEvent actionEvent) {
         appController.onDetailsChosen();
+    }
+
+    public SimpleStringProperty getFilePath() {
+        return filePath;
     }
 }
