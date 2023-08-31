@@ -13,6 +13,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ import java.util.ResourceBundle;
 
 public class AppController extends ResourceBundle {
     @FXML private VBox dynamicBox;
-    @FXML private ScrollPane headerComponent;
+    @FXML private GridPane headerComponent;
     @FXML private HeaderController headerComponentController;
     @FXML private DetailsPageController detailsPageComponentController;
     @FXML private ScrollPane detailsPageComponent;
@@ -37,10 +38,8 @@ public class AppController extends ResourceBundle {
 
 
     @FXML public void initialize() {
-        if (headerComponentController != null && detailsPageComponentController != null) {
+        if (headerComponentController != null) {
            headerComponentController.setMainController(this);
-           detailsPageComponentController.setMainController(this);
-           // add all controllers here..
         }
     }
 
