@@ -7,17 +7,13 @@ import component.header.HeaderController;
 import engine.api.Engine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.BorderPane;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 
 
 public class AppController {
-    private static final String DETAILS_FXML_LOCATION = "/component/body/detailspage/detailsPageView.fxml";
     @FXML private ScrollPane headerComponent;
     @FXML private HeaderController headerComponentController;
 
@@ -32,8 +28,9 @@ public class AppController {
 
 
     @FXML public void initialize() {
-        if (headerComponentController != null) {
+        if (headerComponentController != null && detailsPageComponentController != null) {
            headerComponentController.setMainController(this);
+           detailsPageComponentController.setMainController(this);
            // add all controllers here..
         }
     }
@@ -46,16 +43,8 @@ public class AppController {
     }
 
 
-    public void onDetailsChosen()  {
+    public void onDetailsChosen() {
         WorldDTO worldDTO = engine.getWorldDTO();
-        FXMLLoader fxmlLoader = new FXMLLoader();
-        URL manFXML = getClass().getResource(DETAILS_FXML_LOCATION);
-        try {
-            detailsPageComponent = fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        detailsPageComponentController = fxmlLoader.getController();
         detailsPageComponentController.showDetailsForWorld(worldDTO);
         BorderPaneMain.setCenter(detailsPageComponent);
         // TODO: 28/08/2023 implement the World details screen
