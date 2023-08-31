@@ -28,9 +28,8 @@ public class AppController {
 
 
     @FXML public void initialize() {
-        if (headerComponentController != null && detailsPageComponentController != null) {
+        if (headerComponentController != null) {
            headerComponentController.setMainController(this);
-           detailsPageComponentController.setMainController(this);
            // add all controllers here..
         }
     }
@@ -45,7 +44,7 @@ public class AppController {
 
     public void onDetailsChosen() {
         WorldDTO worldDTO = engine.getWorldDTO();
-        detailsPageComponentController.showDetailsForWorld(worldDTO);
+        detailsPageComponentController.showDetailsForWorld();
         BorderPaneMain.setCenter(detailsPageComponent);
         // TODO: 28/08/2023 implement the World details screen
     }
