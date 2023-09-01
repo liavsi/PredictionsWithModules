@@ -31,6 +31,7 @@ public class HeaderController {
     @FXML
     public Button ButtonQueueManage;
 
+    private SimpleBooleanProperty isThereSimulationOutCome;
     private SimpleStringProperty filePath;
     private SimpleBooleanProperty isNewExecutionPressed;
     private SimpleBooleanProperty isDetails;
@@ -47,6 +48,7 @@ public class HeaderController {
         this.isDetails = new SimpleBooleanProperty(false);
         this.isQueueManage = new SimpleBooleanProperty(false);
         this.isFileSelected = new SimpleBooleanProperty(false);
+        this.isThereSimulationOutCome = new SimpleBooleanProperty(false);
     }
 
 
@@ -58,7 +60,7 @@ public class HeaderController {
         ButtonDetails.disableProperty().bind(isFileSelected.not());
         ButtonNewExec.disableProperty().bind(isFileSelected.not());
         // TODO: 01/09/2023 only make enabled when finishd simulation
-        ButtonResults.disableProperty().bind(isNewExecutionPressed.not());
+        ButtonResults.disableProperty().bind(isThereSimulationOutCome.not());
     }
 
     @FXML
@@ -99,5 +101,11 @@ public class HeaderController {
 
     public SimpleStringProperty getFilePath() {
         return filePath;
+    }
+
+
+
+    public void setIsIsThereSimulationOutCome(boolean bool) {
+        isThereSimulationOutCome.set(bool);
     }
 }

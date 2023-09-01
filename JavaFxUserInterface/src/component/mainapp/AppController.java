@@ -8,6 +8,7 @@ import component.body.executionpage.SimulationPageController;
 import component.header.HeaderController;
 import engine.api.Engine;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -30,9 +31,10 @@ import java.util.concurrent.Executors;
 
 public class AppController {
     private static final String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
-
     private static final String NEW_EXECUTION_FXML_RESOURCE = "/component/body/executionpage/newExecutionView.fxml";
-    public VBox dynamicVBox;
+
+
+    @FXML private VBox dynamicVBox;
 
     @FXML private GridPane headerComponent;
     @FXML private HeaderController headerComponentController;
@@ -41,6 +43,7 @@ public class AppController {
     @FXML private SimulationPageController newExecutionPageComponentController;
 
     @FXML private BorderPane BorderPaneMain;
+
 
     private ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
 
@@ -126,9 +129,10 @@ public class AppController {
             }
         };
         executor.submit(simulationTask);
-        simulationTask.setOnSucceeded(event ->{
+        simulationTask.setOnSucceeded(event -> {
             SimulationOutcomeDTO simulationOutcomeDTO = simulationTask.getValue();
             showSimulationResults(simulationOutcomeDTO);
+            headerComponentController.setIsIsThereSimulationOutCome(true);
         });
     }
 
