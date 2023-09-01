@@ -32,4 +32,13 @@ public class WorldDTO {
     public TerminationDTO getTerminationDTO() {
         return terminationDTO;
     }
+
+    public EntityDefinitionDTO getEntityDefinitionDTOByName(String entityName){
+        for (EntityDefinitionDTO entityDefinitionDTO: nameToEntityDefinitionDTO.values()){
+            if (entityName.equals(entityDefinitionDTO.getName())){
+                return entityDefinitionDTO;
+            }
+        }
+        return null;
+    }
 }
