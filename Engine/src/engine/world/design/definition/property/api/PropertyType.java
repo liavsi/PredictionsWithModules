@@ -10,6 +10,11 @@ public enum PropertyType {
              throw new IllegalArgumentException("Can't convert this value to int");
          }
         }
+
+        @Override
+        public String toString() {
+            return "decimal";
+        }
     }, BOOLEAN {
         @Override
         public Boolean convert(Object value) {
@@ -19,6 +24,11 @@ public enum PropertyType {
             }catch (NumberFormatException e){
                 throw new IllegalArgumentException("Can't convert this value to boolean");
             }
+        }
+
+        @Override
+        public String toString() {
+            return "boolean";
         }
     }, FLOAT {
         @Override
@@ -30,11 +40,19 @@ public enum PropertyType {
                 throw new IllegalArgumentException("Can't convert this value to float");
             }
         }
+        @Override
+        public String toString() {
+            return "float";
+        }
     }, STRING {
         @Override
         public String convert(Object value) {
             String res = value.toString();
             return res;
+        }
+        @Override
+        public String toString() {
+            return "string";
         }
     };
 

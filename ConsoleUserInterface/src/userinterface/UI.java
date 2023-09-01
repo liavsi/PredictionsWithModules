@@ -145,7 +145,6 @@ public class UI {
         }
         return true;
 
-        // TODO: 18/08/2023 not let him change vars twice and stop when he finish
     }
     private static void showSimulation(SimulationOutcomeDTO simulationOutcomeDTO, WorldDTO worldDTO,Scanner scanner) {
 

@@ -2,7 +2,6 @@ package component.body.detailspage;
 
 import DTOManager.impl.WorldDTO;
 import component.mainapp.AppController;
-import engine.api.Engine;
 import javafx.fxml.FXML;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -28,7 +27,7 @@ public class DetailsPageController {
     }
 
 
-    public void worldMenu(){
+    public void organizeData(){
         TreeItem<String> worldTreeView = new TreeItem<>("World");
         TreeItem<String> entitiesTreeView = new TreeItem<>("Entities");
         TreeItem<String> envVarsTreeView = new TreeItem<>("Environment Variables");
