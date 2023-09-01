@@ -11,8 +11,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import utils.inputFields.LabelBooleanInputBox;
 import utils.inputFields.LabelNumericInputBox;
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 public class SimulationPageController {
 
 
+    @FXML private Pane mainView;
     @FXML private Button clearButton;
     @FXML private Button startSimulationButton;
     @FXML private VBox rightVbox;
@@ -92,5 +95,9 @@ public class SimulationPageController {
     }
 
     public void onClickedClearButton(ActionEvent event) {
+    }
+
+    public Parent getMainView() {
+        return mainView;
     }
 }

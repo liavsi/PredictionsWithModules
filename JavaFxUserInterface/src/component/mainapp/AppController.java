@@ -3,16 +3,21 @@ package component.mainapp;
 import DTOManager.impl.PropertyDefinitionDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
 import DTOManager.impl.WorldDTO;
+import com.sun.javafx.collections.ObservableListWrapper;
 import component.body.detailspage.DetailsPageController;
 import component.body.executionpage.SimulationPageController;
+import component.body.resultspage.ResultsPageController;
 import component.header.HeaderController;
 import engine.api.Engine;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -32,6 +37,7 @@ import java.util.concurrent.Executors;
 public class AppController {
     private static final String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
     private static final String NEW_EXECUTION_FXML_RESOURCE = "/component/body/executionpage/newExecutionView.fxml";
+    private static final String RESULTS_FXML_RESOURCE = "/component/body/resultspage/resultView.fxml" ;
 
 
     @FXML private VBox dynamicVBox;
@@ -42,6 +48,8 @@ public class AppController {
 
     @FXML private SimulationPageController newExecutionPageComponentController;
 
+    @FXML private ResultsPageController resultsPageController;
+
     @FXML private BorderPane BorderPaneMain;
 
 
@@ -49,11 +57,10 @@ public class AppController {
 
 
     private Engine engine;
-
+    private ObservableList<SimulationOutcomeDTO> recentSimulations = FXCollections.observableArrayList();
 
     public AppController() {
     }
-
     @FXML public void initialize() {
         if (headerComponentController != null) {
            headerComponentController.setMainController(this);
@@ -68,6 +75,7 @@ public class AppController {
     public void setFileNameToEngine(SimpleStringProperty filePath) {
         engine.fileNameProperty().bind(filePath);
     }
+
     private void changeDynamicDetailsScreen() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL mainFxml = getClass().getResource("body/detailspage/detailsPageView.fxml");
@@ -77,7 +85,6 @@ public class AppController {
         dynamicVBox.getChildren().clear();
         dynamicVBox.getChildren().add(detailsBox);
     }
-
     public void onDetailsChosen() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -93,21 +100,25 @@ public class AppController {
         detailsPageComponentController.organizeData();
     }
 
-    public void onNewExecutionChosen() {
-
+    public void loadResultsPage() {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource(NEW_EXECUTION_FXML_RESOURCE));
-            Pane newExecutionPane = loader.load();
-            newExecutionPageComponentController = loader.getController();
-            newExecutionPageComponentController.setMainController(this);
-            newExecutionPageComponentController.setWorld(engine.getWorldDTO());
+            loader.setLocation(getClass().getResource(RESULTS_FXML_RESOURCE));
+            Parent resultsPage = loader.load();
+            resultsPageController = loader.getController();
+            // Customize any data or logic you want to pass to the ResultsPageController
+            // For example, you can set recent simulations:
+            resultsPageController.setMainController(this);
+            // Set the ResultsPage as the center of the BorderPane
             dynamicVBox.getChildren().clear();
-            dynamicVBox.getChildren().add(newExecutionPane);
+            dynamicVBox.getChildren().add(resultsPage);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        newExecutionPageComponentController.organizeData();
+    }
+
+    public void onNewExecutionChosen() {
+        switchToNewExecutionPage();
     }
 
     public void readWorld() {
@@ -128,15 +139,54 @@ public class AppController {
                 return simulationOutcomeDTO;
             }
         };
+
         executor.submit(simulationTask);
         simulationTask.setOnSucceeded(event -> {
             SimulationOutcomeDTO simulationOutcomeDTO = simulationTask.getValue();
-            showSimulationResults(simulationOutcomeDTO);
+            recentSimulations.add(simulationOutcomeDTO);
             headerComponentController.setIsIsThereSimulationOutCome(true);
+            switchToResultsPage();
         });
     }
 
-    private void showSimulationResults(SimulationOutcomeDTO simulationOutcomeDTO) {
-        System.out.println("finished simulation");
+    public void switchToNewExecutionPage() {
+        if(newExecutionPageComponentController != null) {
+            dynamicVBox.getChildren().clear();
+            dynamicVBox.getChildren().add(newExecutionPageComponentController.getMainView());
+        }
+        else {
+            loadNewExecutionPage();
+        }
+    }
+
+    private void loadNewExecutionPage() {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(NEW_EXECUTION_FXML_RESOURCE));
+            Pane newExecutionPane = loader.load();
+            newExecutionPageComponentController = loader.getController();
+            newExecutionPageComponentController.setMainController(this);
+            newExecutionPageComponentController.setWorld(engine.getWorldDTO());
+            newExecutionPageComponentController.organizeData();
+            dynamicVBox.getChildren().clear();
+            dynamicVBox.getChildren().add(newExecutionPane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void switchToResultsPage() {
+        if(resultsPageController != null) {
+            dynamicVBox.getChildren().clear();
+            dynamicVBox.getChildren().add(resultsPageController.getMainView());
+        }
+        else {
+            loadResultsPage();
+        }
+    }
+
+
+    public ObservableList<SimulationOutcomeDTO> getRecentSimulations() {
+        return recentSimulations;
     }
 }

@@ -3,7 +3,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<Pane prefHeight="386.0" prefWidth="641.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.executionpage.SimulationPageController">
+<Pane fx:id="mainView" prefHeight="386.0" prefWidth="641.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.executionpage.SimulationPageController">
    <children>
       <SplitPane dividerPositions="0.3729096989966555" layoutX="-7.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="337.0" prefWidth="649.0">
          <items>

@@ -108,4 +108,8 @@ public class HeaderController {
     public void setIsIsThereSimulationOutCome(boolean bool) {
         isThereSimulationOutCome.set(bool);
     }
+
+    public void onResultsClicked(ActionEvent event) {
+        appController.switchToResultsPage();
+    }
 }
