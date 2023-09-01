@@ -33,7 +33,7 @@ public class SingleCondition implements Condition{
         //return operaton1.runOperator(propertyInstance,value);
 
         PropertyType propertyType = propertyInstance.getPropertyDefinition().getType();
-        Object realValue = ExpressionType.valueOf(propertyType.toString()).evaluate(value, context);
+        Object realValue = ExpressionType.valueOf(propertyType.name()).evaluate(value, context);
         // TODO: 15/08/2023  boolean res = false;
         switch (operator){
             case ("="):{

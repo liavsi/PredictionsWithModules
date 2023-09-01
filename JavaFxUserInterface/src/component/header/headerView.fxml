@@ -1,16 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.text.Font?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-
-<GridPane hgap="5.0" prefHeight="83.0" prefWidth="527.0" stylesheets="@../body/centerStyle.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.header.HeaderController">
+<GridPane hgap="5.0" prefHeight="83.0" prefWidth="527.0" stylesheets="@../body/centerStyle.css" vgap="5.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.header.HeaderController">
   <columnConstraints>
       <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
     <ColumnConstraints hgrow="NEVER" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" />
@@ -35,7 +30,7 @@
          <children>
             <Button fx:id="ButtonDetails" mnemonicParsing="false" onAction="#onDetailsClicked" styleClass="execute-button" text="Details" />
             <Button fx:id="ButtonNewExec" mnemonicParsing="false" onAction="#onNewExecutionClicked" styleClass="execute-button" text="New Execution" />
-            <Button fx:id="ButtonResults" mnemonicParsing="false" styleClass="execute-button" text="Results" />
+            <Button fx:id="ButtonResults" mnemonicParsing="false" onAction="#onResultsClicked" styleClass="execute-button" text="Results" />
          </children>
          <GridPane.margin>
             <Insets />
