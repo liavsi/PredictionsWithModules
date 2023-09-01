@@ -57,6 +57,7 @@ public class HeaderController {
         LabelFilePath.textProperty().bind(filePath);
         ButtonDetails.disableProperty().bind(isFileSelected.not());
         ButtonNewExec.disableProperty().bind(isFileSelected.not());
+        // TODO: 01/09/2023 only make enabled when finishd simulation
         ButtonResults.disableProperty().bind(isNewExecutionPressed.not());
     }
 
@@ -82,7 +83,7 @@ public class HeaderController {
 
     @FXML
     private void onNewExecutionClicked(ActionEvent event) throws IOException {
-        appController.moveToNewExecutionScreen();
+        appController.onNewExecutionChosen();
         isNewExecutionPressed.set(true);
     }
 

@@ -1,42 +1,51 @@
 package component.mainapp;
 
 import DTOManager.impl.PropertyDefinitionDTO;
+import DTOManager.impl.SimulationOutcomeDTO;
 import DTOManager.impl.WorldDTO;
 import component.body.detailspage.DetailsPageController;
+import component.body.executionpage.SimulationPageController;
 import component.header.HeaderController;
 import engine.api.Engine;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TreeView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
-public class AppController extends ResourceBundle {
+public class AppController {
+    private static final String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
+
+    private static final String NEW_EXECUTION_FXML_RESOURCE = "/component/body/executionpage/newExecutionView.fxml";
     public VBox dynamicVBox;
 
     @FXML private GridPane headerComponent;
     @FXML private HeaderController headerComponentController;
     @FXML private DetailsPageController detailsPageComponentController;
 
+    @FXML private SimulationPageController newExecutionPageComponentController;
+
     @FXML private BorderPane BorderPaneMain;
 
-    private Engine engine;
+    private ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
 
-    private static String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
+
+    private Engine engine;
 
 
     public AppController() {
@@ -60,7 +69,6 @@ public class AppController extends ResourceBundle {
         FXMLLoader fxmlLoader = new FXMLLoader();
         URL mainFxml = getClass().getResource("body/detailspage/detailsPageView.fxml");
         fxmlLoader.setLocation(mainFxml);
-        fxmlLoader.setResources(this);
         VBox detailsBox = fxmlLoader.load();
         DetailsPageController detailsPageController = fxmlLoader.getController();
         dynamicVBox.getChildren().clear();
@@ -79,31 +87,52 @@ public class AppController extends ResourceBundle {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        detailsPageComponentController.worldMenu();
-        // TODO: 28/08/2023 implement the World details screen
+        detailsPageComponentController.organizeData();
+    }
+
+    public void onNewExecutionChosen() {
+
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(NEW_EXECUTION_FXML_RESOURCE));
+            Pane newExecutionPane = loader.load();
+            newExecutionPageComponentController = loader.getController();
+            newExecutionPageComponentController.setMainController(this);
+            newExecutionPageComponentController.setWorld(engine.getWorldDTO());
+            dynamicVBox.getChildren().clear();
+            dynamicVBox.getChildren().add(newExecutionPane);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        newExecutionPageComponentController.organizeData();
     }
 
     public void readWorld() {
         engine.readWorldFromXml();
     }
-    public void moveToNewExecutionScreen() throws IOException {
-        WorldDTO worldDTO = engine.getWorldDTO();
-        List<PropertyDefinitionDTO> environmentVarsAskToFill = worldDTO.getEnvPropertiesDefinitionDTO();
-        changeDynamicDetailsScreen();
-        // TODO: 28/08/2023 implement the new execution screen
-    }
-    @Override
-    protected Object handleGetObject(String key) {
-        switch (key){
-            case "Engine":
-                return engine;
-            default:
-                return null;
-        }
+
+    public void startSimulationInEngine(Map<String, Object> resToEngine) {
+
+        Task<SimulationOutcomeDTO> simulationTask = new Task<SimulationOutcomeDTO>() {
+            @Override
+            protected SimulationOutcomeDTO call() throws Exception {
+                // Run your simulation here
+                SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+
+                // You can update the progress here as needed
+                updateProgress(1, 1); // Example: Completed
+
+                return simulationOutcomeDTO;
+            }
+        };
+        executor.submit(simulationTask);
+        simulationTask.setOnSucceeded(event ->{
+            SimulationOutcomeDTO simulationOutcomeDTO = simulationTask.getValue();
+            showSimulationResults(simulationOutcomeDTO);
+        });
     }
 
-    @Override
-    public Enumeration<String> getKeys() {
-        return null;
+    private void showSimulationResults(SimulationOutcomeDTO simulationOutcomeDTO) {
+        System.out.println("finished simulation");
     }
 }

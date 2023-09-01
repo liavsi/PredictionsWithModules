@@ -3,10 +3,18 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-
-<SplitPane dividerPositions="0.3729096989966555" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
-   <items>
-      <VBox prefHeight="398.0" prefWidth="257.0" />
-      <VBox prefHeight="398.0" prefWidth="312.0" />
-   </items>
-</SplitPane>
+<Pane prefHeight="386.0" prefWidth="641.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.executionpage.SimulationPageController">
+   <children>
+      <SplitPane dividerPositions="0.3729096989966555" layoutX="-7.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="337.0" prefWidth="649.0">
+         <items>
+            <VBox fx:id="leftVbox" prefHeight="398.0" prefWidth="257.0" />
+            <VBox fx:id="rightVbox" prefHeight="335.0" prefWidth="426.0" spacing="10.0">
+               <children>
+                  <Label text="Set Environment Variables" />
+               </children></VBox>
+         </items>
+      </SplitPane>
+      <Button fx:id="startSimulationButton" layoutX="560.0" layoutY="347.0" mnemonicParsing="false" onAction="#onClickedStartSimulation" text="Start !" />
+      <Button fx:id="clearButton" layoutX="14.0" layoutY="347.0" mnemonicParsing="false" onAction="#onClickedClearButton" text="Clear" />
+   </children>
+</Pane>
