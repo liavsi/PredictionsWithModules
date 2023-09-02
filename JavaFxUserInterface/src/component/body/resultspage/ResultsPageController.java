@@ -8,6 +8,7 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import utils.results.SimulationOutcomeListCell;
@@ -39,7 +40,6 @@ public class ResultsPageController {
     private void initialize() {
         // Initialize your controller
         simulationList.setCellFactory(param -> new SimulationOutcomeListCell());
-        simulationList.setItems(recentSimulations);
         // Handle item selection in the list
         simulationList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showSimulationDetails(newValue); // Display details of the selected simulation outcome
@@ -49,12 +49,14 @@ public class ResultsPageController {
     private void showSimulationDetails(SimulationOutcomeDTO selectedSimulation) {
 
         simulationDetailsPane.getChildren().clear();
+        simulationDetailsPane.getChildren().add(new TextArea(selectedSimulation.getRunDate()));
         // Add labels, text, or other UI components to display details here
     }
 
     public void setMainController(AppController appController) {
         this.mainController = appController;
         recentSimulations = appController.getRecentSimulations();
+        simulationList.setItems(recentSimulations);
     }
 
     public Parent getMainView() {
