@@ -41,4 +41,20 @@ public class WorldDTO {
         }
         return null;
     }
+    public RuleDTO getRuleDTOByName(String ruleName){
+        for(RuleDTO ruleDTO: rulesDTO){
+            if (ruleName.equals(ruleDTO.getName())){
+                return ruleDTO;
+            }
+        }
+        return null;
+    }
+    public PropertyDefinitionDTO getEnvVarDTOByName(String envVarName){
+        for (PropertyDefinitionDTO envVarDTO: envPropertiesDefinitionDTO){
+            if (envVarName.equals(envVarDTO.getName())){
+                return envVarDTO;
+            }
+        }
+        return null;
+    }
 }

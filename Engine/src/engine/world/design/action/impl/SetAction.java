@@ -1,6 +1,9 @@
 package engine.world.design.action.impl;
 
+import DTOManager.impl.actionDTO.ActionDTO;
+import DTOManager.impl.actionDTO.SetDTO;
 import engine.world.design.action.api.AbstractAction;
+import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
@@ -40,5 +43,10 @@ public class SetAction extends AbstractAction {
             propertyInstance.updateValue(result);
         }
 
+    }
+
+    @Override
+    public ActionDTO createActionDTO() {
+        return new SetDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),property,value);
     }
 }

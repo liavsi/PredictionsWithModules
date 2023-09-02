@@ -1,5 +1,6 @@
 package engine.world.design.action.condition;
 
+import DTOManager.impl.actionDTO.ActionDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
@@ -13,7 +14,6 @@ public class ConditionAction extends AbstractAction{
 
     private final List<Action> thanActions;
     private final List<Action> elseActions;
-
     private final Condition condition;
     public ConditionAction(EntityDefinition entityDefinition,Condition condition) {
         super(ActionType.CONDITION, entityDefinition);
@@ -31,11 +31,20 @@ public class ConditionAction extends AbstractAction{
     }
     @Override
     public void invoke(Context context) {
-        if(condition.evaluate(context)){
+        if (condition.evaluate(context)) {
             thanActions.forEach(action -> action.invoke(context));
-        }
-        else{
+        } else {
             elseActions.forEach(action -> action.invoke(context));
         }
     }
+
+    @Override
+    public ActionDTO createActionDTO() {
+        return null;
+    }
+
+//    @Override
+//    public ActionDTO createActionDTO() {
+//        return condition.createConditionDTO(getActionType().name(),getMainEntity());
+//    }
 }

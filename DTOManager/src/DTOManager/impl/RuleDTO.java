@@ -1,5 +1,7 @@
 package DTOManager.impl;
 
+import DTOManager.impl.actionDTO.ActionDTO;
+
 import java.util.List;
 
 public class RuleDTO {
@@ -7,13 +9,13 @@ public class RuleDTO {
     private final String name;
     private final Integer ticks;
     private final Double probability;
-    private final List<String> actionsNames;
+    private final List<ActionDTO> actions;
 
-    public RuleDTO(String name, Integer ticks, Double probability, List<String> actionsNames) {
+    public RuleDTO(String name, Integer ticks, Double probability, List<ActionDTO> actions) {
         this.name = name;
         this.ticks = ticks;
         this.probability = probability;
-        this.actionsNames = actionsNames;
+        this.actions = actions;
     }
 
     public String getName() {
@@ -28,7 +30,7 @@ public class RuleDTO {
         return probability;
     }
 
-    public List<String> getActionsNames() {
-        return actionsNames;
+    public List<ActionDTO> getActions() {
+        return actions;
     }
 }

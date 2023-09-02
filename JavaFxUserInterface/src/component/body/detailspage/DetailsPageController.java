@@ -2,16 +2,16 @@ package component.body.detailspage;
 
 import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.PropertyDefinitionDTO;
+import DTOManager.impl.RuleDTO;
 import DTOManager.impl.WorldDTO;
-import component.body.detailspage.component.PropertyDetailsController;
+import DTOManager.impl.actionDTO.ActionDTO;
+import component.body.detailspage.component.entity.EntityDetailsController;
+import component.body.detailspage.component.property.PropertyDetailsController;
+import component.body.detailspage.component.rule.RuleDetailsController;
 import component.mainapp.AppController;
-import engine.api.Engine;
-import javafx.beans.property.ObjectProperty;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
@@ -28,7 +28,9 @@ public class DetailsPageController {
     private TreeView<String> treeView;
 
     private WorldDTO world;
-    private static final String Property_Details_FXML_RESOURCE = "/component/body/detailspage/component/propertyDetailsView.fxml";
+    private static final String Property_Details_FXML_RESOURCE = "/component/body/detailspage/component/property/propertyDetailsView.fxml";
+    private static final String Entity_Details_FXML_RESOURCE = "/component/body/detailspage/component/entity/entityDetailsView.fxml";
+    private static final String Rule_Details_FXML_RESOURCE = "/component/body/detailspage/component/rule/ruleDetailsView.fxml";
     public void setMainController(AppController appController) {
         this.mainAppController = appController;
     }
@@ -59,30 +61,64 @@ public class DetailsPageController {
             TreeItem<String> envVarNode = new TreeItem<>(envVarsDTO.getName());
             envVarsNode.getChildren().add(envVarNode);
         }
+        for (RuleDTO ruleDTO:world.getRulesDTO()){
+            TreeItem<String> ruleNode = new TreeItem<>(ruleDTO.getName());
+            rulesNode.getChildren().add(ruleNode);
+//            for (ActionDTO actionDTO: ruleDTO.getActions()){
+//                TreeItem<String> actionNode = new TreeItem<>(actionDTO.getActionType());
+//                ruleNode.getChildren().add(actionNode);
+//            }
+        }
     }
 
 
     public void setWorld(WorldDTO worldDTO) {
         this.world = worldDTO;
     }
-
-//    public void showItem(MouseEvent mouseEvent) {
-//        TreeItem<String> item = treeView.getSelectionModel().getSelectedItem();
-//        if (item != null && item.getValue() != null){
-//            loadItem(item);
-//        }
-//
-//    }
-
-
     private void loadItem(TreeItem<String> item) {
+        if(item == null){
+            return;
+        }else if(item.getParent() != null && item.getParent().getValue().equals("Entities")){
+            loadEntity(item);
+        }else if (item.getParent()!= null && item.getParent().getParent() != null && item.getParent().getParent().getValue().equals("Entities")) {
+            loadProperty(item);
+        }else if(item.getParent() != null && item.getParent().getValue().equals("Rules")){
+            loadRule(item);
+        }else if(item.getParent() != null && item.getParent().getValue().equals("Environment Variables")){
+            loadProperty(item);
+        }
         try {
-            if (item.getParent().getParent() != null && item.getParent().getParent().getValue().equals("Entities")) {
-                loadProperty(item);
-            } else if (item.getParent() != null && item.getParent().getValue().equals("Entities")) {
-                //entity
-            }
         } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadEntity(TreeItem<String> item) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(Entity_Details_FXML_RESOURCE));
+            GridPane detailsBox = loader.load();
+            EntityDetailsController entityDetailsController= loader.getController();
+            entityDetailsController.setWorld(world);
+            entityDetailsController.setEntityDetails(item);
+            details.getChildren().clear();
+            details.getChildren().add(detailsBox);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadRule(TreeItem<String> item) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(Rule_Details_FXML_RESOURCE));
+            GridPane detailsBox = loader.load();
+            RuleDetailsController ruleDetailsController= loader.getController();
+            ruleDetailsController.setWorld(world);
+            ruleDetailsController.setRuleDetails(item);
+            details.getChildren().clear();
+            details.getChildren().add(detailsBox);
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -110,7 +146,4 @@ public class DetailsPageController {
             loadItem(item);
         }
     }
-
-
-
 }

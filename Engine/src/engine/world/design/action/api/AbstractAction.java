@@ -1,5 +1,6 @@
 package engine.world.design.action.api;
 
+import DTOManager.impl.actionDTO.ActionDTO;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
 import engine.world.design.execution.property.PropertyInstance;
@@ -30,5 +31,8 @@ public abstract class AbstractAction implements Action {
                 PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType()) || PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
     }
 
-
+    @Override
+    public EntityDefinition getMainEntity() {
+        return mainEntity;
+    }
 }

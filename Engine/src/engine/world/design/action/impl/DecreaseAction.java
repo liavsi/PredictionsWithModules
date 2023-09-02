@@ -1,6 +1,9 @@
 package engine.world.design.action.impl;
 
+import DTOManager.impl.actionDTO.ActionDTO;
+import DTOManager.impl.actionDTO.DecreaseDTO;
 import engine.world.design.action.api.AbstractAction;
+import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
@@ -40,6 +43,11 @@ public class DecreaseAction extends AbstractAction {
             float result = v-x;
             propertyInstance.updateValue(result);
         }
+    }
+
+    @Override
+    public ActionDTO createActionDTO() {
+        return new DecreaseDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),property,byExpression);
     }
 
 }
