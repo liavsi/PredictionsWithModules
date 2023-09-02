@@ -41,6 +41,7 @@ public class ResultsPageController {
         // Initialize your controller
         simulationList.setCellFactory(param -> new SimulationOutcomeListCell());
         // Handle item selection in the list
+        simulationList.getSelectionModel().selectLast();
         simulationList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showSimulationDetails(newValue); // Display details of the selected simulation outcome
         });
