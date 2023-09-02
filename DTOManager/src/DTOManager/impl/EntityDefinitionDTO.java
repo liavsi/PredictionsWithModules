@@ -24,5 +24,14 @@ public class EntityDefinitionDTO {
     public String getName() {
         return name;
     }
+
+    public PropertyDefinitionDTO getPropertyDefinitionDTOByName(String propertyName){
+        for (PropertyDefinitionDTO propertyDefinitionDTO: propertiesDTO){
+            if(propertyName.equals(propertyDefinitionDTO.getName())){
+                return propertyDefinitionDTO;
+            }
+        }
+        return null;
+    }
 }
 

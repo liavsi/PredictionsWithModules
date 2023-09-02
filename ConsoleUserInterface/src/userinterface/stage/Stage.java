@@ -1,4 +1,4 @@
-package userinterface.stage;
+/*package userinterface.stage;
 
 import java.util.Scanner;
 
@@ -65,3 +65,4 @@ public enum Stage {
 
     public abstract int runMenu(Scanner scanner);
 }
+*/

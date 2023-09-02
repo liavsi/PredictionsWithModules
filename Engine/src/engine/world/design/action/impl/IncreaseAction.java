@@ -1,6 +1,9 @@
 package engine.world.design.action.impl;
 
+import DTOManager.impl.actionDTO.ActionDTO;
+import DTOManager.impl.actionDTO.IncreaseDTO;
 import engine.world.design.action.api.AbstractAction;
+import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
@@ -43,5 +46,9 @@ public class IncreaseAction extends AbstractAction {
 
     }
 
+    @Override
+    public ActionDTO createActionDTO() {
+        return new IncreaseDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),property,byExpression);
+    }
 
 }

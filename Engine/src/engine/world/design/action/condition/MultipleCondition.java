@@ -1,5 +1,6 @@
 package engine.world.design.action.condition;
 
+import DTOManager.impl.actionDTO.ConditionDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
@@ -13,7 +14,7 @@ import java.util.Objects;
 public class MultipleCondition implements Condition{
 
     private final List<Condition> conditions;
-    String logical;
+    private final String logical;
 
     public MultipleCondition(String logical) {
         this.logical = logical;
@@ -36,4 +37,9 @@ public class MultipleCondition implements Condition{
             throw new RuntimeException("invalid logical sign");
         }
     }
+
+//    @Override
+//    public ConditionDTO createConditionDTO(String actionType, EntityDefinition mainEntity) {
+//        return null;
+//    }
 }

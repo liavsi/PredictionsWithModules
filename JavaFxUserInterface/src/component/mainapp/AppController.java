@@ -92,12 +92,13 @@ public class AppController {
             SplitPane detailsBox = loader.load();
             detailsPageComponentController = loader.getController();
             detailsPageComponentController.setWorld(engine.getWorldDTO());
+            detailsPageComponentController.worldMenu();
             dynamicVBox.getChildren().clear();
             dynamicVBox.getChildren().add(detailsBox);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        detailsPageComponentController.organizeData();
+        //detailsPageComponentController.organizeData();
     }
 
     public void loadResultsPage() {

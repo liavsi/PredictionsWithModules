@@ -32,4 +32,29 @@ public class WorldDTO {
     public TerminationDTO getTerminationDTO() {
         return terminationDTO;
     }
+
+    public EntityDefinitionDTO getEntityDefinitionDTOByName(String entityName){
+        for (EntityDefinitionDTO entityDefinitionDTO: nameToEntityDefinitionDTO.values()){
+            if (entityName.equals(entityDefinitionDTO.getName())){
+                return entityDefinitionDTO;
+            }
+        }
+        return null;
+    }
+    public RuleDTO getRuleDTOByName(String ruleName){
+        for(RuleDTO ruleDTO: rulesDTO){
+            if (ruleName.equals(ruleDTO.getName())){
+                return ruleDTO;
+            }
+        }
+        return null;
+    }
+    public PropertyDefinitionDTO getEnvVarDTOByName(String envVarName){
+        for (PropertyDefinitionDTO envVarDTO: envPropertiesDefinitionDTO){
+            if (envVarName.equals(envVarDTO.getName())){
+                return envVarDTO;
+            }
+        }
+        return null;
+    }
 }

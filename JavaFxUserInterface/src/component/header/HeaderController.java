@@ -103,8 +103,6 @@ public class HeaderController {
         return filePath;
     }
 
-
-
     public void setIsIsThereSimulationOutCome(boolean bool) {
         isThereSimulationOutCome.set(bool);
     }

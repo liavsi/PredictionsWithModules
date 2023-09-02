@@ -1,6 +1,9 @@
 package engine.world.design.action.impl;
 
+import DTOManager.impl.actionDTO.ActionDTO;
+import DTOManager.impl.actionDTO.CalculationDTO;
 import engine.world.design.action.api.AbstractAction;
+import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
 import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.definition.entity.api.EntityDefinition;
@@ -57,5 +60,10 @@ public class CalculationAction extends AbstractAction {
             }
             propertyInstance.updateValue(result);
         }
+    }
+
+    @Override
+    public ActionDTO createActionDTO() {
+        return new CalculationDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),calculationType.name(),property,arg1,arg2);
     }
 }

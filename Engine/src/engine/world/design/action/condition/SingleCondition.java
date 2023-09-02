@@ -1,5 +1,9 @@
 package engine.world.design.action.condition;
 
+import DTOManager.impl.EntityDefinitionDTO;
+import DTOManager.impl.actionDTO.ActionDTO;
+import DTOManager.impl.actionDTO.ConditionDTO;
+import DTOManager.impl.actionDTO.SingleConditionDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
@@ -72,4 +76,8 @@ public class SingleCondition implements Condition{
         return
                 PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType()) || PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
     }
+//    @Override
+//    public ConditionDTO createConditionDTO(String actionType, EntityDefinition mainEntity){
+//        return new SingleConditionDTO(actionType,mainEntity.createEntityDefinitionDTO(),property,entity.createEntityDefinitionDTO(),operator,value);
+//    }
 }
