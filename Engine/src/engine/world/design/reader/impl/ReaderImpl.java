@@ -202,7 +202,7 @@ public class ReaderImpl implements Reader {
                 throw new IllegalArgumentException(singularity + "is not a valid Condition Singularity");
         }
         for (PRDAction prdAction1: prdAction.getPRDThen().getPRDAction()){
-            res.getThanActions().add(buildActionFromPRD(prdAction1));
+            res.getThenActions().add(buildActionFromPRD(prdAction1));
         }
         if (prdAction.getPRDElse() != null) {
             for (PRDAction prdAction1 : prdAction.getPRDElse().getPRDAction()) {

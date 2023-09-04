@@ -14,4 +14,8 @@ public abstract class ActionDTO {
     public String getActionType() {
         return actionType;
     }
+
+    public EntityDefinitionDTO getMainEntity() {
+        return mainEntity;
+    }
 }

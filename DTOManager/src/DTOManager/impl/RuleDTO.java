@@ -33,4 +33,12 @@ public class RuleDTO {
     public List<ActionDTO> getActions() {
         return actions;
     }
+    public ActionDTO getActionByIndex(int index){
+        for (int i=0; i<actions.size(); i++){
+            if(i==index){
+                return actions.get(i);
+            }
+        }
+        return null;
+    }
 }

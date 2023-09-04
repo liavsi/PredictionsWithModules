@@ -13,18 +13,18 @@ import java.util.List;
 
 public class ConditionAction extends AbstractAction{
 
-    private final List<Action> thanActions;
+    private final List<Action> thenActions;
     private final List<Action> elseActions;
     private final Condition condition;
     public ConditionAction(EntityDefinition entityDefinition,Condition condition) {
         super(ActionType.CONDITION, entityDefinition);
         this.condition = condition;
-        thanActions = new ArrayList<>();
+        thenActions = new ArrayList<>();
         elseActions = new ArrayList<>();
     }
 
-    public List<Action> getThanActions() {
-        return thanActions;
+    public List<Action> getThenActions() {
+        return thenActions;
     }
 
     public List<Action> getElseActions() {
@@ -33,7 +33,7 @@ public class ConditionAction extends AbstractAction{
     @Override
     public void invoke(Context context) {
         if (condition.evaluate(context)) {
-            thanActions.forEach(action -> action.invoke(context));
+            thenActions.forEach(action -> action.invoke(context));
         } else {
             elseActions.forEach(action -> action.invoke(context));
         }
@@ -41,7 +41,6 @@ public class ConditionAction extends AbstractAction{
 
     @Override
     public ActionDTO createActionDTO() {
-        return new ConditionActionDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),condition.createConditionDTO());
-
+        return new ConditionActionDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),condition.createConditionDTO(), thenActions.size(), elseActions.size());
     }
 }

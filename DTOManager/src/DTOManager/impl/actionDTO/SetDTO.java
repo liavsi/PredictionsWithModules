@@ -10,11 +10,9 @@ public class SetDTO extends ActionDTO{
         this.property = property;
         this.value = value;
     }
-
     public String getProperty() {
         return property;
     }
-
     public String getValue() {
         return value;
     }

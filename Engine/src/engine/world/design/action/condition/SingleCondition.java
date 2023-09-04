@@ -77,7 +77,7 @@ public class SingleCondition implements Condition{
                 PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType()) || PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
     }
     @Override
-    public ConditionDTO createConditionDTO(){
+    public SingleConditionDTO createConditionDTO(){
         return new SingleConditionDTO(property,entity.createEntityDefinitionDTO(),operator,value);
     }
 }

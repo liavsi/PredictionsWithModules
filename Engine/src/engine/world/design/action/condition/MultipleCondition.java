@@ -40,11 +40,7 @@ public class MultipleCondition implements Condition{
     }
 
     @Override
-    public ConditionDTO createConditionDTO() {
-        List<ConditionDTO> conditionsDTO = new ArrayList<>();
-        for (Condition condition: conditions){
-            conditionsDTO.add(condition.createConditionDTO());
-        }
-        return new MultipleConditionDTO(conditionsDTO,logical);
+    public MultipleConditionDTO createConditionDTO() {
+        return new MultipleConditionDTO(logical,conditions.size());
     }
 }
