@@ -1,6 +1,7 @@
 package engine.world.design.action.condition;
 
 import DTOManager.impl.actionDTO.ConditionDTO;
+import DTOManager.impl.actionDTO.MultipleConditionDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
@@ -38,8 +39,12 @@ public class MultipleCondition implements Condition{
         }
     }
 
-//    @Override
-//    public ConditionDTO createConditionDTO(String actionType, EntityDefinition mainEntity) {
-//        return null;
-//    }
+    @Override
+    public ConditionDTO createConditionDTO() {
+        List<ConditionDTO> conditionsDTO = new ArrayList<>();
+        for (Condition condition: conditions){
+            conditionsDTO.add(condition.createConditionDTO());
+        }
+        return new MultipleConditionDTO(conditionsDTO,logical);
+    }
 }

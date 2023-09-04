@@ -54,6 +54,7 @@ public class PropertyDetailsController {
         }
         else{
             propertyDefinitionDTO = world.getEnvVarDTOByName(item.getValue());
+            propertyTitle.set("Environment Variable");
         }
         propertyName.set(propertyDefinitionDTO.getName());
         propertyType.set(propertyDefinitionDTO.getPropertyType());

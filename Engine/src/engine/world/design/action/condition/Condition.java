@@ -11,6 +11,6 @@ public interface Condition {
 
     boolean evaluate(Context context);
 
-//    ConditionDTO createConditionDTO(String actionType, EntityDefinition mainEntity);
+    ConditionDTO createConditionDTO();
 
 }

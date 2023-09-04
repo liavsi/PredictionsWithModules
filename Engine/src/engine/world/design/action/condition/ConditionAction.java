@@ -1,6 +1,7 @@
 package engine.world.design.action.condition;
 
 import DTOManager.impl.actionDTO.ActionDTO;
+import DTOManager.impl.actionDTO.ConditionActionDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
@@ -40,11 +41,7 @@ public class ConditionAction extends AbstractAction{
 
     @Override
     public ActionDTO createActionDTO() {
-        return null;
-    }
+        return new ConditionActionDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),condition.createConditionDTO());
 
-//    @Override
-//    public ActionDTO createActionDTO() {
-//        return condition.createConditionDTO(getActionType().name(),getMainEntity());
-//    }
+    }
 }

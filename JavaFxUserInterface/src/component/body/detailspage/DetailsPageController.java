@@ -64,10 +64,10 @@ public class DetailsPageController {
         for (RuleDTO ruleDTO:world.getRulesDTO()){
             TreeItem<String> ruleNode = new TreeItem<>(ruleDTO.getName());
             rulesNode.getChildren().add(ruleNode);
-//            for (ActionDTO actionDTO: ruleDTO.getActions()){
-//                TreeItem<String> actionNode = new TreeItem<>(actionDTO.getActionType());
-//                ruleNode.getChildren().add(actionNode);
-//            }
+            for (ActionDTO actionDTO: ruleDTO.getActions()){
+                TreeItem<String> actionNode = new TreeItem<>(actionDTO.getActionType());
+                ruleNode.getChildren().add(actionNode);
+            }
         }
     }
 
