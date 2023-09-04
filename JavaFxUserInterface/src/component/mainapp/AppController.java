@@ -9,6 +9,8 @@ import component.body.executionpage.SimulationPageController;
 import component.body.resultspage.ResultsPageController;
 import component.header.HeaderController;
 import engine.api.Engine;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -23,6 +25,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
@@ -38,6 +41,7 @@ public class AppController {
     private static final String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
     private static final String NEW_EXECUTION_FXML_RESOURCE = "/component/body/executionpage/newExecutionView.fxml";
     private static final String RESULTS_FXML_RESOURCE = "/component/body/resultspage/resultView.fxml" ;
+    private static final int MILISEC_TASK_SEND_UPDATES = 100;
 
 
     @FXML private VBox dynamicVBox;
@@ -142,11 +146,23 @@ public class AppController {
         };
 
         executor.submit(simulationTask);
+        switchToResultsPage();
+
+        // here im trying to get updates from the Task on a scheduled time
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.millis(MILISEC_TASK_SEND_UPDATES), event -> {
+                    if (simulationTask.isRunning()) {
+                        // This code will run every MILISEC_TASK_SEND_UPDATES ms while the task is running
+                        System.out.println("Task is running...");
+                    }
+                })
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
         simulationTask.setOnSucceeded(event -> {
             SimulationOutcomeDTO simulationOutcomeDTO = simulationTask.getValue();
             recentSimulations.add(simulationOutcomeDTO);
             headerComponentController.setIsIsThereSimulationOutCome(true);
-            switchToResultsPage();
         });
     }
 

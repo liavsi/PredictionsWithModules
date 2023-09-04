@@ -37,9 +37,9 @@ public class EngineImpl implements Engine {
     }
     @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
-        Map<Integer, EntityInstanceManagerDTO> currSimulationInstances = myWorld.runSimulation(propertyNameToValueAsString);
         Date currentDate = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy | HH.mm.ss");
+        Map<Integer, EntityInstanceManagerDTO> currSimulationInstances = myWorld.runSimulation(propertyNameToValueAsString);
         String formattedDate = dateFormat.format(currentDate);
         SimulationOutcome currSimulation = new SimulationOutcome(formattedDate,countId, myWorld.getTermination(),currSimulationInstances);
         pastSimulations.put(countId++, currSimulation);
