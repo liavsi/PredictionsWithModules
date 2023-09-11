@@ -16,8 +16,8 @@ public class SetAction extends AbstractAction {
     private final String property;
     private final String value;
 
-    public SetAction(EntityDefinition entityDefinition, String property, String value) {
-        super(ActionType.SET, entityDefinition);
+    public SetAction(EntityDefinition entityDefinition,EntityDefinition secondEntity, String property, String value) {
+        super(ActionType.SET, entityDefinition,secondEntity);
         this.property = property;
         this.value = value;
     }

@@ -3,6 +3,7 @@ package engine.api;
 import DTOManager.impl.SimulationOutcomeDTO;
 import engine.SimulationOutcome;
 import DTOManager.impl.WorldDTO;
+import engine.world.design.world.api.World;
 import javafx.beans.property.SimpleStringProperty;
 
 import java.util.Map;
@@ -18,8 +19,13 @@ public interface Engine {
 
     Map<Integer, SimulationOutcomeDTO> getPastSimulationMapDTO();
     public boolean getIsLoadedWorld();
-
+    public Integer getCountId();
+    public Map<Integer, SimulationOutcome> getPastSimulations();
+    public World getMyWorld();
     SimpleStringProperty fileNameProperty();
-
+    public Map<String, Object> getPropertyNameToValueAsString();
+    public void setPropertyNameToValueAsString(Map<String, Object> propertyNameToValueAsString);
+    public void setCountId(Integer countId);
+    public void setNumOfThreads(int numOfThreads);
     // TODO: 10/08/2023 SimulationOutComeDTO getSimulationOutComeDTO();
 }

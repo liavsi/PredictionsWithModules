@@ -61,7 +61,11 @@ public class SingleCondition implements Condition{
             }
             case ("lt"):{
                 if(verifyNumericPropertyType(propertyInstance)){
-                    return (float) propertyInstance.getValue() < (float) propertyType.convert(realValue);
+                    if (propertyType == PropertyType.DECIMAL) {
+                        return (int) propertyInstance.getValue() < (int) propertyType.convert(realValue);
+                    }else{
+                        return (float) propertyInstance.getValue() < (float) propertyType.convert(realValue);
+                    }
                 }
                 else{
                     throw new RuntimeException("Lt can't be done on non numeric values");

@@ -16,8 +16,8 @@ public class DecreaseAction extends AbstractAction {
     private final String property;
     private final String byExpression;
 
-    public DecreaseAction(EntityDefinition entityDefinition, String property, String byExpression) {
-        super(ActionType.DECREASE, entityDefinition);
+    public DecreaseAction(EntityDefinition entityDefinition,EntityDefinition secondEntity, String property, String byExpression) {
+        super(ActionType.DECREASE, entityDefinition,secondEntity);
         this.property = property;
         this.byExpression = byExpression;
 

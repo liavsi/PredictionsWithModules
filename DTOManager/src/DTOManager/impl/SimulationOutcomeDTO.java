@@ -1,5 +1,6 @@
 package DTOManager.impl;
 
+import java.awt.*;
 import java.util.Map;
 
 public class SimulationOutcomeDTO {
@@ -7,18 +8,17 @@ public class SimulationOutcomeDTO {
     private final String runDate;
     private final int id;
     private final TerminationDTO terminationDTO;
+    private final EntityInstanceManagerDTO entityInstanceDTOS;
 
-    public Map<Integer, EntityInstanceManagerDTO> getEntityInstancDTOS() {
-        return entityInstancDTOS;
+    public EntityInstanceManagerDTO getEntityInstanceDTOS() {
+        return entityInstanceDTOS;
     }
 
-    private final Map<Integer, EntityInstanceManagerDTO> entityInstancDTOS;
-
-    public SimulationOutcomeDTO(String runDate, int id, TerminationDTO terminationDTO, Map<Integer, EntityInstanceManagerDTO> entityInstancDTOS) {
+    public SimulationOutcomeDTO(String runDate, int id, TerminationDTO terminationDTO, EntityInstanceManagerDTO entityInstancDTOS) {
         this.runDate = runDate;
         this.id = id;
         this.terminationDTO = terminationDTO;
-        this.entityInstancDTOS = entityInstancDTOS;
+        this.entityInstanceDTOS = entityInstancDTOS;
     }
 
     public String getRunDate() {

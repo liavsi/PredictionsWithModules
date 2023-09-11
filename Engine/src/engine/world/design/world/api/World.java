@@ -2,8 +2,10 @@ package engine.world.design.world.api;
 
 import DTOManager.impl.EntityInstanceManagerDTO;
 import DTOManager.impl.WorldDTO;
+import engine.SimulationOutcome;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.environment.api.EnvVariablesManager;
+import engine.world.design.grid.api.Grid;
 import engine.world.design.rule.Rule;
 import engine.world.design.termination.api.Termination;
 
@@ -15,7 +17,7 @@ public interface World {
 
     EntityDefinition getEntityDefinitionByName(String name);
     EnvVariablesManager getEnvVariablesManager();
-    Map<Integer, EntityInstanceManagerDTO> runSimulation(Map<String, Object> propertyNameToValueAsString);
+    SimulationOutcome runSimulation(int id);
 
     void setEntities(Map<String, EntityDefinition> entities);
 
@@ -28,4 +30,6 @@ public interface World {
     Termination getTermination();
     List<Rule> getRules();
     WorldDTO createWorldDTO();
+    public void setGrid(Grid grid);
+    public Grid getGrid();
 }

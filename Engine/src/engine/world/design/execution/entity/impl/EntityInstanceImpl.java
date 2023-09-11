@@ -5,20 +5,31 @@ import DTOManager.impl.PropertyInstanceDTO;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.property.PropertyInstance;
+import engine.world.design.grid.cell.Coordinate;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntityInstanceImpl implements EntityInstance {
+public class EntityInstanceImpl implements EntityInstance{
 
     private final EntityDefinition entityDefinition;
+
     private final int id;
     private final Map<String, PropertyInstance> properties;
+    private Coordinate coordinate;
 
     public EntityInstanceImpl(EntityDefinition entityDefinition, int id) {
         this.entityDefinition = entityDefinition;
         this.id = id;
         properties = new HashMap<>();
+    }
+    @Override
+    public Coordinate getCoordinate() {
+        return coordinate;
+    }
+    @Override
+    public void setCoordinate(Coordinate coordinate) {
+        this.coordinate = coordinate;
     }
 
     @Override
@@ -45,5 +56,19 @@ public class EntityInstanceImpl implements EntityInstance {
         Map<String, PropertyInstanceDTO> propertyInstanceToNameDTO = new HashMap<>();
         properties.forEach((name, propertyInstance) -> propertyInstanceToNameDTO.put(name,propertyInstance.createDTO()));
         return new EntityInstanceDTO(entityDefinition.createEntityDefinitionDTO(), id,propertyInstanceToNameDTO);
+    }
+//    @Override
+//    public EntityInstance clone() throws CloneNotSupportedException {
+//        EntityInstance clone = (EntityInstance) super.clone();
+//        clone.getEntityDefinition() = entityDefinition.clone();
+//        properties.forEach((name,property)-> clone.getProperties().put(name,property.clone()));
+//    }
+    @Override
+    public EntityDefinition getEntityDefinition() {
+        return entityDefinition;
+    }
+    @Override
+    public Map<String, PropertyInstance> getProperties() {
+        return properties;
     }
 }

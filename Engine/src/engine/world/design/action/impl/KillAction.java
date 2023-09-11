@@ -13,8 +13,8 @@ import engine.world.design.execution.environment.api.ActiveEnvironment;
 
 public class KillAction extends AbstractAction {
 
-    public KillAction(EntityDefinition entityDefinition) {
-        super(ActionType.KILL, entityDefinition);
+    public KillAction(EntityDefinition entityDefinition,EntityDefinition secondEntity) {
+        super(ActionType.KILL, entityDefinition,secondEntity);
     }
 
     @Override

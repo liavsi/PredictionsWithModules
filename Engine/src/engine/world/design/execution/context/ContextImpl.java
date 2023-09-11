@@ -8,13 +8,20 @@ import engine.world.design.execution.property.PropertyInstance;
 public class ContextImpl implements Context {
 
     private final EntityInstance primaryEntityInstance;
+
+    private final EntityInstance secondaryEntity;
     private final EntityInstanceManager entityInstanceManager;
     private final ActiveEnvironment activeEnvironment;
 
-    public ContextImpl(EntityInstance primaryEntityInstance, EntityInstanceManager entityInstanceManager, ActiveEnvironment activeEnvironment) {
+    public ContextImpl(EntityInstance primaryEntityInstance, EntityInstance secondaryEntity, EntityInstanceManager entityInstanceManager, ActiveEnvironment activeEnvironment) {
         this.primaryEntityInstance = primaryEntityInstance;
+        this.secondaryEntity = secondaryEntity;
         this.entityInstanceManager = entityInstanceManager;
         this.activeEnvironment = activeEnvironment;
+    }
+    @Override
+    public EntityInstance getSecondaryEntity() {
+        return secondaryEntity;
     }
 
     @Override
