@@ -1,6 +1,7 @@
 package engine.impl;
 
 import engine.SimulationOutcome;
+import engine.world.design.action.api.Action;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.execution.context.Context;
@@ -10,6 +11,7 @@ import engine.world.design.execution.property.PropertyInstanceImpl;
 import engine.world.design.rule.Rule;
 import engine.world.design.world.api.World;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -50,11 +52,25 @@ public class RunSimulation implements Runnable{
         int ticks = 0;
         //informationSimulation.put(0, simulationOutcome);
         while (!world.getTermination().isTerminated(ticks)) {
+            moveEntities();
+            ArrayList<Action> activeActions = new ArrayList<>();
+            for (Rule rule: world.getRules()) {
+                if (rule.getActivation().isActive(ticks)) {
+                    activeActions.addAll(rule.getActionToPreform());
+                }
+            }
             for (EntityInstance entityInstance: simulationOutcome.getEntityInstanceManager().getInstances().values()) {
-                Context context = new ContextImpl(entityInstance, secondaryEntity, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment());
-                for (Rule rule: world.getRules()) {
-                    if (rule.getActivation().isActive(ticks)) {
-                        rule.getActionToPreform().forEach(action -> action.invoke(context));
+                for (Action action: activeActions){
+                    if (action.getMainEntity().equals(entityInstance.getEntityDefinition())){
+                        if (action.getInteractiveEntity() != null) {
+                            for (EntityInstance secondaryEntity : action.getSecondaryInstances()) {
+                                Context context = new ContextImpl(entityInstance, secondaryEntity, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment());
+                                action.invoke(context);
+                            }
+                        }else{
+                            Context context = new ContextImpl(entityInstance, null, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment());
+                            action.invoke(context);
+                        }
                     }
                 }
             }
@@ -64,5 +80,12 @@ public class RunSimulation implements Runnable{
 //        SimulationOutcome currSimulation = engine.getMyWorld().runSimulation(engine.getPropertyNameToValueAsString(),engine.getCountId());
 //        engine.setCountId(engine.getCountId() + 1);
 //        engine.getPastSimulations().put(engine.getCountId(), currSimulation);
+    }
+    private void moveEntities(){
+        simulationOutcome.
+                getEntityInstanceManager().
+                getInstances().
+                values().
+                forEach((entityInstance) -> world.getGrid().moveEntity(entityInstance));
     }
 }

@@ -3,7 +3,6 @@ package engine.world.design.action.impl;
 import DTOManager.impl.actionDTO.ActionDTO;
 import DTOManager.impl.actionDTO.SetDTO;
 import engine.world.design.action.api.AbstractAction;
-import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
@@ -17,7 +16,7 @@ public class SetAction extends AbstractAction {
     private final String value;
 
     public SetAction(EntityDefinition entityDefinition,EntityDefinition secondEntity, String property, String value) {
-        super(ActionType.SET, entityDefinition,secondEntity);
+        super(ActionType.SET, entityDefinition, interactiveEntity, secondEntity);
         this.property = property;
         this.value = value;
     }

@@ -1,20 +1,26 @@
 package engine.world.design.action.api;
 
-import DTOManager.impl.actionDTO.ActionDTO;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
+import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.property.PropertyInstance;
+
+import java.util.ArrayList;
 
 public abstract class AbstractAction implements Action {
 
     private final ActionType actionType;
     private final EntityDefinition mainEntity;
-    private EntityDefinition secondEntity = null;
+    private final InteractiveEntity interactiveEntity;
 
-    protected AbstractAction(ActionType actionType, EntityDefinition entityDefinition,EntityDefinition secondEntity) {
+    protected AbstractAction(ActionType actionType, EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, EntityDefinition secondEntity) {
         this.actionType = actionType;
         this.mainEntity = entityDefinition;
-        this.secondEntity = secondEntity;
+        this.interactiveEntity = interactiveEntity;
+    }
+    @Override
+    public InteractiveEntity getInteractiveEntity() {
+        return interactiveEntity;
     }
 
     @Override
@@ -31,6 +37,11 @@ public abstract class AbstractAction implements Action {
     public boolean verifyNumericPropertyType(PropertyInstance propertyValue) {
         return
                 PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType()) || PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
+    }
+    @Override
+    public ArrayList<EntityInstance> getSecondaryInstances(){
+        ArrayList<EntityInstance> secondaryInstances = new ArrayList<>();
+        return secondaryInstances;
     }
 
     @Override

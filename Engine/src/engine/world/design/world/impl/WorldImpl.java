@@ -98,7 +98,7 @@ public class WorldImpl implements World {
         ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
         EntityInstanceManager entityInstanceManager = new EntityInstanceManagerImpl();
         return new SimulationOutcome(formattedDate,id,termination,entityInstanceManager, entityInstanceManager.createDTO(),activeEnvironment);
-
+        // TODO: 11/09/2023 change name 
 
 
 //        for (PropertyDefinition envVarDefinition: envVariablesManager.getEnvVariables().values()) {

@@ -8,6 +8,8 @@ import engine.world.design.execution.entity.manager.EntityInstanceManager;
 import engine.world.design.execution.environment.api.ActiveEnvironment;
 import engine.world.design.execution.property.PropertyInstance;
 
+import java.util.ArrayList;
+
 public interface Action {
     void invoke(Context context);
     ActionType getActionType();
@@ -16,4 +18,6 @@ public interface Action {
 
     ActionDTO createActionDTO();
     public EntityDefinition getMainEntity();
+    public ArrayList<EntityInstance> getSecondaryInstances();
+    public InteractiveEntity getInteractiveEntity();
 }

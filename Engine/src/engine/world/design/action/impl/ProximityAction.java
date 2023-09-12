@@ -7,9 +7,7 @@ import engine.world.design.action.api.ActionType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.context.Context;
 import engine.world.design.execution.entity.api.EntityInstance;
-import engine.world.design.expression.Expression;
 import engine.world.design.expression.ExpressionType;
-import engine.world.design.grid.cell.Coordinate;
 
 import java.util.ArrayList;
 
@@ -21,7 +19,7 @@ public class ProximityAction extends AbstractAction {
     private ArrayList<Action> actions;
 
     public ProximityAction(ActionType actionType, EntityDefinition entityDefinition, EntityDefinition secondEntity, String ofExpression, int columns, int rows, ArrayList<Action> actions) {
-        super(actionType, entityDefinition, secondEntity);
+        super(actionType, entityDefinition, interactiveEntity, secondEntity);
         this.ofExpression = ofExpression;
         this.columns = columns;
         this.rows = rows;
@@ -47,7 +45,7 @@ public class ProximityAction extends AbstractAction {
         EntityInstance targetEntity = context.getSecondaryEntity();
         int depth = ExpressionType.DECIMAL.evaluate(ofExpression,context);
         int x = sourceEntity.getCoordinate().getX();
-        int y= sourceEntity.getCoordinate().getY();
+        int y = sourceEntity.getCoordinate().getY();
         int xRight = (x + depth) % columns;
         int xLeft = (x - depth) % columns;
         int yUp = (y + depth) % rows;
