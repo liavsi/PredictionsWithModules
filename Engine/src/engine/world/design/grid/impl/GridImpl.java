@@ -77,4 +77,12 @@ public class GridImpl implements Grid {
     private Cell leftCell(Cell cell){
         return grid[(cell.getCoordinate().getX() - 1) % columns][cell.getCoordinate().getY()];
     }
+    @Override
+    public int getColumns() {
+        return columns;
+    }
+    @Override
+    public int getRows() {
+        return rows;
+    }
 }

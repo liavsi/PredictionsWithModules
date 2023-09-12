@@ -98,9 +98,9 @@ public class ReaderImpl implements Reader {
     private void readPRDWorld() {
         buildEntitiesFromPRD(prdWorld.getPRDEntities());
         buildEnvironmentFromPRD(prdWorld.getPRDEnvironment());
+        buildGridFromPRD(prdWorld.getPRDGrid());
         buildRulesFromPRD(prdWorld.getPRDRules());
         buildTerminationFromPRD(prdWorld.getPRDTermination());
-        buildGridFromPRD(prdWorld.getPRDGrid());
     }
 
     private void buildGridFromPRD(PRDWorld.PRDGrid prdGrid) {
@@ -191,16 +191,41 @@ public class ReaderImpl implements Reader {
     }
 
     private Action createReplaceAction(PRDAction prdAction) {
-        return null;
+        Action res = null;
+        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getKill());
+        Condition conditionAction = null;
+        InteractiveEntity interactiveEntity = null;
+        if (prdAction.getPRDSecondaryEntity() != null){
+            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getCreate());
+            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
+            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
+                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
+            }
+            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
+        }
+        return new ReplaceAction(mainEntity,interactiveEntity,prdAction.getMode());
     }
 
     private Action createProximityAction(PRDAction prdAction) {
-        return null;
-    }
-
-    private Action createSetAction(PRDAction prdAction) {
         Action res = null;
-        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDBetween().getSourceEntity());
+        Condition conditionAction = null;
+        InteractiveEntity interactiveEntity = null;
+        if (prdAction.getPRDSecondaryEntity() != null){
+            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDBetween().getTargetEntity());
+            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
+            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
+                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
+            }
+            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
+        }
+        ArrayList<Action> actions = new ArrayList<>();
+        for (PRDAction prdProximityAction: prdAction.getPRDActions().getPRDAction()){
+            actions.add(buildActionFromPRD(prdProximityAction));
+        }
+        return new ProximityAction(mainEntity,interactiveEntity,prdAction.getPRDEnvDepth().getOf(),createdWorld.getGrid().getColumns(),createdWorld.getGrid().getRows(),actions);
+    }
+    private InteractiveEntity getInteractive(PRDAction prdAction){
         Condition conditionAction = null;
         InteractiveEntity interactiveEntity = null;
         if (prdAction.getPRDSecondaryEntity() != null){
@@ -211,6 +236,13 @@ public class ReaderImpl implements Reader {
             }
             interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
         }
+        return interactiveEntity;
+    }
+
+    private Action createSetAction(PRDAction prdAction) {
+        Action res = null;
+        EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        InteractiveEntity interactiveEntity= getInteractive(prdAction);
         String property = prdAction.getProperty();
         String value = prdAction.getValue();
         res = new SetAction(mainEntity, interactiveEntity,property, value);
@@ -220,16 +252,7 @@ public class ReaderImpl implements Reader {
         ConditionAction res = null;
         Condition condition = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-        Condition conditionAction = null;
-        InteractiveEntity interactiveEntity = null;
-        if (prdAction.getPRDSecondaryEntity() != null){
-            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
-            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
-            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
-                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
-            }
-            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
-        }
+        InteractiveEntity interactiveEntity= getInteractive(prdAction);
         String singularity = prdAction.getPRDCondition().getSingularity();
         switch (singularity) {
             case "single":
@@ -294,16 +317,7 @@ public class ReaderImpl implements Reader {
     private Action createcalCulationAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-        Condition conditionAction = null;
-        InteractiveEntity interactiveEntity = null;
-        if (prdAction.getPRDSecondaryEntity() != null){
-            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
-            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
-            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
-                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
-            }
-            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
-        }
+        InteractiveEntity interactiveEntity= getInteractive(prdAction);
         String property = prdAction.getResultProp();
         String arg1 = null, arg2 = null;
         CalculationType calculationType = null;
@@ -324,31 +338,13 @@ public class ReaderImpl implements Reader {
     }
     private Action createKillAction(PRDAction prdAction) {
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-        Condition conditionAction = null;
-        InteractiveEntity interactiveEntity = null;
-        if (prdAction.getPRDSecondaryEntity() != null){
-            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
-            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
-            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
-                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
-            }
-            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
-        }
+        InteractiveEntity interactiveEntity= getInteractive(prdAction);
         return new KillAction(mainEntity,interactiveEntity);
     }
     private Action createIncreaseOrDecreaseAction(PRDAction prdAction, ActionType type) {
         Action res = null ;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-        Condition conditionAction = null;
-        InteractiveEntity interactiveEntity = null;
-        if (prdAction.getPRDSecondaryEntity() != null){
-            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
-            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
-            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
-                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
-            }
-            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
-        }
+        InteractiveEntity interactiveEntity= getInteractive(prdAction);
         String propertyName = prdAction.getProperty();
         String byExpression = prdAction.getBy();
         if(type == ActionType.INCREASE) {

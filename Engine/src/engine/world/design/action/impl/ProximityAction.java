@@ -1,6 +1,7 @@
 package engine.world.design.action.impl;
 
 import DTOManager.impl.actionDTO.ActionDTO;
+import DTOManager.impl.actionDTO.ProximityDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
@@ -19,8 +20,8 @@ public class ProximityAction extends AbstractAction {
     private final int rows;
     private ArrayList<Action> actions;
 
-    public ProximityAction(ActionType actionType, EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String ofExpression, int columns, int rows, ArrayList<Action> actions) {
-        super(actionType, entityDefinition, interactiveEntity);
+    public ProximityAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String ofExpression, int columns, int rows, ArrayList<Action> actions) {
+        super(ActionType.PROXIMITY, entityDefinition, interactiveEntity);
         this.ofExpression = ofExpression;
         this.columns = columns;
         this.rows = rows;
@@ -38,7 +39,9 @@ public class ProximityAction extends AbstractAction {
 
     @Override
     public ActionDTO createActionDTO() {
-        return null;
+        ArrayList<ActionDTO> actionsDTO = new ArrayList<>();
+        actions.forEach(action -> actionsDTO.add(action.createActionDTO()));
+        return new ProximityDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),ofExpression,columns,rows,actionsDTO);
     }
 
     private boolean isClose(Context context){
