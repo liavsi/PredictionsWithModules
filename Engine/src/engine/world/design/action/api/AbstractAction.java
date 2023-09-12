@@ -41,6 +41,15 @@ public abstract class AbstractAction implements Action {
     @Override
     public ArrayList<EntityInstance> getSecondaryInstances(){
         ArrayList<EntityInstance> secondaryInstances = new ArrayList<>();
+        if(getInteractiveEntity().getConditionAction() == null){
+            int count = getInteractiveEntity().getCount();
+            if(count > interactiveEntity.getSecondaryEntity().getPopulation()){
+                count = interactiveEntity.getSecondaryEntity().getPopulation();
+            }
+            for (int i=0; i<count; i++){
+               // secondaryInstances.add();
+            }
+        }
         return secondaryInstances;
     }
 

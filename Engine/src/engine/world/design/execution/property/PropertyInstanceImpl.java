@@ -32,4 +32,8 @@ public class PropertyInstanceImpl implements PropertyInstance {
     public PropertyInstanceDTO createDTO() {
         return new PropertyInstanceDTO(propertyDefinition.createPropertyDefinitionDTO(), value.toString());
     }
+    @Override
+    public void setValue(Object value) {
+        this.value = value;
+    }
 }

@@ -42,9 +42,12 @@ public class RunSimulation implements Runnable{
         // showFinalEnvProperties();
         // creating the instance manager
         for (EntityDefinition entityDefinition: world.getNameToEntityDefinition().values()) {
+            int entityNum = 0;
+            simulationOutcome.getEntityInstanceManager().getInstances().put(entityDefinition.getName(),null);
             for (int i = 0 ;i < entityDefinition.getPopulation(); i++) {
                 simulationOutcome.getEntityInstanceManager().create(entityDefinition, world.getGrid());
             }
+            entityNum++;
         }
         world.getTermination().startTerminationClock();
         Map<Integer, SimulationOutcome> informationSimulation = new HashMap();
@@ -61,14 +64,14 @@ public class RunSimulation implements Runnable{
             }
             for (EntityInstance entityInstance: simulationOutcome.getEntityInstanceManager().getInstances().values()) {
                 for (Action action: activeActions){
-                    if (action.getMainEntity().equals(entityInstance.getEntityDefinition())){
+                    if (action.getMainEntity().equals(entityInstance.getEntityDefinition())){ //if the action activate on the entity
                         if (action.getInteractiveEntity() != null) {
                             for (EntityInstance secondaryEntity : action.getSecondaryInstances()) {
-                                Context context = new ContextImpl(entityInstance, secondaryEntity, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment());
+                                Context context = new ContextImpl(entityInstance, secondaryEntity, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), world.getGrid());
                                 action.invoke(context);
                             }
                         }else{
-                            Context context = new ContextImpl(entityInstance, null, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment());
+                            Context context = new ContextImpl(entityInstance, null, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), world.getGrid());
                             action.invoke(context);
                         }
                     }

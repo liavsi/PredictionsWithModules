@@ -20,7 +20,7 @@ import java.util.Map;
 public class EntityInstanceManagerImpl implements EntityInstanceManager{
 
     private int count;
-    private final Map<Integer, EntityInstance> instances;
+    private final Map<String, Map<Integer, EntityInstance>> instances;
     List <Integer> instanceToKill = new ArrayList<>();
     public EntityInstanceManagerImpl() {
         count = 0;
@@ -30,7 +30,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
     @Override
     public EntityInstanceManagerDTO createDTO() {
         Map<Integer, EntityInstanceDTO> instanceDTOMapToId = new HashMap<>();
-        instances.forEach(((Id, entityInstance) -> instanceDTOMapToId.put(Id,entityInstance.createDTO())));
+       // instances.forEach(((Id, entityInstance) -> instanceDTOMapToId.put(Id,entityInstance.createDTO())));
         return new EntityInstanceManagerDTO(instanceDTOMapToId);
     }
 //    public EntityInstanceManager clone() throws CloneNotSupportedException {
@@ -42,10 +42,9 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
 
     @Override
     public EntityInstance create(EntityDefinition entityDefinition, Grid grid) {
-
         count++;
         EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinition, count);
-        instances.put(count, newEntityInstance);
+        instances.get(entityDefinition.getName()).put(count,newEntityInstance);
         for (PropertyDefinition propertyDefinition : entityDefinition.getProps()) {
             Object value = propertyDefinition.generateValue();
             PropertyInstance newPropertyInstance = new PropertyInstanceImpl(propertyDefinition, value);
@@ -56,7 +55,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
     }
 
     @Override
-    public Map<Integer, EntityInstance> getInstances() {
+    public Map<String,Map<Integer, EntityInstance>> getInstances() {
         return instances;
     }
 

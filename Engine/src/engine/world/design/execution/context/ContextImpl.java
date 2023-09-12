@@ -4,21 +4,28 @@ import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.entity.manager.EntityInstanceManager;
 import engine.world.design.execution.environment.api.ActiveEnvironment;
 import engine.world.design.execution.property.PropertyInstance;
+import engine.world.design.grid.api.Grid;
 
 public class ContextImpl implements Context {
 
     private final EntityInstance primaryEntityInstance;
-
     private final EntityInstance secondaryEntity;
     private final EntityInstanceManager entityInstanceManager;
     private final ActiveEnvironment activeEnvironment;
+    private final Grid grid;
 
-    public ContextImpl(EntityInstance primaryEntityInstance, EntityInstance secondaryEntity, EntityInstanceManager entityInstanceManager, ActiveEnvironment activeEnvironment) {
+    public ContextImpl(EntityInstance primaryEntityInstance, EntityInstance secondaryEntity, EntityInstanceManager entityInstanceManager, ActiveEnvironment activeEnvironment, Grid grid) {
         this.primaryEntityInstance = primaryEntityInstance;
         this.secondaryEntity = secondaryEntity;
         this.entityInstanceManager = entityInstanceManager;
         this.activeEnvironment = activeEnvironment;
+        this.grid = grid;
     }
+    @Override
+    public Grid getGrid() {
+        return grid;
+    }
+
     @Override
     public EntityInstance getSecondaryEntity() {
         return secondaryEntity;
@@ -27,6 +34,10 @@ public class ContextImpl implements Context {
     @Override
     public EntityInstance getPrimaryEntityInstance() {
         return primaryEntityInstance;
+    }
+    @Override
+    public EntityInstanceManager getEntityInstanceManager() {
+        return entityInstanceManager;
     }
 
     @Override
