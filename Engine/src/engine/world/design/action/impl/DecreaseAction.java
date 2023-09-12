@@ -4,6 +4,7 @@ import DTOManager.impl.actionDTO.ActionDTO;
 import DTOManager.impl.actionDTO.DecreaseDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.ActionType;
+import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
 import engine.world.design.execution.context.Context;
@@ -15,8 +16,8 @@ public class DecreaseAction extends AbstractAction {
     private final String property;
     private final String byExpression;
 
-    public DecreaseAction(EntityDefinition entityDefinition,EntityDefinition secondEntity, String property, String byExpression) {
-        super(ActionType.DECREASE, entityDefinition, interactiveEntity, secondEntity);
+    public DecreaseAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String property, String byExpression) {
+        super(ActionType.DECREASE, entityDefinition, interactiveEntity);
         this.property = property;
         this.byExpression = byExpression;
 

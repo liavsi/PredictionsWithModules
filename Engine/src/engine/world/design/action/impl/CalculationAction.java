@@ -4,6 +4,7 @@ import DTOManager.impl.actionDTO.ActionDTO;
 import DTOManager.impl.actionDTO.CalculationDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.ActionType;
+import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
@@ -19,8 +20,8 @@ public class CalculationAction extends AbstractAction {
     private final String arg2;
 
 
-    public CalculationAction(EntityDefinition entityDefinition,EntityDefinition secondEntity, String property, String arg1, String arg2,CalculationType calculationType) {
-        super(ActionType.CALCULATION, entityDefinition, interactiveEntity, secondEntity);
+    public CalculationAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String property, String arg1, String arg2, CalculationType calculationType) {
+        super(ActionType.CALCULATION, entityDefinition, interactiveEntity);
         this.property = property;
         this.arg1 = arg1;
         this.arg2 = arg2;

@@ -5,6 +5,7 @@ import DTOManager.impl.actionDTO.ConditionActionDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
+import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.context.Context;
 
@@ -16,8 +17,8 @@ public class ConditionAction extends AbstractAction{
     private final List<Action> thenActions;
     private final List<Action> elseActions;
     private final Condition condition;
-    public ConditionAction(EntityDefinition entityDefinition,EntityDefinition secondEntity,Condition condition) {
-        super(ActionType.CONDITION, entityDefinition, interactiveEntity, secondEntity);
+    public ConditionAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, Condition condition) {
+        super(ActionType.CONDITION, entityDefinition, interactiveEntity);
         this.condition = condition;
         thenActions = new ArrayList<>();
         elseActions = new ArrayList<>();
