@@ -4,6 +4,7 @@ import DTOManager.impl.actionDTO.ActionDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
+import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.context.Context;
 import engine.world.design.execution.entity.api.EntityInstance;
@@ -18,8 +19,8 @@ public class ProximityAction extends AbstractAction {
     private final int rows;
     private ArrayList<Action> actions;
 
-    public ProximityAction(ActionType actionType, EntityDefinition entityDefinition, EntityDefinition secondEntity, String ofExpression, int columns, int rows, ArrayList<Action> actions) {
-        super(actionType, entityDefinition, interactiveEntity, secondEntity);
+    public ProximityAction(ActionType actionType, EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String ofExpression, int columns, int rows, ArrayList<Action> actions) {
+        super(actionType, entityDefinition, interactiveEntity);
         this.ofExpression = ofExpression;
         this.columns = columns;
         this.rows = rows;

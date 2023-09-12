@@ -4,13 +4,14 @@ import DTOManager.impl.actionDTO.ActionDTO;
 import DTOManager.impl.actionDTO.KillDTO;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.ActionType;
+import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.context.Context;
 
 public class KillAction extends AbstractAction {
 
-    public KillAction(EntityDefinition entityDefinition,EntityDefinition secondEntity) {
-        super(ActionType.KILL, entityDefinition, interactiveEntity, secondEntity);
+    public KillAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity) {
+        super(ActionType.KILL, entityDefinition, interactiveEntity);
     }
 
     @Override

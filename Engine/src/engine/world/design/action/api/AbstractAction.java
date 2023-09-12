@@ -13,7 +13,7 @@ public abstract class AbstractAction implements Action {
     private final EntityDefinition mainEntity;
     private final InteractiveEntity interactiveEntity;
 
-    protected AbstractAction(ActionType actionType, EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, EntityDefinition secondEntity) {
+    protected AbstractAction(ActionType actionType, EntityDefinition entityDefinition, InteractiveEntity interactiveEntity) {
         this.actionType = actionType;
         this.mainEntity = entityDefinition;
         this.interactiveEntity = interactiveEntity;
