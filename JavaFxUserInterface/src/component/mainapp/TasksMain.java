@@ -31,6 +31,7 @@ public class TasksMain extends Application {
             throw new RuntimeException(e);
         }
         AppController controller = fxmlLoader.getController();
+        //engine needs to know the controller
         controller.setEngine(new EngineImpl());
         //setPrimeryStage?
         Scene scene = new Scene(root, 500, 600);//

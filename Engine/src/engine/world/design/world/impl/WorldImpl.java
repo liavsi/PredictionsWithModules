@@ -1,6 +1,7 @@
 package engine.world.design.world.impl;
 
 import DTOManager.impl.*;
+import engine.SimulationOutcome;
 import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.execution.context.Context;
 import engine.world.design.execution.context.ContextImpl;
@@ -9,12 +10,14 @@ import engine.world.design.execution.entity.manager.EntityInstanceManager;
 import engine.world.design.execution.entity.manager.EntityInstanceManagerImpl;
 import engine.world.design.execution.environment.api.ActiveEnvironment;
 import engine.world.design.execution.property.PropertyInstanceImpl;
+import engine.world.design.grid.api.Grid;
 import engine.world.design.termination.api.Termination;
 import engine.world.design.world.api.World;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.environment.api.EnvVariablesManager;
 import engine.world.design.rule.Rule;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class WorldImpl implements World {
@@ -23,10 +26,20 @@ public class WorldImpl implements World {
     private EnvVariablesManager envVariablesManager;
     private List<Rule> rules;
     private Termination termination;
+    private Grid grid;
 
 // TODO: 10/08/2023 List<Termination> terminationConditions;
     public WorldImpl() {
+
     }
+//    public WorldImpl clone(){
+//        Map<String, EntityDefinition> entities = new HashMap<>();
+//        for (Map.Entry<String, EntityDefinition> entry : nameToEntityDefinition.entrySet()) {
+//            EntityDefinition originalEntity = entry.getValue();
+//            EntityDefinition copiedEntity = new EntityDefinition(originalEntity); // Assuming EntityDefinition has a copy constructor
+//            entities.put(entry.getKey(), copiedEntity);
+//        }
+//    }
     public Map<String, EntityDefinition> getNameToEntityDefinition() {
         return nameToEntityDefinition;
     }
@@ -62,54 +75,68 @@ public class WorldImpl implements World {
         }
         return new WorldDTO(entityDefinitionDTOMap,rulesDTO,terminationDTO,envPropertiesDefinitionDTO);
     }
+    @Override
+    public Grid getGrid() {
+        return grid;
+    }
 
     @Override
     public EnvVariablesManager getEnvVariablesManager() {
         return envVariablesManager;
     }
+    @Override
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+    }
 
     @Override
-    public Map<Integer, EntityInstanceManagerDTO> runSimulation(Map<String, Object> propertyNameToValueAsString) {
+    public SimulationOutcome runSimulation(int id) {
+        Date currentDate = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy | HH.mm.ss");
+        String formattedDate = dateFormat.format(currentDate);
         // creating the Active Environment - if the user gave the property its value we will use it otherwise generate value
         ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
-        for (PropertyDefinition envVarDefinition: envVariablesManager.getEnvVariables().values()) {
-            String envName = envVarDefinition.getName();
-            if(propertyNameToValueAsString.containsKey(envName)) {
-                Object value = envVarDefinition.getType().convert(propertyNameToValueAsString.get(envName));
-                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefinition,value));
-            }
-            else {
-                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefinition, envVarDefinition.generateValue()));
-            }
-        }
-        //showFinalEnvProperties();
-        // creating the instance manager
         EntityInstanceManager entityInstanceManager = new EntityInstanceManagerImpl();
-        for (EntityDefinition entityDefinition: nameToEntityDefinition.values()) {
-            for (int i = 0 ;i < entityDefinition.getPopulation(); i++) {
-                entityInstanceManager.create(entityDefinition);
-            }
-        }
-        Map<Integer, EntityInstanceManagerDTO> informationAboutInstance = new HashMap();
-        // take a picture
-        int ticks = 0; // TODO: 19/08/2023 if ticks = 1
-        informationAboutInstance.put(0, entityInstanceManager.createDTO());
-        termination.startTerminationClock();
-        while (!termination.isTerminated(ticks)) {
-            for (EntityInstance entityInstance: entityInstanceManager.getInstances().values()) {
-                Context context = new ContextImpl(entityInstance, entityInstanceManager, activeEnvironment);
-                for (Rule rule: rules) {
-                    if (rule.getActivation().isActive(ticks)) {
-                        rule.getActionToPreform().forEach(action -> action.invoke(context));
-                    }
-                }
-            }
-            entityInstanceManager.killEntities();
-            ticks++;
-        }
-        informationAboutInstance.put(1, entityInstanceManager.createDTO());
+        return new SimulationOutcome(formattedDate,id,termination,entityInstanceManager, entityInstanceManager.createDTO(),activeEnvironment);
+        // TODO: 11/09/2023 change name 
 
-        return informationAboutInstance;
+
+//        for (PropertyDefinition envVarDefinition: envVariablesManager.getEnvVariables().values()) {
+//            String envName = envVarDefinition.getName();
+//            if(propertyNameToValueAsString.containsKey(envName)) {
+//                Object value = envVarDefinition.getType().convert(propertyNameToValueAsString.get(envName));
+//                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefinition,value));
+//            }
+//            else {
+//                activeEnvironment.addPropertyInstance(new PropertyInstanceImpl(envVarDefinition, envVarDefinition.generateValue()));
+//            }
+//        }
+//        // showFinalEnvProperties();
+//        // creating the instance manager
+//        for (EntityDefinition entityDefinition: nameToEntityDefinition.values()) {
+//            for (int i = 0 ;i < entityDefinition.getPopulation(); i++) {
+//                entityInstanceManager.create(entityDefinition);
+//            }
+//        }
+//
+//        termination.startTerminationClock();
+//        Map<Integer, SimulationOutcome> informationSimulation = new HashMap();
+//        // take a picture
+//        int ticks = 0;
+//        //informationSimulation.put(0, simulationOutcome);
+//        while (!termination.isTerminated(ticks)) {
+//            for (EntityInstance entityInstance: entityInstanceManager.getInstances().values()) {
+//                Context context = new ContextImpl(entityInstance, entityInstanceManager, activeEnvironment);
+//                for (Rule rule: rules) {
+//                    if (rule.getActivation().isActive(ticks)) {
+//                        rule.getActionToPreform().forEach(action -> action.invoke(context));
+//                    }
+//                }
+//            }
+//            entityInstanceManager.killEntities();
+//            ticks++;
+//        }
+        //informationAboutInstance.put(1, entityInstanceManager.createDTO());
     }
     @Override
     public void setEntities(Map<String, EntityDefinition> entities) {

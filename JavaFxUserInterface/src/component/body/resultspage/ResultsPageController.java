@@ -36,6 +36,8 @@ public class ResultsPageController {
 
     private AppController mainController;
     private ObservableList<SimulationOutcomeDTO> recentSimulations;
+
+
     @FXML
     private void initialize() {
         // Initialize your controller

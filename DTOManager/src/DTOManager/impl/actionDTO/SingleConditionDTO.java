@@ -2,13 +2,12 @@ package DTOManager.impl.actionDTO;
 
 import DTOManager.impl.EntityDefinitionDTO;
 
-public class SingleConditionDTO extends ActionDTO implements ConditionDTO{
+public class SingleConditionDTO implements ConditionDTO{
     private final String property;
     private final EntityDefinitionDTO entity;
     private final String operator;
     private final String value;
-    public SingleConditionDTO(String actionType, EntityDefinitionDTO mainEntity, String property, EntityDefinitionDTO entity, String operator, String value) {
-        super(actionType, mainEntity);
+    public SingleConditionDTO(String property, EntityDefinitionDTO entity, String operator, String value) {
         this.property = property;
         this.entity = entity;
         this.operator = operator;

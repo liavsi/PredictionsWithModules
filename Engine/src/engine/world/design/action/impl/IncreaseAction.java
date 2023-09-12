@@ -3,7 +3,6 @@ package engine.world.design.action.impl;
 import DTOManager.impl.actionDTO.ActionDTO;
 import DTOManager.impl.actionDTO.IncreaseDTO;
 import engine.world.design.action.api.AbstractAction;
-import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
@@ -16,8 +15,8 @@ public class IncreaseAction extends AbstractAction {
     private final String property;
     private final String byExpression;
 
-    public IncreaseAction(EntityDefinition entityDefinition, String property, String byExpression) {
-        super(ActionType.INCREASE, entityDefinition);
+    public IncreaseAction(EntityDefinition entityDefinition,EntityDefinition secondEntity, String property, String byExpression) {
+        super(ActionType.INCREASE, entityDefinition, interactiveEntity, secondEntity);
         this.property = property;
         this.byExpression = byExpression;
     }

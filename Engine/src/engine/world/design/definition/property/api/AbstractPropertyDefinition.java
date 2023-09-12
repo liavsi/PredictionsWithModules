@@ -23,9 +23,11 @@ public abstract class AbstractPropertyDefinition<T>  implements PropertyDefiniti
         Boolean isRandomInitializer;
         Float from = null;
         Float to = null;
+        Object value = null;
 
         if (valueGenerator instanceof FixedValueGenerator) {
             isRandomInitializer = Boolean.FALSE;
+            value = valueGenerator.generateValue();
         } else {
             isRandomInitializer = Boolean.TRUE;
             if (valueGenerator instanceof RandomFloatGenerator) {
@@ -37,7 +39,7 @@ public abstract class AbstractPropertyDefinition<T>  implements PropertyDefiniti
             }
 
         }
-        return new PropertyDefinitionDTO(name, propertyType.name(), isRandomInitializer, from, to);
+        return new PropertyDefinitionDTO(name, propertyType.name(), isRandomInitializer, from, to,value);
     }
 
     @Override

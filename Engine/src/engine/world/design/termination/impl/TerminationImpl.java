@@ -27,9 +27,19 @@ public class TerminationImpl implements Termination {
     }
     @Override
     public TerminationDTO createTerminationDTO(){
-        boolean isTicksTerminate = ticks.isTerminateReason();
-        boolean isSecondsTerminate = secondsToPast.isTerminateReason();
-        return new TerminationDTO(ticks.getTicks(),secondsToPast.getSeconds(), isTicksTerminate, isSecondsTerminate);
+        boolean isTicksTerminate = false;
+        boolean isSecondsTerminate = false;
+        Integer numOfTicks = null;
+        Integer numOfSeconds = null;
+        if (ticks != null) {
+            isTicksTerminate = ticks.isTerminateReason();
+            numOfTicks = ticks.getTicks();
+        }
+        if(secondsToPast != null) {
+            isSecondsTerminate = secondsToPast.isTerminateReason();
+            numOfSeconds = secondsToPast.getSeconds();
+        }
+        return new TerminationDTO(numOfTicks,numOfSeconds, isTicksTerminate, isSecondsTerminate);
     }
     @Override
     public Boolean isTerminated(Integer currentTicks) {
@@ -59,8 +69,12 @@ public class TerminationImpl implements Termination {
 
     @Override
     public void startTerminationClock() {
-        ticks.setTerminateReason(false);
-        secondsToPast.setTerminateReason(false);
+        if (ticks != null) {
+            ticks.setTerminateReason(false);
+        }
+        if (secondsToPast != null){
+            secondsToPast.setTerminateReason(false);
+        }
         startTime = Instant.now();
     }
 }

@@ -5,6 +5,8 @@ import engine.world.design.action.api.ActionType;
 import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.action.condition.*;
 import engine.world.design.action.impl.*;
+import engine.world.design.grid.api.Grid;
+import engine.world.design.grid.impl.GridImpl;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
 import engine.world.design.rule.activation.api.Activation;
@@ -28,7 +30,7 @@ import engine.world.design.definition.property.impl.StringPropertyDefinition;
 import engine.world.design.definition.value.generator.api.ValueGeneratorFactory;
 import engine.world.design.world.impl.WorldImpl;
 import engine.world.design.reader.api.Reader;
-import schema.generated.*;
+import schema2.generated.*;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -94,13 +96,28 @@ public class ReaderImpl implements Reader {
 
     private void readPRDWorld() {
         buildEntitiesFromPRD(prdWorld.getPRDEntities());
-        buildEnvironmentFromPRD(prdWorld.getPRDEvironment());
+        buildEnvironmentFromPRD(prdWorld.getPRDEnvironment());
         buildRulesFromPRD(prdWorld.getPRDRules());
         buildTerminationFromPRD(prdWorld.getPRDTermination());
+        buildGridFromPRD(prdWorld.getPRDGrid());
     }
+
+    private void buildGridFromPRD(PRDWorld.PRDGrid prdGrid) {
+        int columns = prdGrid.getColumns();
+        int rows = prdGrid.getRows();
+        if(columns < 10 || columns > 100){
+            throw new RuntimeException("Size of columns is invalid");
+        }
+        if (rows < 10 || rows > 100){
+            throw new RuntimeException("Size of rows is invalid");
+        }
+        GridImpl grid = new GridImpl(prdGrid.getColumns(), prdGrid.getRows());
+        createdWorld.setGrid(grid);
+    }
+
     private void buildTerminationFromPRD(PRDTermination prdTermination) {
         TerminationImpl termination = new TerminationImpl();
-        for (Object prdTicksOrSeconds :prdTermination.getPRDByTicksOrPRDBySecond()) {
+        for (Object prdTicksOrSeconds :prdTermination.getPRDBySecondOrPRDByTicks()) {
             if(prdTicksOrSeconds instanceof PRDByTicks) {
                 Tick tick = new TickImpl(((PRDByTicks) prdTicksOrSeconds).getCount());
                 termination.setTicks(tick);
@@ -160,23 +177,40 @@ public class ReaderImpl implements Reader {
             case ("kill"):
                 res = createKillAction(prdAction);
                 break;
+            case("proximity"):
+                res = createProximityAction(prdAction);;
+                break;
+            case("replace"):
+                res = createReplaceAction(prdAction);
+                break;
             default:
                 throw new IllegalStateException("Unexpected value: " + prdAction.getType());
         }
         return res;
     }
+
+    private Action createReplaceAction(PRDAction prdAction) {
+        return null;
+    }
+
+    private Action createProximityAction(PRDAction prdAction) {
+        return null;
+    }
+
     private Action createSetAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
         String property = prdAction.getProperty();
         String value = prdAction.getValue();
-        res = new SetAction(mainEntity, property, value);
+        res = new SetAction(mainEntity, secondEntity,property, value);
         return res;
     }
     private Action createConditionAction(PRDAction prdAction) {
         ConditionAction res = null;
         Condition condition = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
         String singularity = prdAction.getPRDCondition().getSingularity();
         switch (singularity) {
             case "single":
@@ -185,7 +219,7 @@ public class ReaderImpl implements Reader {
                 String value = prdAction.getPRDCondition().getValue();
                 String operator = prdAction.getPRDCondition().getOperator();
                 condition = new SingleCondition(entity, property,value,operator);
-                res = new ConditionAction(mainEntity,condition);
+                res = new ConditionAction(mainEntity,secondEntity,condition);
                 break;
             case "multiple":
                 String logical = prdAction.getPRDCondition().getLogical();
@@ -196,13 +230,13 @@ public class ReaderImpl implements Reader {
                 for (PRDCondition prdCondition: prdAction.getPRDCondition().getPRDCondition()){
                     multipleCondition.addCondition(createSubCondition(prdCondition));
                 }
-                res = new ConditionAction(mainEntity,multipleCondition);
+                res = new ConditionAction(mainEntity,secondEntity,multipleCondition);
                 break;
             default:
                 throw new IllegalArgumentException(singularity + "is not a valid Condition Singularity");
         }
         for (PRDAction prdAction1: prdAction.getPRDThen().getPRDAction()){
-            res.getThanActions().add(buildActionFromPRD(prdAction1));
+            res.getThenActions().add(buildActionFromPRD(prdAction1));
         }
         if (prdAction.getPRDElse() != null) {
             for (PRDAction prdAction1 : prdAction.getPRDElse().getPRDAction()) {
@@ -241,6 +275,7 @@ public class ReaderImpl implements Reader {
     private Action createcalCulationAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
         String property = prdAction.getResultProp();
         String arg1 = null, arg2 = null;
         CalculationType calculationType = null;
@@ -256,24 +291,25 @@ public class ReaderImpl implements Reader {
         else {
             throw new IllegalArgumentException(prdAction + "is Calculation but illegal property" +prdAction.getPRDDivide().toString() +prdAction.getPRDMultiply().toString());
         }
-        res = new CalculationAction(mainEntity, property, arg1, arg2, calculationType);
+        res = new CalculationAction(mainEntity,secondEntity, property, arg1, arg2, calculationType);
         return res;
     }
     private Action createKillAction(PRDAction prdAction) {
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
-        Action res = new KillAction(mainEntity);
-        return res;
+        EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
+        return new KillAction(mainEntity,secondEntity);
     }
     private Action createIncreaseOrDecreaseAction(PRDAction prdAction, ActionType type) {
         Action res = null ;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getEntity());
+        EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDSecondaryEntity().getEntity());
         String propertyName = prdAction.getProperty();
         String byExpression = prdAction.getBy();
         if(type == ActionType.INCREASE) {
-            res = new IncreaseAction(mainEntity,propertyName,byExpression);
+            res = new IncreaseAction(mainEntity,secondEntity,propertyName,byExpression);
         }
         else if (type == ActionType.DECREASE) {
-            res = new DecreaseAction(mainEntity,propertyName,byExpression);
+            res = new DecreaseAction(mainEntity,secondEntity,propertyName,byExpression);
         }
         return res;
     }
@@ -291,9 +327,9 @@ public class ReaderImpl implements Reader {
     /**
      * this code is responsible for creating Property definition from the correct Type
      */
-    private void buildEnvironmentFromPRD(PRDEvironment prdEvironment) {
+    private void buildEnvironmentFromPRD(PRDEnvironment prdEnvironment) {
         EnvVariablesManager envVariablesManager = new EnvVariablesManagerImpl();
-        for(PRDEnvProperty prdEnvProperty: prdEvironment.getPRDEnvProperty()) {
+        for(PRDEnvProperty prdEnvProperty: prdEnvironment.getPRDEnvProperty()) {
             if (envVariablesManager.getEnvVariables().containsKey(prdEnvProperty.getPRDName())) {
                 throw new IllegalArgumentException(prdEnvProperty.getPRDName() + "is already exists in the simulation");
             }
@@ -425,7 +461,7 @@ public class ReaderImpl implements Reader {
     private void buildEntitiesFromPRD(PRDEntities prdEntities) {
         Map<String, EntityDefinition> entities = new HashMap<>();
         for (PRDEntity prdEntity: prdEntities.getPRDEntity()){
-            EntityDefinition currEntity = new EntityDefinitionImpl(prdEntity.getName(), prdEntity.getPRDPopulation());
+            EntityDefinition currEntity = new EntityDefinitionImpl(prdEntity.getName());
             for (PRDProperty prdProperty : prdEntity.getPRDProperties().getPRDProperty()) {
                 if (currEntity.getProps().contains(prdProperty)) {
                     throw new IllegalArgumentException("Property " + prdProperty + " already exists in the Entity " + currEntity.getName());

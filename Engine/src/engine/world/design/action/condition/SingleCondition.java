@@ -61,7 +61,11 @@ public class SingleCondition implements Condition{
             }
             case ("lt"):{
                 if(verifyNumericPropertyType(propertyInstance)){
-                    return (float) propertyInstance.getValue() < (float) propertyType.convert(realValue);
+                    if (propertyType == PropertyType.DECIMAL) {
+                        return (int) propertyInstance.getValue() < (int) propertyType.convert(realValue);
+                    }else{
+                        return (float) propertyInstance.getValue() < (float) propertyType.convert(realValue);
+                    }
                 }
                 else{
                     throw new RuntimeException("Lt can't be done on non numeric values");
@@ -76,8 +80,8 @@ public class SingleCondition implements Condition{
         return
                 PropertyType.DECIMAL.equals(propertyValue.getPropertyDefinition().getType()) || PropertyType.FLOAT.equals(propertyValue.getPropertyDefinition().getType());
     }
-//    @Override
-//    public ConditionDTO createConditionDTO(String actionType, EntityDefinition mainEntity){
-//        return new SingleConditionDTO(actionType,mainEntity.createEntityDefinitionDTO(),property,entity.createEntityDefinitionDTO(),operator,value);
-//    }
+    @Override
+    public SingleConditionDTO createConditionDTO(){
+        return new SingleConditionDTO(property,entity.createEntityDefinitionDTO(),operator,value);
+    }
 }

@@ -14,19 +14,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 // TODO: 10/08/2023 After deleting old World Change to World
 
 public class EngineImpl implements Engine {
-    private static final String JAXB_XML_PACKAGE_NAME = "schema.generated";
-
-
+    private static final String JAXB_XML_PACKAGE_NAME = "schema2.generated";
     private boolean isLoadedWorld = false;
-    private SimpleStringProperty fileName = new SimpleStringProperty();
+    private final SimpleStringProperty fileName = new SimpleStringProperty();
     private final Reader myReader;
     private World myWorld; // TODO: 19/08/2023 static?
     private Integer countId = 1;
-    private final Map<Integer, SimulationOutcome> pastSimulations;
+    private final Map<Integer,SimulationOutcome> pastSimulations;
+    private Map<String, Object> propertyNameToValueAsString;
+    private ExecutorService threadExecutor;
+    private int numOfThreads;
 
     public World getWorld() {
         return myWorld;
@@ -36,18 +39,39 @@ public class EngineImpl implements Engine {
         pastSimulations = new HashMap<>();
     }
     @Override
+    public void setNumOfThreads(int numOfThreads) {
+        this.numOfThreads = numOfThreads;
+        threadExecutor = Executors.newFixedThreadPool(numOfThreads);
+    }
+
+    @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
-        Date currentDate = new Date();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy | HH.mm.ss");
-        Map<Integer, EntityInstanceManagerDTO> currSimulationInstances = myWorld.runSimulation(propertyNameToValueAsString);
-        String formattedDate = dateFormat.format(currentDate);
-        SimulationOutcome currSimulation = new SimulationOutcome(formattedDate,countId, myWorld.getTermination(),currSimulationInstances);
-        pastSimulations.put(countId++, currSimulation);
-        return currSimulation.createSimulationOutcomeDTO();
+        SimulationOutcome simulation = myWorld.runSimulation(countId);
+        pastSimulations.put(countId++, simulation);
+        threadExecutor.execute(new RunSimulation(simulation,myWorld,propertyNameToValueAsString));
+        return simulation.createSimulationOutcomeDTO();
+        //SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString,countId);
+        //engine.setCountId(engine.getCountId() + 1);
+        //engine.getPastSimulations().put(engine.getCountId(), currSimulation);
+//        for(){
+//
+//        }
+//        //Date currentDate = new Date();
+//        //SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy | HH.mm.ss");
+//        SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString,countId);
+//        //String formattedDate = dateFormat.format(currentDate);
+//        //SimulationOutcome currSimulation = new SimulationOutcome(formattedDate,countId, myWorld.getTermination(),currSimulationInstances);
+//        pastSimulations.put(countId++, currSimulation);
+//        return currSimulation.createSimulationOutcomeDTO();
     }
     @Override
     public WorldDTO getWorldDTO() {
          return myWorld.createWorldDTO();
+    }
+
+    @Override
+    public SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber) {
+        return pastSimulations.get(wantedSimulationNumber).createSimulationOutcomeDTO();
     }
 
     @Override
@@ -67,10 +91,10 @@ public class EngineImpl implements Engine {
     public boolean getIsLoadedWorld() {
         return isLoadedWorld;
     }
-    @Override
-    public SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber) {
-        return pastSimulations.get(wantedSimulationNumber).createSimulationOutcomeDTO();
-    }
+//    @Override
+//    public Map<Integer,SimulationOutcomeDTO> getPastSimulationDTO(int wantedSimulationNumber) {
+//        return pastSimulations.get(wantedSimulationNumber).createSimulationOutcomeDTO();
+//    }
 
     @Override
     public Map<Integer, SimulationOutcomeDTO> getPastSimulationMapDTO() {
@@ -78,11 +102,32 @@ public class EngineImpl implements Engine {
         pastSimulations.forEach((id,pastSimulationOutCome) -> res.put(id, pastSimulationOutCome.createSimulationOutcomeDTO()));
         return res;
     }
-
     @Override
     public SimpleStringProperty fileNameProperty() {
         return fileName;
     }
-
-
+    @Override
+    public Integer getCountId() {
+        return countId;
+    }
+    @Override
+    public Map<Integer, SimulationOutcome> getPastSimulations() {
+        return pastSimulations;
+    }
+    @Override
+    public World getMyWorld() {
+        return myWorld;
+    }
+    @Override
+    public Map<String, Object> getPropertyNameToValueAsString() {
+        return propertyNameToValueAsString;
+    }
+    @Override
+    public void setPropertyNameToValueAsString(Map<String, Object> propertyNameToValueAsString) {
+        this.propertyNameToValueAsString = propertyNameToValueAsString;
+    }
+    @Override
+    public void setCountId(Integer countId) {
+        this.countId = countId;
+    }
 }

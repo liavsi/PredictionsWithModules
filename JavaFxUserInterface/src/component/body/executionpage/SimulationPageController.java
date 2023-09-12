@@ -34,12 +34,10 @@ public class SimulationPageController {
     @FXML private VBox rightVbox;
     @FXML private VBox leftVbox;
     private SimpleIntegerProperty gridArea;
-
     private WorldDTO world;
-
     private List<PropertyDefinitionDTO> environmentVariablesDefinition;
 
-    private Map<String, ObjectProperty> resultEnvironment = new HashMap<>();
+    private final Map<String, ObjectProperty> resultEnvironment = new HashMap<>();
     private AppController appController;
 
 
@@ -84,7 +82,6 @@ public class SimulationPageController {
     public void setMainController(AppController appController) {
         this.appController = appController;
     }
-
     public void onClickedStartSimulation(ActionEvent event) {
         Map<String, Object> resToEngine = resultEnvironment.entrySet().stream()
                 .collect(Collectors.toMap(

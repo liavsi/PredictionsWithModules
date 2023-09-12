@@ -13,13 +13,16 @@ import java.util.List;
 public class EntityDefinitionImpl implements EntityDefinition, Cloneable{
 
     private final String name;
-    private final int population;
+    private int population;
     private final List<PropertyDefinition> properties;
 
-    public EntityDefinitionImpl(String name, int population) {
+    public EntityDefinitionImpl(String name) {
         this.name = name;
-        this.population = population;
         properties = new ArrayList<>();
+    }
+
+    public void setPopulation(int population) {
+        this.population = population;
     }
 
     @Override
@@ -53,4 +56,10 @@ public class EntityDefinitionImpl implements EntityDefinition, Cloneable{
         }
         throw new IllegalArgumentException("for entity of type " + getName() + " has no property named " + name);
     }
+//    @Override
+//    public EntityDefinition clone() throws CloneNotSupportedException {
+//        EntityDefinition clone = (EntityDefinition) super.clone();
+//        properties.forEach((propertyDefinition) -> clone.getProps().add(propertyDefinition.clone()));
+//        return clone;
+//    }
 }

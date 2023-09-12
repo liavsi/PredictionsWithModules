@@ -57,7 +57,7 @@ public class AppController {
     @FXML private BorderPane BorderPaneMain;
 
 
-    private ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
+    //private ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
 
 
     private Engine engine;
@@ -144,8 +144,7 @@ public class AppController {
                 return simulationOutcomeDTO;
             }
         };
-
-        executor.submit(simulationTask);
+        //executor.submit(simulationTask);
         switchToResultsPage();
 
         // here im trying to get updates from the Task on a scheduled time
@@ -164,6 +163,11 @@ public class AppController {
             recentSimulations.add(simulationOutcomeDTO);
             headerComponentController.setIsIsThereSimulationOutCome(true);
         });
+        // TODO: 09/09/2023  
+//        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+//        switchToResultsPage();
+
+        
     }
 
     public void switchToNewExecutionPage() {
