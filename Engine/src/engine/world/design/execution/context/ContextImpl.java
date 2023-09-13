@@ -8,7 +8,7 @@ import engine.world.design.grid.api.Grid;
 
 public class ContextImpl implements Context {
 
-    private final EntityInstance primaryEntityInstance;
+    private EntityInstance primaryEntityInstance;
     private final EntityInstance secondaryEntity;
     private final EntityInstanceManager entityInstanceManager;
     private final ActiveEnvironment activeEnvironment;
@@ -21,6 +21,11 @@ public class ContextImpl implements Context {
         this.activeEnvironment = activeEnvironment;
         this.grid = grid;
     }
+    @Override
+    public void setPrimaryEntityInstance(EntityInstance primaryEntityInstance) {
+        this.primaryEntityInstance = primaryEntityInstance;
+    }
+
     @Override
     public Grid getGrid() {
         return grid;

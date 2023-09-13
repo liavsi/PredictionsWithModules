@@ -16,6 +16,6 @@ public interface Action {
 
     ActionDTO createActionDTO();
     public EntityDefinition getMainEntity();
-    public ArrayList<EntityInstance> getSecondaryInstances();
+    public ArrayList<EntityInstance> getSecondaryInstances(Context context);
     public InteractiveEntity getInteractiveEntity();
 }

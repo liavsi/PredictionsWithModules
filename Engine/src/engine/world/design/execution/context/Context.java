@@ -13,4 +13,5 @@ public interface Context {
     public EntityInstance getSecondaryEntity();
     public EntityInstanceManager getEntityInstanceManager();
     public Grid getGrid();
+    public void setPrimaryEntityInstance(EntityInstance primaryEntityInstance);
 }

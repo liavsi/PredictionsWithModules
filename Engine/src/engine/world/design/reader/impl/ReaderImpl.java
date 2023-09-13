@@ -101,6 +101,7 @@ public class ReaderImpl implements Reader {
         buildGridFromPRD(prdWorld.getPRDGrid());
         buildRulesFromPRD(prdWorld.getPRDRules());
         buildTerminationFromPRD(prdWorld.getPRDTermination());
+        createdWorld.setNumOfThreads(prdWorld.getPRDThreadCount());
     }
 
     private void buildGridFromPRD(PRDWorld.PRDGrid prdGrid) {

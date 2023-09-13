@@ -27,6 +27,7 @@ public class WorldImpl implements World {
     private List<Rule> rules;
     private Termination termination;
     private Grid grid;
+    private int numOfThreads;
 
 // TODO: 10/08/2023 List<Termination> terminationConditions;
     public WorldImpl() {
@@ -49,6 +50,15 @@ public class WorldImpl implements World {
 
     public List<Rule> getRules() {
         return rules;
+    }
+
+    @Override
+    public void setNumOfThreads(int numOfThreads) {
+        this.numOfThreads = numOfThreads;
+    }
+    @Override
+    public int getNumOfThreads() {
+        return numOfThreads;
     }
 
     @Override

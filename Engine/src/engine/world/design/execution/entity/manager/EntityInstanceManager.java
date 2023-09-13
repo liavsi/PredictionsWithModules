@@ -13,7 +13,7 @@ public interface EntityInstanceManager {
     EntityInstanceManagerDTO createDTO();
 
     EntityInstance create(EntityDefinition entityDefinition, Grid grid);
-    Map<String,Map<Integer, EntityInstance>> getInstances();
+    Map<Integer, EntityInstance> getInstances();
     void killEntities();
     void killEntity(int id);
     public List<Integer> getInstanceToKill();
