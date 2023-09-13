@@ -14,7 +14,6 @@ public class TerminationDTO {
     }
     public Integer getTicks() {
         return ticks;
-
     }
     public Integer getSecondsToPast() {
         return secondsToPast;
