@@ -164,8 +164,8 @@ public class AppController {
             headerComponentController.setIsIsThereSimulationOutCome(true);
         });
         // TODO: 09/09/2023  
-//        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
-//        switchToResultsPage();
+        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+        switchToResultsPage();
 
         
     }

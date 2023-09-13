@@ -7,7 +7,7 @@ public interface PropertyInstance {
     PropertyDefinition getPropertyDefinition();
     Object getValue();
     void updateValue(Object val);
-
+    public void setValue(Object value);
 
     PropertyInstanceDTO createDTO();
 }

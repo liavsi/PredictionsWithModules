@@ -29,7 +29,6 @@ public class EngineImpl implements Engine {
     private final Map<Integer,SimulationOutcome> pastSimulations;
     private Map<String, Object> propertyNameToValueAsString;
     private ExecutorService threadExecutor;
-    private int numOfThreads;
 
     public World getWorld() {
         return myWorld;
@@ -38,11 +37,7 @@ public class EngineImpl implements Engine {
         myReader = new ReaderImpl();
         pastSimulations = new HashMap<>();
     }
-    @Override
-    public void setNumOfThreads(int numOfThreads) {
-        this.numOfThreads = numOfThreads;
-        threadExecutor = Executors.newFixedThreadPool(numOfThreads);
-    }
+
 
     @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
@@ -79,6 +74,7 @@ public class EngineImpl implements Engine {
         myReader.readWorldFromXml(fileName.get(), JAXB_XML_PACKAGE_NAME);
         myWorld = myReader.getWorld();
         isLoadedWorld = true;
+        threadExecutor = Executors.newFixedThreadPool(myWorld.getNumOfThreads());
     }
 
     @Override

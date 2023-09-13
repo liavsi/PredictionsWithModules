@@ -3,6 +3,7 @@ package engine.world.design.action.condition;
 import engine.world.design.action.api.AbstractAction;
 import engine.world.design.action.api.Action;
 import engine.world.design.action.api.ActionType;
+import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.context.Context;
 
@@ -14,8 +15,8 @@ public abstract class AbstractCondition extends AbstractAction implements Condit
     private final List<Action> thanActions;
     private final List<Action> elseActions;
 
-    protected AbstractCondition(ActionType actionType, EntityDefinition entityDefinition) {// TODO: 15/08/2023  
-        super(actionType, entityDefinition);
+    protected AbstractCondition(ActionType actionType, EntityDefinition entityDefinition, InteractiveEntity interactiveEntity) {// TODO: 15/08/2023
+        super(actionType, entityDefinition, interactiveEntity);
         thanActions = new ArrayList<>();
         elseActions = new ArrayList<>();
     }

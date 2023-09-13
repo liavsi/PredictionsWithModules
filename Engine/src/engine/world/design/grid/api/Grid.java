@@ -10,5 +10,7 @@ public interface Grid {
 
     public void initEntityPlace(EntityInstance entityInstance);
     public void moveEntity(EntityInstance entityInstance);
+    public int getColumns();
+    public int getRows();
 
 }

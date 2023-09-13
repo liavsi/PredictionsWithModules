@@ -26,6 +26,5 @@ public interface Engine {
     public Map<String, Object> getPropertyNameToValueAsString();
     public void setPropertyNameToValueAsString(Map<String, Object> propertyNameToValueAsString);
     public void setCountId(Integer countId);
-    public void setNumOfThreads(int numOfThreads);
     // TODO: 10/08/2023 SimulationOutComeDTO getSimulationOutComeDTO();
 }

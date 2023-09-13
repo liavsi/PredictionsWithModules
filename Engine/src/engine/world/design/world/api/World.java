@@ -32,4 +32,6 @@ public interface World {
     WorldDTO createWorldDTO();
     public void setGrid(Grid grid);
     public Grid getGrid();
+    public void setNumOfThreads(int numOfThreads);
+    public int getNumOfThreads();
 }
