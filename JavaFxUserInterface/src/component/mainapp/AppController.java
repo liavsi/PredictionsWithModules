@@ -157,16 +157,15 @@ public class AppController {
                     SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
                     Platform.runLater(() -> {
                         recentSimulations.put(simulationId, currSimulationDTO);
-
 //                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
                     });
-                    Thread.sleep(150);
+                    Thread.sleep(800);
                     isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() && currSimulationDTO.getTerminationDTO().isTicksTerminate());
                 }
                 return engine.getPastSimulationDTO(simulationId);
             }
         };
-        executor.submit(simulationTask);
+        executor.execute(simulationTask);
         simulationTask.setOnSucceeded(event -> {
             SimulationOutcomeDTO simulationOutcomeDTO = simulationTask.getValue();
         });

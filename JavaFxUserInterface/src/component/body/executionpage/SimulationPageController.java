@@ -55,39 +55,81 @@ public class SimulationPageController {
         organizeEnvironmentVariablesData();
         organizePopulationData();
     }
-
     private void organizePopulationData() {
         IntegerProperty maxPopulation = new SimpleIntegerProperty(world.getGridDTO().getArea());
-        List<DoubleProperty> sumPopulation = new ArrayList<>();
+        DoubleProperty sumPopulation = new SimpleDoubleProperty(0.0); // Initialize sum to 0
+
         for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionByName.values()) {
             HBox pair = null;
-            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), 0); // Initialize with a default value within the specified range
+            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), 0);
+
+            // Bind inputPlaceNumber to sumPopulation
+            inputPlaceNumber.valueProperty().addListener((observable, oldValue, newValue) -> {
+                // Update the sumPopulation whenever an inputPlaceNumber changes
+                sumPopulation.set(sumPopulation.get() - oldValue.doubleValue() + newValue.doubleValue());
+            });
+
             resultEnvironment.put(entityDefinitionDTO.getName() + "entity", new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().intValue()));
-            sumPopulation.add(inputPlaceNumber.valueProperty());
             pair = inputPlaceNumber;
             if (pair == null) {
                 throw new RuntimeException("expected pair to have a value");
             }
             leftVbox.getChildren().add(pair);
         }
-        StringProperty alert = new SimpleStringProperty("check");
-        Label alertLabel =new Label("");
+
+        String goodMessage = "Max Population in the simulation is: " + maxPopulation.intValue();
+        StringProperty alert = new SimpleStringProperty(goodMessage);
+        Label alertLabel = new Label("");
         alertLabel.textProperty().bind(alert);
         leftVbox.getChildren().add(alertLabel);
-        DoubleBinding result = Bindings.createDoubleBinding(() -> sumPopulation.stream().mapToDouble(DoubleProperty::get).sum(), sumPopulation.toArray(new DoubleProperty[0]));
-        result.addListener(((observable, oldValue, newValue) -> {
-            int tooMuch =-1*(maxPopulation.intValue() - newValue.intValue());
+
+        // Bind the alert message and enable/disable button based on sumPopulation
+        sumPopulation.addListener((observable, oldValue, newValue) -> {
+            int tooMuch = -1 * (maxPopulation.intValue() - newValue.intValue());
             if (maxPopulation.intValue() - newValue.intValue() < 0) {
                 alert.set("You need to lower your population by " + tooMuch);
                 startSimulationButton.setDisable(true);
-            }
-            else {
+            } else {
                 startSimulationButton.setDisable(false);
-                alert.set("");
+                alert.set(goodMessage);
             }
-
-        }));
+        });
     }
+
+//    private void organizePopulationData() {
+//        IntegerProperty maxPopulation = new SimpleIntegerProperty(world.getGridDTO().getArea());
+//        List<DoubleProperty> sumPopulation = new ArrayList<>();
+//        for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionByName.values()) {
+//            HBox pair = null;
+//            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), 0); // Initialize with a default value within the specified range
+//            resultEnvironment.put(entityDefinitionDTO.getName() + "entity", new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().intValue()));
+//            inputPlaceNumber.valueProperty().bindBidirectional(resultEnvironment.get(entityDefinitionDTO.getName()+"entity"));
+//            sumPopulation.add(inputPlaceNumber.valueProperty());
+//            pair = inputPlaceNumber;
+//            if (pair == null) {
+//                throw new RuntimeException("expected pair to have a value");
+//            }
+//            leftVbox.getChildren().add(pair);
+//        }
+//        String goodMessage = "Max Population in the simulation is: " + maxPopulation.intValue();
+//        StringProperty alert = new SimpleStringProperty(goodMessage);
+//        Label alertLabel =new Label("");
+//        alertLabel.textProperty().bind(alert);
+//        leftVbox.getChildren().add(alertLabel);
+//        DoubleBinding result = Bindings.createDoubleBinding(() -> sumPopulation.stream().mapToDouble(DoubleProperty::get).sum(), sumPopulation.toArray(new DoubleProperty[0]));
+//        result.addListener(((observable, oldValue, newValue) -> {
+//            int tooMuch =-1*(maxPopulation.intValue() - newValue.intValue());
+//            if (maxPopulation.intValue() - newValue.intValue() < 0) {
+//                alert.set("You need to lower your population by " + tooMuch);
+//                startSimulationButton.setDisable(true);
+//            }
+//            else {
+//                startSimulationButton.setDisable(false);
+//                alert.set(goodMessage);
+//            }
+//        }));
+//        result.get();
+//    }
 
     private void organizeEnvironmentVariablesData() {
         for(PropertyDefinitionDTO env: environmentVariablesDefinition) {
