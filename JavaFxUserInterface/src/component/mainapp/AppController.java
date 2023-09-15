@@ -16,6 +16,7 @@ import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -40,34 +41,43 @@ import java.util.concurrent.Executors;
 public class AppController {
     private static final String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
     private static final String NEW_EXECUTION_FXML_RESOURCE = "/component/body/executionpage/newExecutionView.fxml";
-    private static final String RESULTS_FXML_RESOURCE = "/component/body/resultspage/resultView.fxml" ;
+    private static final String RESULTS_FXML_RESOURCE = "/component/body/resultspage/resultView.fxml";
     private static final int MILISEC_TASK_SEND_UPDATES = 100;
 
 
-    @FXML private VBox dynamicVBox;
+    @FXML
+    private VBox dynamicVBox;
 
-    @FXML private GridPane headerComponent;
-    @FXML private HeaderController headerComponentController;
-    @FXML private DetailsPageController detailsPageComponentController;
+    @FXML
+    private GridPane headerComponent;
+    @FXML
+    private HeaderController headerComponentController;
+    @FXML
+    private DetailsPageController detailsPageComponentController;
 
-    @FXML private SimulationPageController newExecutionPageComponentController;
+    @FXML
+    private SimulationPageController newExecutionPageComponentController;
 
-    @FXML private ResultsPageController resultsPageController;
+    @FXML
+    private ResultsPageController resultsPageController;
 
-    @FXML private BorderPane BorderPaneMain;
+    @FXML
+    private BorderPane BorderPaneMain;
 
 
-    //private ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
+    private final ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
 
 
     private Engine engine;
-    private ObservableList<SimulationOutcomeDTO> recentSimulations = FXCollections.observableArrayList();
+    private ObservableMap<Integer, SimulationOutcomeDTO> recentSimulations = FXCollections.observableHashMap();
 
     public AppController() {
     }
-    @FXML public void initialize() {
+
+    @FXML
+    public void initialize() {
         if (headerComponentController != null) {
-           headerComponentController.setMainController(this);
+            headerComponentController.setMainController(this);
         }
     }
 
@@ -89,6 +99,7 @@ public class AppController {
         dynamicVBox.getChildren().clear();
         dynamicVBox.getChildren().add(detailsBox);
     }
+
     public void onDetailsChosen() {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -137,45 +148,36 @@ public class AppController {
             protected SimulationOutcomeDTO call() throws Exception {
                 // Run your simulation here
                 SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+                int simulationId = simulationOutcomeDTO.getId();
+                recentSimulations.put(simulationId, simulationOutcomeDTO);
+                headerComponentController.setIsIsThereSimulationOutCome(true);
+                boolean isSimulationRunning = true;
+                isSimulationRunning = !(simulationOutcomeDTO.getTerminationDTO().isSecondsTerminate() && simulationOutcomeDTO.getTerminationDTO().isTicksTerminate());
+                while (isSimulationRunning) {
+                    SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
+                    Platform.runLater(() -> {
+                        recentSimulations.put(simulationId, currSimulationDTO);
 
-                // You can update the progress here as needed
-                updateProgress(1, 1); // Example: Completed
-
-                return simulationOutcomeDTO;
+//                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
+                    });
+                    Thread.sleep(150);
+                    isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() && currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                }
+                return engine.getPastSimulationDTO(simulationId);
             }
         };
-        //executor.submit(simulationTask);
-        switchToResultsPage();
-
-        // here im trying to get updates from the Task on a scheduled time
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.millis(MILISEC_TASK_SEND_UPDATES), event -> {
-                    if (simulationTask.isRunning()) {
-                        // This code will run every MILISEC_TASK_SEND_UPDATES ms while the task is running
-                        System.out.println("Task is running...");
-                    }
-                })
-        );
-        timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.play();
+        executor.submit(simulationTask);
         simulationTask.setOnSucceeded(event -> {
             SimulationOutcomeDTO simulationOutcomeDTO = simulationTask.getValue();
-            recentSimulations.add(simulationOutcomeDTO);
-            headerComponentController.setIsIsThereSimulationOutCome(true);
         });
-        // TODO: 09/09/2023  
-        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
         switchToResultsPage();
-
-        
     }
 
     public void switchToNewExecutionPage() {
-        if(newExecutionPageComponentController != null) {
+        if (newExecutionPageComponentController != null) {
             dynamicVBox.getChildren().clear();
             dynamicVBox.getChildren().add(newExecutionPageComponentController.getMainView());
-        }
-        else {
+        } else {
             loadNewExecutionPage();
         }
     }
@@ -197,17 +199,16 @@ public class AppController {
     }
 
     public void switchToResultsPage() {
-        if(resultsPageController != null) {
+        if (resultsPageController != null) {
             dynamicVBox.getChildren().clear();
             dynamicVBox.getChildren().add(resultsPageController.getMainView());
-        }
-        else {
+        } else {
             loadResultsPage();
         }
     }
 
 
-    public ObservableList<SimulationOutcomeDTO> getRecentSimulations() {
+    public ObservableMap<Integer, SimulationOutcomeDTO> getRecentSimulations() {
         return recentSimulations;
     }
 }
