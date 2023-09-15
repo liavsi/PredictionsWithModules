@@ -42,6 +42,7 @@ public class RunSimulation implements Runnable{
         // showFinalEnvProperties();
         // creating the instance manager
         for (EntityDefinition entityDefinition: world.getNameToEntityDefinition().values()) {
+            entityDefinition.setPopulation((int)propertyNameToValueAsString.get(entityDefinition.getName()+"entity"));
             for (int i = 0 ;i < entityDefinition.getPopulation(); i++) {
                 simulationOutcome.getEntityInstanceManager().create(entityDefinition, world.getGrid());
             }

@@ -1,5 +1,6 @@
 package engine.world.design.grid.api;
 
+import DTOManager.impl.GridDTO;
 import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.grid.cell.Cell;
 import engine.world.design.grid.cell.Coordinate;
@@ -13,4 +14,5 @@ public interface Grid {
     public int getColumns();
     public int getRows();
 
+    GridDTO createGridDTO();
 }

@@ -83,7 +83,8 @@ public class WorldImpl implements World {
         for (PropertyDefinition propertyDefinition : envVariablesManager.getEnvVariables().values()){
             envPropertiesDefinitionDTO.add(propertyDefinition.createPropertyDefinitionDTO());
         }
-        return new WorldDTO(entityDefinitionDTOMap,rulesDTO,terminationDTO,envPropertiesDefinitionDTO);
+        GridDTO gridDTO = grid.createGridDTO();
+        return new WorldDTO(entityDefinitionDTOMap,rulesDTO,terminationDTO,envPropertiesDefinitionDTO, gridDTO);
     }
     @Override
     public Grid getGrid() {
