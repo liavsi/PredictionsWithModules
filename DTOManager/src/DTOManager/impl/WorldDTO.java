@@ -4,19 +4,25 @@ import java.util.List;
 import java.util.Map;
 
 public class WorldDTO {
+
+    private GridDTO gridDTO;
     private Map<String, EntityDefinitionDTO> nameToEntityDefinitionDTO;
     private List<RuleDTO> rulesDTO;
     private List<PropertyDefinitionDTO> envPropertiesDefinitionDTO;
     private final TerminationDTO terminationDTO;
 
+    public WorldDTO(TerminationDTO terminationDTO) {
+        this.terminationDTO = terminationDTO;
+    }
+
     public WorldDTO(Map<String, EntityDefinitionDTO> nameToEntityDefinitionDTO, List<RuleDTO> rulesDTO,
-                    TerminationDTO terminationDTO ,List<PropertyDefinitionDTO> envPropertiesDefinitionDTO) {
+                    TerminationDTO terminationDTO ,List<PropertyDefinitionDTO> envPropertiesDefinitionDTO, GridDTO gridDTO) {
         this.nameToEntityDefinitionDTO = nameToEntityDefinitionDTO;
         this.rulesDTO = rulesDTO;
         this.terminationDTO = terminationDTO;
         this.envPropertiesDefinitionDTO = envPropertiesDefinitionDTO;
+        this.gridDTO = gridDTO;
     }
-
     public Map<String, EntityDefinitionDTO> getNameToEntityDefinitionDTO() {
         return nameToEntityDefinitionDTO;
     }
@@ -25,9 +31,6 @@ public class WorldDTO {
     }
     public List<PropertyDefinitionDTO> getEnvPropertiesDefinitionDTO() {
         return envPropertiesDefinitionDTO;
-    }
-    public WorldDTO(TerminationDTO terminationDTO) {
-        this.terminationDTO = terminationDTO;
     }
     public TerminationDTO getTerminationDTO() {
         return terminationDTO;
@@ -56,5 +59,9 @@ public class WorldDTO {
             }
         }
         return null;
+    }
+
+    public GridDTO getGridDTO() {
+        return gridDTO;
     }
 }
