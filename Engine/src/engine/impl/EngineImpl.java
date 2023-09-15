@@ -80,7 +80,6 @@ public class EngineImpl implements Engine {
         isLoadedWorld = true;
         threadExecutor = Executors.newFixedThreadPool(myWorld.getNumOfThreads());
     }
-
     @Override
     public void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME) {
         myReader.readWorldFromXml(XML_PATH, JAXB_XML_PACKAGE_NAME);

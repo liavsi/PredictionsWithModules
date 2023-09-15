@@ -12,20 +12,23 @@ import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.expression.ExpressionType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ProximityAction extends AbstractAction {
 
     private final String ofExpression;
     private final int columns;
     private final int rows;
-    private ArrayList<Action> actions;
+    private final ArrayList<Action> actions;
+    private final EntityDefinition targetEntity;
 
-    public ProximityAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String ofExpression, int columns, int rows, ArrayList<Action> actions) {
+    public ProximityAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String ofExpression, int columns, int rows, ArrayList<Action> actions, EntityDefinition targetEntity) {
         super(ActionType.PROXIMITY, entityDefinition, interactiveEntity);
         this.ofExpression = ofExpression;
         this.columns = columns;
         this.rows = rows;
         this.actions = actions;
+        this.targetEntity = targetEntity;
     }
 
     @Override
@@ -46,7 +49,6 @@ public class ProximityAction extends AbstractAction {
 
     private boolean isClose(Context context){
         EntityInstance sourceEntity = context.getPrimaryEntityInstance();
-        EntityInstance targetEntity = context.getSecondaryEntity();
         int depth = ExpressionType.DECIMAL.evaluate(ofExpression,context);
         int x = sourceEntity.getCoordinate().getX();
         int y = sourceEntity.getCoordinate().getY();
@@ -54,14 +56,17 @@ public class ProximityAction extends AbstractAction {
         int xLeft = (x - depth) % columns;
         int yUp = (y + depth) % rows;
         int yDown = (y + depth) % rows;
-        int xTarget = targetEntity.getCoordinate().getX();
-        int yTarget = targetEntity.getCoordinate().getY();
-        if(xTarget < xLeft || xTarget > xRight){
-            return false;
+        for (EntityInstance entityInstance:context.getEntityInstanceManager().getInstances().values()){
+            if (entityInstance.getEntityDefinition().getName().equals(targetEntity.getName())) {
+                int xTarget = entityInstance.getCoordinate().getX();
+                int yTarget = entityInstance.getCoordinate().getY();
+                if (xTarget >= xLeft && xTarget <= xRight) {
+                    if (yTarget <= yUp && yTarget >= yDown) {
+                        return true;
+                    }
+                }
+            }
         }
-        if (yTarget > yUp || yTarget < yDown){
-            return false;
-        }
-        return true;
+        return false;
     }
 }

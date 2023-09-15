@@ -27,7 +27,6 @@ public class IncreaseAction extends AbstractAction {
         if (!verifyNumericPropertyType(propertyInstance)) {
             throw new IllegalArgumentException("increase action can't operate on a none number property [" + property);
         }
-
         if(PropertyType.DECIMAL.equals(propertyInstance.getPropertyDefinition().getType())){
             Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
             int x = ExpressionType.DECIMAL.evaluate(byExpression,context);

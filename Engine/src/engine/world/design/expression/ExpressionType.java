@@ -1,5 +1,6 @@
 package engine.world.design.expression;
 
+import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.definition.property.api.PropertyType;
 import engine.world.design.definition.value.generator.random.impl.numeric.RandomIntegerGenerator;
@@ -28,6 +29,13 @@ public enum ExpressionType {
                         Random random = new Random();
                         int res = random.nextInt(randomVal + 1);
                         return (float) res;
+                    }
+                    case("evaluate"):{
+                        int dot = envFuncArg.indexOf(".");
+                        String entity = envFuncArg.substring(0,dot);
+                        if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
+
+                        }
                     }
                     default:
                         throw new RuntimeException("There is no such environment function");

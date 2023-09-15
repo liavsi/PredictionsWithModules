@@ -14,13 +14,13 @@ import java.util.Map;
 
 public class ReplaceAction extends AbstractAction {
     private final String mode;
+    private final EntityDefinition createEntity;
 
-
-    public ReplaceAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String mode) {
+    public ReplaceAction(EntityDefinition entityDefinition, InteractiveEntity interactiveEntity, String mode, EntityDefinition createEntity) {
         super(ActionType.REPLACE, entityDefinition, interactiveEntity);
         this.mode = mode;
+        this.createEntity = createEntity;
     }
-
     @Override
     public void invoke(Context context) {
         if (mode.equals("scratch")){
@@ -43,9 +43,7 @@ public class ReplaceAction extends AbstractAction {
         else {
             throw new RuntimeException("Not a valid mode in the replace action");
         }
-
     }
-
     @Override
     public ActionDTO createActionDTO() {
         return new ReplaceDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),mode);

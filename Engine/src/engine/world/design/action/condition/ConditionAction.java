@@ -39,7 +39,6 @@ public class ConditionAction extends AbstractAction{
             elseActions.forEach(action -> action.invoke(context));
         }
     }
-
     @Override
     public ActionDTO createActionDTO() {
         return new ConditionActionDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),condition.createConditionDTO(), thenActions.size(), elseActions.size());
