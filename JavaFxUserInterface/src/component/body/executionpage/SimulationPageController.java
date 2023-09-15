@@ -70,6 +70,7 @@ public class SimulationPageController {
             });
 
             resultEnvironment.put(entityDefinitionDTO.getName() + "entity", new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().intValue()));
+            inputPlaceNumber.valueProperty().bindBidirectional(resultEnvironment.get(entityDefinitionDTO.getName()+"entity"));
             pair = inputPlaceNumber;
             if (pair == null) {
                 throw new RuntimeException("expected pair to have a value");

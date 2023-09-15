@@ -152,15 +152,15 @@ public class AppController {
                 recentSimulations.put(simulationId, simulationOutcomeDTO);
                 headerComponentController.setIsIsThereSimulationOutCome(true);
                 boolean isSimulationRunning = true;
-                isSimulationRunning = !(simulationOutcomeDTO.getTerminationDTO().isSecondsTerminate() && simulationOutcomeDTO.getTerminationDTO().isTicksTerminate());
+                isSimulationRunning = !(simulationOutcomeDTO.getTerminationDTO().isSecondsTerminate() || simulationOutcomeDTO.getTerminationDTO().isTicksTerminate());
                 while (isSimulationRunning) {
                     SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
                     Platform.runLater(() -> {
                         recentSimulations.put(simulationId, currSimulationDTO);
 //                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
                     });
-                    Thread.sleep(800);
-                    isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() && currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                    Thread.sleep(100000000);
+                    isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
                 }
                 return engine.getPastSimulationDTO(simulationId);
             }

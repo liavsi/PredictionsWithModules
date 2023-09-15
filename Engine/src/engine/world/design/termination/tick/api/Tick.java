@@ -6,5 +6,4 @@ public interface Tick {
     Integer getTicks();
     boolean isTerminateReason();
     void setTerminateReason(boolean terminateReason);
-
 }

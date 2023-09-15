@@ -39,7 +39,7 @@ public class TerminationImpl implements Termination {
             isSecondsTerminate = secondsToPast.isTerminateReason();
             numOfSeconds = secondsToPast.getSeconds();
         }
-        return new TerminationDTO(numOfTicks,numOfSeconds, isTicksTerminate, isSecondsTerminate);
+        return new TerminationDTO(numOfTicks, numOfSeconds, isTicksTerminate, isSecondsTerminate);
     }
     @Override
     public Boolean isTerminated(Integer currentTicks) {

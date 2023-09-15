@@ -42,16 +42,19 @@ public class RunSimulation implements Runnable{
         // showFinalEnvProperties();
         // creating the instance manager
         for (EntityDefinition entityDefinition: world.getNameToEntityDefinition().values()) {
-            entityDefinition.setPopulation((int)propertyNameToValueAsString.get(entityDefinition.getName()+"entity"));
+            Double population = (Double) propertyNameToValueAsString.get(entityDefinition.getName()+"entity");
+            entityDefinition.setPopulation(population.intValue());
             for (int i = 0 ;i < entityDefinition.getPopulation(); i++) {
                 simulationOutcome.getEntityInstanceManager().create(entityDefinition, world.getGrid());
             }
         }
-        world.getTermination().startTerminationClock();
+        simulationOutcome.getTermination().startTerminationClock();
         Map<Integer, SimulationOutcome> informationSimulation = new HashMap<>();
         // take a picture
         int ticks = 0;
-        while (!world.getTermination().isTerminated(ticks)) {
+        // TODO: 15/09/2023 setTicks
+//        simulationOutcome.getTermination()
+        while (!simulationOutcome.getTermination().isTerminated(ticks)) {
             moveEntities();
             ArrayList<Action> activeActions = new ArrayList<>();
             for (Rule rule: world.getRules()) {
