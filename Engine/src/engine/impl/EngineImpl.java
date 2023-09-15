@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 // TODO: 10/08/2023 After deleting old World Change to World
 
@@ -43,7 +44,7 @@ public class EngineImpl implements Engine {
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
         SimulationOutcome simulation = myWorld.runSimulation(countId);
         pastSimulations.put(countId++, simulation);
-        threadExecutor.execute(new RunSimulation(simulation,myWorld,propertyNameToValueAsString));
+        threadExecutor.submit(new RunSimulation(simulation,myWorld,propertyNameToValueAsString));
         return simulation.createSimulationOutcomeDTO();
         //SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString,countId);
         //engine.setCountId(engine.getCountId() + 1);
@@ -59,6 +60,9 @@ public class EngineImpl implements Engine {
 //        pastSimulations.put(countId++, currSimulation);
 //        return currSimulation.createSimulationOutcomeDTO();
     }
+
+
+
     @Override
     public WorldDTO getWorldDTO() {
          return myWorld.createWorldDTO();

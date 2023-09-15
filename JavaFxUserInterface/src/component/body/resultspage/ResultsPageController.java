@@ -3,7 +3,9 @@ package component.body.resultspage;
 import DTOManager.impl.SimulationOutcomeDTO;
 import com.sun.javafx.collections.ObservableListWrapper;
 import component.mainapp.AppController;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
@@ -35,13 +37,15 @@ public class ResultsPageController {
     private Parent mainView;
 
     private AppController mainController;
-    private ObservableList<SimulationOutcomeDTO> recentSimulations;
+    private ObservableMap<Integer, SimulationOutcomeDTO> recentSimulations;
 
 
     @FXML
     private void initialize() {
         // Initialize your controller
         simulationList.setCellFactory(param -> new SimulationOutcomeListCell());
+
+
         // Handle item selection in the list
         simulationList.getSelectionModel().selectLast();
         simulationList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -59,7 +63,7 @@ public class ResultsPageController {
     public void setMainController(AppController appController) {
         this.mainController = appController;
         recentSimulations = appController.getRecentSimulations();
-        simulationList.setItems(recentSimulations);
+        simulationList.setItems(FXCollections.observableArrayList(recentSimulations.values()));
     }
 
     public Parent getMainView() {
