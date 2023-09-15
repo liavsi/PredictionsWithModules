@@ -11,4 +11,6 @@ public interface EntityDefinition extends Cloneable{
     List<PropertyDefinition> getProps();
     EntityDefinitionDTO createEntityDefinitionDTO();
     public PropertyDefinition getPropertyByName(String name);
+
+    void setPopulation(int i);
 }

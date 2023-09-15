@@ -4,15 +4,17 @@ import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.EntityInstanceManagerDTO;
 import DTOManager.impl.PropertyDefinitionDTO;
 import DTOManager.impl.WorldDTO;
+import com.sun.deploy.panel.IProperty;
 import component.mainapp.AppController;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -20,6 +22,7 @@ import utils.inputFields.LabelBooleanInputBox;
 import utils.inputFields.LabelNumericInputBox;
 import utils.inputFields.LabelTextBox;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,7 @@ public class SimulationPageController {
     private SimpleIntegerProperty gridArea;
     private WorldDTO world;
     private List<PropertyDefinitionDTO> environmentVariablesDefinition;
+    private Map<String, EntityDefinitionDTO> entityDefinitionByName;
 
     private final Map<String, ObjectProperty> resultEnvironment = new HashMap<>();
     private AppController appController;
@@ -44,9 +48,48 @@ public class SimulationPageController {
     public void setWorld(WorldDTO worldDTO) {
         this.world = worldDTO;
         this.environmentVariablesDefinition = world.getEnvPropertiesDefinitionDTO();
+        this.entityDefinitionByName = world.getNameToEntityDefinitionDTO();
     }
 
     public void organizeData() {
+        organizeEnvironmentVariablesData();
+        organizePopulationData();
+    }
+
+    private void organizePopulationData() {
+        IntegerProperty maxPopulation = new SimpleIntegerProperty(world.getGridDTO().getArea());
+        List<DoubleProperty> sumPopulation = new ArrayList<>();
+        for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionByName.values()) {
+            HBox pair = null;
+            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), 0); // Initialize with a default value within the specified range
+            resultEnvironment.put(entityDefinitionDTO.getName() + "entity", new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().intValue()));
+            sumPopulation.add(inputPlaceNumber.valueProperty());
+            pair = inputPlaceNumber;
+            if (pair == null) {
+                throw new RuntimeException("expected pair to have a value");
+            }
+            leftVbox.getChildren().add(pair);
+        }
+        StringProperty alert = new SimpleStringProperty("check");
+        Label alertLabel =new Label("");
+        alertLabel.textProperty().bind(alert);
+        leftVbox.getChildren().add(alertLabel);
+        DoubleBinding result = Bindings.createDoubleBinding(() -> sumPopulation.stream().mapToDouble(DoubleProperty::get).sum(), sumPopulation.toArray(new DoubleProperty[0]));
+        result.addListener(((observable, oldValue, newValue) -> {
+            int tooMuch =-1*(maxPopulation.intValue() - newValue.intValue());
+            if (maxPopulation.intValue() - newValue.intValue() < 0) {
+                alert.set("You need to lower your population by " + tooMuch);
+                startSimulationButton.setDisable(true);
+            }
+            else {
+                startSimulationButton.setDisable(false);
+                alert.set("");
+            }
+
+        }));
+    }
+
+    private void organizeEnvironmentVariablesData() {
         for(PropertyDefinitionDTO env: environmentVariablesDefinition) {
             HBox pair = null;
             switch (env.getPropertyType()) {
@@ -97,4 +140,7 @@ public class SimulationPageController {
     public Parent getMainView() {
         return mainView;
     }
+
+
+
 }

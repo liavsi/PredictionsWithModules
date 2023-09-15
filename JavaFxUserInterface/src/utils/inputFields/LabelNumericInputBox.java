@@ -30,7 +30,6 @@ public class LabelNumericInputBox extends HBox {
         SpinnerValueFactory<Double> valueFactory = new SpinnerValueFactory.DoubleSpinnerValueFactory(minValue, maxValue, initialValue);
         spinner = new Spinner<>(valueFactory);
         spinner.setEditable(true);
-
         // Bind the value property of the spinner to a SimpleDoubleProperty
         valueProperty = new SimpleDoubleProperty(initialValue);
         spinner.getValueFactory().valueProperty().addListener((ObservableValue<? extends Double> observable, Double oldValue, Double newValue) -> {
@@ -50,4 +49,7 @@ public class LabelNumericInputBox extends HBox {
 
     // You can add more methods to customize the behavior of this controller
 }
+
+
+
 

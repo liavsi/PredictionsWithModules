@@ -1,5 +1,6 @@
 package engine.world.design.grid.impl;
 
+import DTOManager.impl.GridDTO;
 import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.grid.api.Grid;
 import engine.world.design.grid.cell.Cell;
@@ -24,6 +25,10 @@ public class GridImpl implements Grid {
                 grid[i][j] = new Cell(null,coordinate);
             }
         }
+    }
+
+    public GridDTO createGridDTO() {
+        return new GridDTO(columns, rows);
     }
     @Override
     public void initEntityPlace(EntityInstance entityInstance){
