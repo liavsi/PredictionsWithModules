@@ -21,7 +21,6 @@ public class IncreaseAction extends AbstractAction {
         this.property = property;
         this.byExpression = byExpression;
     }
-
     @Override
     public void invoke(Context context) {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
