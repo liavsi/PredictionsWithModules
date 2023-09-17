@@ -71,17 +71,37 @@ public class GridImpl implements Grid {
         }
     }
     private Cell upCell(Cell cell){
-        return grid[cell.getCoordinate().getX()][(cell.getCoordinate().getY() + 1) % rows];
+        int newY = (cell.getCoordinate().getY() + 1) % rows;
+        if (newY < 0) {
+            newY += rows;
+        }
+        return grid[cell.getCoordinate().getX()][newY];
     }
+
     private Cell downCell(Cell cell){
-        return grid[cell.getCoordinate().getX()][(cell.getCoordinate().getY() - 1) % rows];
+        int newY = (cell.getCoordinate().getY() - 1) % rows;
+        if (newY < 0) {
+            newY += rows;
+        }
+        return grid[cell.getCoordinate().getX()][newY];
     }
+
     private Cell rightCell(Cell cell){
-        return grid[(cell.getCoordinate().getX()+1) % columns][cell.getCoordinate().getY()];
+        int newX = (cell.getCoordinate().getX() + 1) % columns;
+        if (newX < 0) {
+            newX += columns;
+        }
+        return grid[newX][cell.getCoordinate().getY()];
     }
+
     private Cell leftCell(Cell cell){
-        return grid[(cell.getCoordinate().getX() - 1) % columns][cell.getCoordinate().getY()];
+        int newX = (cell.getCoordinate().getX() - 1) % columns;
+        if (newX < 0) {
+            newX += columns;
+        }
+        return grid[newX][cell.getCoordinate().getY()];
     }
+
     @Override
     public int getColumns() {
         return columns;

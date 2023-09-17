@@ -29,23 +29,19 @@ public class SetAction extends AbstractAction {
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
         Object type = propertyInstance.getPropertyDefinition().getType();
         if(PropertyType.DECIMAL.equals(type)){
-            Object resultObj = expression.evaluate(value,context);
-            int result = PropertyType.DECIMAL.convert(resultObj);
+            int result = ExpressionType.DECIMAL.evaluate(value, context);
             propertyInstance.updateValue(result);
         }
         else if(PropertyType.FLOAT.equals(type)){
-            Object resultObj = expression.evaluate(value,context);
-            float result = PropertyType.FLOAT.convert(resultObj);
+            float result = ExpressionType.FLOAT.evaluate(value, context);
             propertyInstance.updateValue(result);
         }
         else if(PropertyType.STRING.equals(type)){
-            Object resultObj = expression.evaluate(value,context);
-            String result = PropertyType.STRING.convert(resultObj);
+            String result = ExpressionType.STRING.evaluate(value, context);
             propertyInstance.updateValue(result);
         }
         else if(PropertyType.BOOLEAN.equals(type)) {
-            Object resultObj = expression.evaluate(value,context);
-            boolean result = PropertyType.BOOLEAN.convert(resultObj);
+            boolean result = ExpressionType.BOOLEAN.evaluate(value, context);
             propertyInstance.updateValue(result);
         }
 

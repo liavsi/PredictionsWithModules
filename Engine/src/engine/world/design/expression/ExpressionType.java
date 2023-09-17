@@ -15,7 +15,10 @@ public enum ExpressionType {
         @Override
         public Float evaluate(String expression, Context context) {
             int openingParen = expression.indexOf("(");
-            int closingParen = expression.indexOf(")");
+            int closingParen = -1;
+            if(openingParen != -1) {
+                closingParen = expression.length() - 1;
+            }
             if(openingParen != -1 && closingParen != -1) {
                 String envFunc = expression.substring(0,openingParen);
                 String envFuncArg = expression.substring(openingParen + 1,closingParen);
@@ -80,7 +83,10 @@ public enum ExpressionType {
         @Override
         public Integer evaluate(String expression, Context context) {
             int openingParen = expression.indexOf("(");
-            int closingParen = expression.indexOf(")");
+            int closingParen = -1;
+            if(openingParen != -1) {
+                closingParen = expression.length() - 1;
+            }
             if(openingParen != -1 && closingParen != -1) {
                 String envFunc = expression.substring(0,openingParen);
                 String envFuncArg = expression.substring(openingParen + 1,closingParen);
@@ -145,7 +151,10 @@ public enum ExpressionType {
         @Override
         public String evaluate(String expression, Context context) {// TODO: 15/08/2023
             int openingParen = expression.indexOf("(");
-            int closingParen = expression.indexOf(")");
+            int closingParen = -1;
+            if(openingParen != -1) {
+                closingParen = expression.length() - 1;
+            }
             if(openingParen != -1 && closingParen != -1) {
                 String envFunc = expression.substring(0,openingParen);
                 String envFuncArg = expression.substring(openingParen + 1,closingParen);
@@ -190,7 +199,10 @@ public enum ExpressionType {
         @Override
         public Boolean evaluate(String expression, Context context) { // TODO: 15/08/2023
             int openingParen = expression.indexOf("(");
-            int closingParen = expression.indexOf(")");
+            int closingParen = -1;
+            if(openingParen != -1) {
+                closingParen = expression.length() - 1;
+            }
             if(openingParen != -1 && closingParen != -1) {
                 String envFunc = expression.substring(0,openingParen);
                 String envFuncArg = expression.substring(openingParen + 1,closingParen);

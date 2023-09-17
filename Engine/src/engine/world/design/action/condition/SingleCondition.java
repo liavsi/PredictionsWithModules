@@ -1,22 +1,12 @@
 package engine.world.design.action.condition;
 
-import DTOManager.impl.EntityDefinitionDTO;
-import DTOManager.impl.actionDTO.ActionDTO;
-import DTOManager.impl.actionDTO.ConditionDTO;
 import DTOManager.impl.actionDTO.SingleConditionDTO;
-import engine.world.design.action.api.AbstractAction;
-import engine.world.design.action.api.Action;
-import engine.world.design.action.api.ActionType;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
 import engine.world.design.execution.context.Context;
-import engine.world.design.execution.context.ContextImpl;
-import engine.world.design.execution.entity.impl.EntityInstanceImpl;
 import engine.world.design.execution.property.PropertyInstance;
 import engine.world.design.expression.Expression;
 import engine.world.design.expression.ExpressionType;
-
-import java.util.List;
 
 public class SingleCondition implements Condition{
     private final String property;
@@ -35,19 +25,18 @@ public class SingleCondition implements Condition{
     public boolean evaluate(Context context) {
         Expression expression = new Expression();
         Object propertyExpression = expression.evaluate(property,context);
-        Object realValue = expression.evaluate(value, context);
         switch (operator){
             case ("="):{
-                return isEqual(propertyExpression,realValue);
+                return isEqual(propertyExpression,value, context);
             }
             case("!="):{
-                return notEqual(propertyExpression,realValue);
+                return notEqual(propertyExpression,value, context);
             }
             case("bt"):{
-                return bt(propertyExpression,realValue);
+                return bt(propertyExpression,value, context);
             }
             case ("lt"):{
-                return lt(propertyExpression,realValue);
+                return lt(propertyExpression,value, context);
             }
             default:{
                 throw new RuntimeException("Invalid operator");
@@ -55,65 +44,49 @@ public class SingleCondition implements Condition{
         }
     }
 
-    private boolean isEqual(Object obj1,Object obj2){
-        if (obj1 instanceof Integer && obj2 instanceof Integer){
+    private boolean isEqual(Object obj1, String value, Context context){
+        if (obj1 instanceof Integer){
             int num1 = (int) obj1;
-            int num2 = (int) obj2;
+            int num2 = ExpressionType.DECIMAL.evaluate(value, context);
             return num1 == num2;
-        }else if(obj1 instanceof Float && obj2 instanceof Float){
+        }else if(obj1 instanceof Float){
             float num1 = (float) obj1;
-            float num2 = (float) obj2;
+            float num2 = ExpressionType.FLOAT.evaluate(value, context);
             return num1 == num2;
-        }else if(obj1 instanceof Boolean && obj2 instanceof Boolean){
+        }else if(obj1 instanceof Boolean ){
             boolean num1 = (boolean) obj1;
-            boolean num2 = (boolean) obj2;
+            boolean num2 = ExpressionType.BOOLEAN.evaluate(value, context);
             return num1 == num2;
         }else{
             String num1 = (String) obj1;
-            String num2 = (String) obj2;
+            boolean num2 = ExpressionType.STRING.evaluate(value, context);
             return num1.equals(num2);
         }
     }
-    private boolean notEqual(Object obj1,Object obj2){
-        if (obj1 instanceof Integer && obj2 instanceof Integer){
-            int num1 = (int) obj1;
-            int num2 = (int) obj2;
-            return num1 != num2;
-        }else if(obj1 instanceof Float && obj2 instanceof Float){
-            float num1 = (float) obj1;
-            float num2 = (float) obj2;
-            return num1 != num2;
-        }else if(obj1 instanceof Boolean && obj2 instanceof Boolean){
-            boolean num1 = (boolean) obj1;
-            boolean num2 = (boolean) obj2;
-            return num1 != num2;
-        }else{
-            String num1 = (String) obj1;
-            String num2 = (String) obj2;
-            return !num1.equals(num2);
-        }
+    private boolean notEqual(Object obj1, String value, Context context){
+        return !isEqual(obj1,value,context);
     }
-    private boolean bt(Object obj1,Object obj2){
-        if (obj1 instanceof Integer && obj2 instanceof Integer){
+    private boolean bt(Object obj1,String  value, Context context) {
+        if (obj1 instanceof Integer ){
             int num1 = (int) obj1;
-            int num2 = (int) obj2;
+            int num2 = ExpressionType.DECIMAL.evaluate(value, context);
             return num1 > num2;
-        }else if(obj1 instanceof Float && obj2 instanceof Float){
+        }else if(obj1 instanceof Float ){
             float num1 = (float) obj1;
-            float num2 = (float) obj2;
+            float num2 = ExpressionType.FLOAT.evaluate(value, context);
             return num1 > num2;
         }else {
             throw new RuntimeException("Bt can't be done on non numeric values");
         }
     }
-    private boolean lt(Object obj1,Object obj2){
-        if (obj1 instanceof Integer && obj2 instanceof Integer){
+    private boolean lt(Object obj1,String  value, Context context){
+        if (obj1 instanceof Integer){
             int num1 = (int) obj1;
-            int num2 = (int) obj2;
+            int num2 = ExpressionType.DECIMAL.evaluate(value, context);
             return num1 < num2;
-        }else if(obj1 instanceof Float && obj2 instanceof Float){
+        }else if(obj1 instanceof Float){
             float num1 = (float) obj1;
-            float num2 = (float) obj2;
+            float num2 = ExpressionType.FLOAT.evaluate(value, context);
             return num1 < num2;
         }else {
             throw new RuntimeException("Bt can't be done on non numeric values");

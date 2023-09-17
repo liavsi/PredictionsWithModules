@@ -39,13 +39,13 @@ public class CalculationAction extends AbstractAction {
         if(PropertyType.DECIMAL.equals(propertyInstance.getPropertyDefinition().getType()))
         {
             int result = 0;
-            Object num1Obj = expression.evaluate(arg1,context);
-            Object num2Obj = expression.evaluate(arg2,context);
-            int num1 = PropertyType.DECIMAL.convert(num1Obj);
-            int num2 = PropertyType.DECIMAL.convert(num2Obj);
+//            Object num1Obj = expression.evaluate(arg1,context);
+//            Object num2Obj = expression.evaluate(arg2,context);
+//            int num1 = PropertyType.DECIMAL.convert(num1Obj);
+//            int num2 = PropertyType.DECIMAL.convert(num2Obj);
 
-            //int num1 = ExpressionType.DECIMAL.evaluate(arg1,context);
-            //int num2 = ExpressionType.DECIMAL.evaluate(arg2,context);
+            int num1 = ExpressionType.DECIMAL.evaluate(arg1,context);
+            int num2 = ExpressionType.DECIMAL.evaluate(arg2,context);
             if (CalculationType.MULTIPLY.equals(calculationType)){
                 result = num1*num2;
             }
@@ -57,10 +57,13 @@ public class CalculationAction extends AbstractAction {
         else if(PropertyType.FLOAT.equals(propertyInstance.getPropertyDefinition().getType()))
         {
             float result = 0;
-            Object num1Obj = expression.evaluate(arg1,context);
-            Object num2Obj = expression.evaluate(arg2,context);
-            float num1 = PropertyType.FLOAT.convert(num1Obj);
-            float num2 = PropertyType.FLOAT.convert(num2Obj);
+//            Object num1Obj = expression.evaluate(arg1,context);
+//            Object num2Obj = expression.evaluate(arg2,context);
+//            float num1 = PropertyType.FLOAT.convert(num1Obj);
+//            float num2 = PropertyType.FLOAT.convert(num2Obj);
+
+            float num1 = ExpressionType.FLOAT.evaluate(arg1,context);
+            float num2 = ExpressionType.FLOAT.evaluate(arg2,context);
             if (CalculationType.MULTIPLY.equals(calculationType)){
                 result = num1*num2;
             }
