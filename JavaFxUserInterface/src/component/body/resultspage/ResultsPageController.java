@@ -1,13 +1,18 @@
 package component.body.resultspage;
 
 import DTOManager.impl.SimulationOutcomeDTO;
+import com.sun.corba.se.spi.activation.Server;
 import com.sun.javafx.collections.ObservableListWrapper;
 import component.mainapp.AppController;
 import engine.api.Engine;
+import engine.world.design.expression.ExpressionType;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -44,7 +49,7 @@ public class ResultsPageController {
     @FXML
     private Button rerunButton;
     private AppController mainController;
-    private ObservableMap<Integer, SimulationOutcomeDTO> recentSimulations;
+    private ObservableList<SimulationOutcomeDTO> recentSimulations;
 
     private SimpleIntegerProperty ticks;
     private SimpleIntegerProperty seconds;
@@ -56,11 +61,13 @@ public class ResultsPageController {
     public ResultsPageController() {
         this.ticks = new SimpleIntegerProperty();
         this.seconds = new SimpleIntegerProperty();
-        recentSimulations = FXCollections.observableHashMap();
+        recentSimulations = FXCollections.observableArrayList();
     }
 
     @FXML
     private void initialize() {
+        TickNumLabel.textProperty().bind(ticks.asString());
+        SecondsLabel.textProperty().bind(seconds.asString());
         // Initialize your controller
         simulationList.setCellFactory(param -> new SimulationOutcomeListCell());
         // Handle item selection in the list
@@ -68,24 +75,59 @@ public class ResultsPageController {
         simulationList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showSimulationDetails(newValue); // Display details of the selected simulation outcome
         });
-
     }
 
     private void showSimulationDetails(SimulationOutcomeDTO selectedSimulation) {
+        Service backgroundService = new Service() {
+            @Override
+            protected Task createTask() {
 
-        simulationDetailsPane.getChildren().clear();
-        simulationDetailsPane.getChildren().add(new TextArea(selectedSimulation.getRunDate()));
-        // Add labels, text, or other UI components to display details here
+                return new Task() {
+                    @Override
+                    protected SimulationOutcomeDTO call() throws Exception {
+                        // Run your simulation here
+                        int simulationId = selectedSimulation.getId();
+                        SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
+                        boolean isSimulationRunning = true;
+                        isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                        while (isSimulationRunning) {
+                            currSimulationDTO = engine.getPastSimulationDTO(simulationId);
+                            SimulationOutcomeDTO finalCurrSimulationDTO = currSimulationDTO;
+                            Platform.runLater(() -> {
+                                ticks.set(selectedSimulation.getTerminationDTO().getTicks());
+                                seconds.set(selectedSimulation.getTerminationDTO().getSecondsToPast());
+//                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
+                            });
+                            Thread.sleep(200);
+                            isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                        }
+                        return engine.getPastSimulationDTO(simulationId);
+                    }
+                };
+            }
+        };
+        backgroundService.start();
+        backgroundService.setOnSucceeded(event -> {
+            // simulation finished make buttons disabled..
+        });
+
+
     }
+
+
 
     public void setMainController(AppController appController) {
         this.mainController = appController;
         recentSimulations = appController.getRecentSimulations();
-        simulationList.setItems(FXCollections.observableArrayList(recentSimulations.values()));
+        simulationList.setItems(recentSimulations);
     }
 
     public void onStopButton(ActionEvent actionEvent) {
-        engine.stopSimulationByID(1);
+        if (simulationList.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        int id = simulationList.getSelectionModel().getSelectedItem().getId();
+        engine.stopSimulationByID(id);
     }
 
     public void onResumeButton(ActionEvent actionEvent) {

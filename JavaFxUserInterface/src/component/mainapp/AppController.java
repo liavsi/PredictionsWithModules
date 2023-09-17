@@ -63,7 +63,7 @@ public class AppController {
     private BorderPane BorderPaneMain;
     private final ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
     private Engine engine;
-    private ObservableMap<Integer, SimulationOutcomeDTO> recentSimulations = FXCollections.observableHashMap();
+    private ObservableList<SimulationOutcomeDTO> recentSimulations = FXCollections.observableArrayList();
 
     public AppController() {
     }
@@ -128,35 +128,12 @@ public class AppController {
     }
 
     public void startSimulationInEngine(Map<String, Object> resToEngine) {
-
-        Task<SimulationOutcomeDTO> simulationTask = new Task<SimulationOutcomeDTO>() {
-            @Override
-            protected SimulationOutcomeDTO call() throws Exception {
-                // Run your simulation here
-                SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
-                int simulationId = simulationOutcomeDTO.getId();
-                recentSimulations.put(simulationId, simulationOutcomeDTO);
-                headerComponentController.setIsIsThereSimulationOutCome(true);
-                Platform.runLater(()->switchToResultsPage());
-                boolean isSimulationRunning = true;
-                isSimulationRunning = !(simulationOutcomeDTO.getTerminationDTO().isSecondsTerminate() || simulationOutcomeDTO.getTerminationDTO().isTicksTerminate());
-                while (isSimulationRunning) {
-                    SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
-                    Platform.runLater(() -> {
-                        recentSimulations.put(simulationId, currSimulationDTO);
-
-//                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
-                    });
-                    Thread.sleep(200);
-                    isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
-                }
-                return engine.getPastSimulationDTO(simulationId);
-            }
-        };
-        executor.execute(simulationTask);
-        simulationTask.setOnSucceeded(event -> {
-            SimulationOutcomeDTO simulationOutcomeDTO = simulationTask.getValue();
-        });
+        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+        int simulationId = simulationOutcomeDTO.getId();
+        recentSimulations.add(simulationOutcomeDTO);
+        headerComponentController.setIsIsThereSimulationOutCome(true);
+        switchToResultsPage();
+    }
 
 //        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
 //        int simulationId = simulationOutcomeDTO.getId();
@@ -197,7 +174,7 @@ public class AppController {
 //            isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
 //        }
 //    }
-    }
+
     public void switchToNewExecutionPage() {
         if (newExecutionPageComponentController != null) {
             dynamicAnchorPane.getChildren().clear();
@@ -233,7 +210,7 @@ public class AppController {
     }
 
 
-    public ObservableMap<Integer, SimulationOutcomeDTO> getRecentSimulations() {
+    public ObservableList<SimulationOutcomeDTO> getRecentSimulations() {
         return recentSimulations;
     }
 }
