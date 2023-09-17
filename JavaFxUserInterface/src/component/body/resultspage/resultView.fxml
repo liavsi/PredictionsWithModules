@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<GridPane fx:id="mainView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.resultspage.ResultsPageController">
+<GridPane fx:id="mainView" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="489.0" prefWidth="613.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.resultspage.ResultsPageController">
   <columnConstraints>
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -16,19 +27,61 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <VBox fx:id="vBoxWithSimulations" prefHeight="200.0" prefWidth="100.0" GridPane.rowSpan="4">
+      <VBox fx:id="vBoxWithSimulations" prefHeight="489.0" prefWidth="135.0" GridPane.rowSpan="4">
          <children>
-            <ListView fx:id="simulationList" accessibleRole="CHECK_MENU_ITEM" />
+            <ListView fx:id="simulationList" accessibleRole="CHECK_MENU_ITEM" prefHeight="489.0" prefWidth="186.0" />
          </children></VBox>
-      <SplitPane dividerPositions="0.4221105527638191" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowSpan="4">
+      <SplitPane dividerPositions="0.5195071868583162" orientation="VERTICAL" prefHeight="489.0" prefWidth="256.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowSpan="4">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="215.0" prefWidth="398.0">
                <children>
-                  <VBox fx:id="simulationDetailsPane" layoutX="85.0" prefHeight="165.0" prefWidth="398.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <Button fx:id="rerunButton" layoutX="324.0" layoutY="31.0" mnemonicParsing="false" text="Rerun!" />
+                  <GridPane hgap="5.0" layoutY="-3.0" prefHeight="257.0" prefWidth="406.0" vgap="5.0" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-3.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.66668701171875" minWidth="10.0" prefWidth="71.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="110.0" minWidth="10.0" prefWidth="38.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="234.66668701171875" minWidth="10.0" prefWidth="201.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="79.33331298828125" minWidth="10.0" prefWidth="76.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="79.33334350585938" minHeight="10.0" prefHeight="79.33334350585938" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="69.0" minHeight="10.0" prefHeight="22.666656494140625" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="34.66668701171875" minHeight="10.0" prefHeight="16.333343505859375" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <VBox fx:id="simulationDetailsPane" prefHeight="165.0" prefWidth="398.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                           <children>
+                              <Button fx:id="rerunButton" mnemonicParsing="false" onAction="#onRerunButton" text="Rerun!" />
+                           </children>
+                        </VBox>
+                        <Label text="Tick Number:" GridPane.rowIndex="1" />
+                        <Label text="Seconds:" GridPane.rowIndex="2" />
+                        <Label fx:id="TickNumLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <Label fx:id="SecondsLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TableView prefHeight="41.0" prefWidth="202.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
+                          <columns>
+                            <TableColumn prefWidth="109.0" text="Entity Name" />
+                            <TableColumn prefWidth="109.0" text="Population" />
+                          </columns>
+                        </TableView>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
+                           <children>
+                              <Button mnemonicParsing="false" onAction="#onStopButton" text="Stop" />
+                              <Button mnemonicParsing="false" onAction="#onResumeButton" text="Resume" />
+                              <Button mnemonicParsing="false" onAction="#onPauseButton" text="Pause" />
+                           </children>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="5.0" />
+                     </padding>
+                  </GridPane>
                </children>
             </AnchorPane>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" />
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="235.0" prefWidth="423.0" />
         </items>
       </SplitPane>
    </children>

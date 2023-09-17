@@ -30,7 +30,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
     @Override
     public EntityInstanceManagerDTO createDTO() {
         Map<Integer, EntityInstanceDTO> instanceDTOMapToId = new HashMap<>();
-       // instances.forEach(((Id, entityInstance) -> instanceDTOMapToId.put(Id,entityInstance.createDTO())));
+        instances.forEach(((Id, entityInstance) -> instanceDTOMapToId.put(Id,entityInstance.createDTO())));
         return new EntityInstanceManagerDTO(instanceDTOMapToId);
     }
 //    public EntityInstanceManager clone() throws CloneNotSupportedException {

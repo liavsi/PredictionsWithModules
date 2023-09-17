@@ -26,5 +26,8 @@ public interface Engine {
     public Map<String, Object> getPropertyNameToValueAsString();
     public void setPropertyNameToValueAsString(Map<String, Object> propertyNameToValueAsString);
     public void setCountId(Integer countId);
+    public void stopSimulationByID(int id);
+    public void resumeSimulationByID(int id);
+    public void pauseSimulationByID(int id);
     // TODO: 10/08/2023 SimulationOutComeDTO getSimulationOutComeDTO();
 }

@@ -2,6 +2,7 @@ package engine.world.design.termination.impl;
 
 import DTOManager.impl.TerminationDTO;
 import engine.world.design.termination.api.Termination;
+import engine.world.design.termination.byuser.ByUser;
 import engine.world.design.termination.second.Second;
 import engine.world.design.termination.tick.api.Tick;
 
@@ -12,6 +13,9 @@ public class TerminationImpl implements Termination {
 
     private Tick ticks = null;
     private Second secondsToPast = null;
+    private ByUser byUser = null;
+
+
     private Instant startTime;
     //private Object terminateReason = null;
 
@@ -42,7 +46,7 @@ public class TerminationImpl implements Termination {
         return new TerminationDTO(numOfTicks, numOfSeconds, isTicksTerminate, isSecondsTerminate);
     }
     @Override
-    public Boolean isTerminated(Integer currentTicks) {
+    public Boolean isTerminated(Integer currentTicks,boolean isUserStop) {
         boolean isTerminate = false;
         if(secondsToPast != null){
             Instant currentTime = Instant.now();
@@ -60,12 +64,25 @@ public class TerminationImpl implements Termination {
                 //terminateReason = ticks;
             }
         }
+        if (isUserStop){
+            isTerminate = true;
+            byUser.setTerminationReason(true);
+        }
         return  isTerminate;
     }
 
 //    public Object getTerminateReason() {
 //        return terminateReason;
 //    }
+
+    public Instant getStartTime() {
+        return startTime;
+    }
+
+    @Override
+    public void reduceWaitTime(Duration waitTime) {
+        this.startTime = startTime.minus(waitTime);
+    }
 
     @Override
     public void startTerminationClock() {

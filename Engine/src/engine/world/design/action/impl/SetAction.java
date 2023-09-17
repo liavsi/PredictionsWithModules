@@ -9,6 +9,7 @@ import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyType;
 import engine.world.design.execution.context.Context;
 import engine.world.design.execution.property.PropertyInstance;
+import engine.world.design.expression.Expression;
 import engine.world.design.expression.ExpressionType;
 
 public class SetAction extends AbstractAction {
@@ -24,22 +25,27 @@ public class SetAction extends AbstractAction {
 
     @Override
     public void invoke(Context context) {
+        Expression expression = new Expression();
         PropertyInstance propertyInstance = context.getPrimaryEntityInstance().getPropertyByName(property);
         Object type = propertyInstance.getPropertyDefinition().getType();
         if(PropertyType.DECIMAL.equals(type)){
-            int result = ExpressionType.DECIMAL.evaluate(value,context);
+            Object resultObj = expression.evaluate(value,context);
+            int result = PropertyType.DECIMAL.convert(resultObj);
             propertyInstance.updateValue(result);
         }
         else if(PropertyType.FLOAT.equals(type)){
-            float result = ExpressionType.FLOAT.evaluate(value,context);
+            Object resultObj = expression.evaluate(value,context);
+            float result = PropertyType.FLOAT.convert(resultObj);
             propertyInstance.updateValue(result);
         }
         else if(PropertyType.STRING.equals(type)){
-            String result = ExpressionType.STRING.evaluate(value,context);
+            Object resultObj = expression.evaluate(value,context);
+            String result = PropertyType.STRING.convert(resultObj);
             propertyInstance.updateValue(result);
         }
         else if(PropertyType.BOOLEAN.equals(type)) {
-            boolean result = ExpressionType.BOOLEAN.evaluate(value,context);
+            Object resultObj = expression.evaluate(value,context);
+            boolean result = PropertyType.BOOLEAN.convert(resultObj);
             propertyInstance.updateValue(result);
         }
 

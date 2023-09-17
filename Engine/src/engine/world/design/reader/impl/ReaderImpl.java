@@ -6,7 +6,6 @@ import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.action.calculation.CalculationType;
 import engine.world.design.action.condition.*;
 import engine.world.design.action.impl.*;
-import engine.world.design.grid.api.Grid;
 import engine.world.design.grid.impl.GridImpl;
 import engine.world.design.rule.Rule;
 import engine.world.design.rule.RuleImpl;
@@ -156,7 +155,6 @@ public class ReaderImpl implements Reader {
             ruleList.add(currRule);
         }
         createdWorld.setRules(ruleList);
-
     }
     private Action buildActionFromPRD(PRDAction prdAction) {
         Action res;
@@ -190,41 +188,24 @@ public class ReaderImpl implements Reader {
         }
         return res;
     }
-
     private Action createReplaceAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getKill());
-        Condition conditionAction = null;
-        InteractiveEntity interactiveEntity = null;
-        if (prdAction.getPRDSecondaryEntity() != null){
-            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getCreate());
-            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
-            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
-                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
-            }
-            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
-        }
-        return new ReplaceAction(mainEntity,interactiveEntity,prdAction.getMode());
+        InteractiveEntity interactiveEntity = getInteractive(prdAction);
+        EntityDefinition createEntity = createdWorld.getEntityDefinitionByName(prdAction.getCreate());
+        return new ReplaceAction(mainEntity,interactiveEntity,prdAction.getMode(), createEntity);
     }
-
     private Action createProximityAction(PRDAction prdAction) {
         Action res = null;
         EntityDefinition mainEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDBetween().getSourceEntity());
         Condition conditionAction = null;
-        InteractiveEntity interactiveEntity = null;
-        if (prdAction.getPRDSecondaryEntity() != null){
-            EntityDefinition secondEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDBetween().getTargetEntity());
-            int count = Integer.parseInt(prdAction.getPRDSecondaryEntity().getPRDSelection().getCount());
-            if(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition() != null) {
-                conditionAction = createSubCondition(prdAction.getPRDSecondaryEntity().getPRDSelection().getPRDCondition());
-            }
-            interactiveEntity = new InteractiveEntity(secondEntity,count,conditionAction);
-        }
+        InteractiveEntity interactiveEntity = getInteractive(prdAction);
+        EntityDefinition targetEntity = createdWorld.getEntityDefinitionByName(prdAction.getPRDBetween().getTargetEntity());
         ArrayList<Action> actions = new ArrayList<>();
         for (PRDAction prdProximityAction: prdAction.getPRDActions().getPRDAction()){
             actions.add(buildActionFromPRD(prdProximityAction));
         }
-        return new ProximityAction(mainEntity,interactiveEntity,prdAction.getPRDEnvDepth().getOf(),createdWorld.getGrid().getColumns(),createdWorld.getGrid().getRows(),actions);
+        return new ProximityAction(mainEntity,interactiveEntity,prdAction.getPRDEnvDepth().getOf(),createdWorld.getGrid().getColumns(),createdWorld.getGrid().getRows(),actions, targetEntity);
     }
     private InteractiveEntity getInteractive(PRDAction prdAction){
         Condition conditionAction = null;
