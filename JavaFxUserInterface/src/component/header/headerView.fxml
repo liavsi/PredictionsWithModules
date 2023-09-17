@@ -1,46 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
 
-<GridPane hgap="5.0" prefHeight="83.0" prefWidth="527.0" stylesheets="@../body/centerStyle.css" vgap="5.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.header.HeaderController">
+
+<GridPane hgap="5.0" minWidth="531.0" prefHeight="140.0" prefWidth="544.0" stylesheets="@../body/centerStyle.css" vgap="5.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.header.HeaderController">
   <columnConstraints>
-      <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
-    <ColumnConstraints hgrow="NEVER" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
-    <ColumnConstraints hgrow="NEVER" maxWidth="220.0" minWidth="220.0" prefWidth="220.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="60.0" minWidth="60.0" prefWidth="60.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="70.0" minWidth="70.0" prefWidth="70.0" />
-      <ColumnConstraints hgrow="NEVER" maxWidth="10.0" minWidth="10.0" prefWidth="10.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" percentWidth="5.0" />
+    <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="89.0" />
+      <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="89.0" />
+    <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="89.0" />
+      <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="89.0" />
+      <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" minWidth="-Infinity" prefWidth="89.0" />
+      <ColumnConstraints hgrow="NEVER" maxWidth="1.7976931348623157E308" percentWidth="5.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="2.0" minHeight="2.0" prefHeight="2.0" vgrow="NEVER" />
-      <RowConstraints vgrow="NEVER" />
-      <RowConstraints vgrow="NEVER" />
-    <RowConstraints vgrow="NEVER" />
-      <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="2.0" minHeight="2.0" prefHeight="2.0" vgrow="NEVER" />
+      <RowConstraints maxHeight="29.33331298828125" minHeight="30.0" prefHeight="18.666656494140625" vgrow="NEVER" />
+    <RowConstraints maxHeight="35.0" minHeight="40.0" prefHeight="16.333343505859375" vgrow="NEVER" />
+      <RowConstraints maxHeight="32.0" minHeight="30.0" prefHeight="17.333343505859375" vgrow="NEVER" />
   </rowConstraints>
    <children>
-      <Button fx:id="ButtonLoadFile" mnemonicParsing="false" onAction="#onClickLoadFile" prefHeight="21.0" prefWidth="100.0" styleClass="my-button" text="Load File" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label id="file-path-label" fx:id="LabelFilePath" minHeight="-Infinity" minWidth="-Infinity" prefHeight="22.0" prefWidth="285.0" GridPane.columnIndex="2" GridPane.columnSpan="3" GridPane.rowIndex="3" />
-      <HBox alignment="CENTER" spacing="5.0" GridPane.columnIndex="3" GridPane.rowIndex="4">
+      <HBox alignment="CENTER" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.rowSpan="2" GridPane.valignment="BOTTOM">
          <children>
             <Button fx:id="ButtonDetails" mnemonicParsing="false" onAction="#onDetailsClicked" styleClass="execute-button" text="Details" />
             <Button fx:id="ButtonNewExec" mnemonicParsing="false" onAction="#onNewExecutionClicked" styleClass="execute-button" text="New Execution" />
             <Button fx:id="ButtonResults" mnemonicParsing="false" onAction="#onResultsClicked" styleClass="execute-button" text="Results" />
+            <Button mnemonicParsing="false" prefHeight="38.0" prefWidth="135.0" text="Queue Management" />
          </children>
          <GridPane.margin>
-            <Insets />
+            <Insets top="30.0" />
          </GridPane.margin>
       </HBox>
-      <Label text="Predictions" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+      <Label text="Predictions" GridPane.columnIndex="3" GridPane.halignment="CENTER">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <Button mnemonicParsing="false" prefHeight="40.0" prefWidth="135.0" text="Queue Management" GridPane.columnIndex="4" GridPane.columnSpan="2" GridPane.rowIndex="2" GridPane.rowSpan="2" GridPane.valignment="BOTTOM" />
+      <HBox spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="5" GridPane.halignment="CENTER" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1">
+         <children>
+            <Button fx:id="ButtonLoadFile" mnemonicParsing="false" onAction="#onClickLoadFile" prefHeight="21.0" prefWidth="100.0" styleClass="my-button" text="Load File" />
+            <Label id="file-path-label" fx:id="LabelFilePath" minHeight="22.0" minWidth="352.0" prefHeight="22.0" prefWidth="399.0" />
+         </children>
+      </HBox>
    </children>
 </GridPane>

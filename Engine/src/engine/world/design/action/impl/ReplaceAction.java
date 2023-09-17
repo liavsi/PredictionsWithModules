@@ -34,7 +34,7 @@ public class ReplaceAction extends AbstractAction {
                 if(entityInstance.getProperties().containsKey(key)){ // if the create entity has property with the same name of the kill entity
                     PropertyInstance propertyInstance = entityInstance.getPropertyByName(key);
                     if (propertyInstance.getPropertyDefinition().getType().equals(value.getPropertyDefinition().getType())){ // // if the create entity has property with the same kind of the kill entity
-                        propertyInstance.setValue(value.getValue());
+                        propertyInstance.updateValue(value.getValue());
                     }
                 }
             }

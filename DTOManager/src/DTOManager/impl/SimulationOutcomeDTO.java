@@ -14,11 +14,11 @@ public class SimulationOutcomeDTO {
         return entityInstanceDTOS;
     }
 
-    public SimulationOutcomeDTO(String runDate, int id, TerminationDTO terminationDTO, EntityInstanceManagerDTO entityInstancDTOS) {
+    public SimulationOutcomeDTO(String runDate, int id, TerminationDTO terminationDTO, EntityInstanceManagerDTO entityInstanceDTOS) {
         this.runDate = runDate;
         this.id = id;
         this.terminationDTO = terminationDTO;
-        this.entityInstanceDTOS = entityInstancDTOS;
+        this.entityInstanceDTOS = entityInstanceDTOS;
     }
 
     public String getRunDate() {

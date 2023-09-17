@@ -9,7 +9,7 @@ import engine.world.design.grid.api.Grid;
 public class ContextImpl implements Context {
 
     private EntityInstance primaryEntityInstance;
-    private final EntityInstance secondaryEntity;
+    private EntityInstance secondaryEntity;
     private final EntityInstanceManager entityInstanceManager;
     private final ActiveEnvironment activeEnvironment;
     private final Grid grid;
@@ -24,6 +24,15 @@ public class ContextImpl implements Context {
     @Override
     public void setPrimaryEntityInstance(EntityInstance primaryEntityInstance) {
         this.primaryEntityInstance = primaryEntityInstance;
+    }
+    @Override
+    public ActiveEnvironment getActiveEnvironment() {
+        return activeEnvironment;
+    }
+
+    @Override
+    public void setSecondaryEntity(EntityInstance secondaryEntity) {
+        this.secondaryEntity = secondaryEntity;
     }
 
     @Override

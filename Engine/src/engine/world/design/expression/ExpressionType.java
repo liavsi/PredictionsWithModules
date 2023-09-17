@@ -33,8 +33,29 @@ public enum ExpressionType {
                     case("evaluate"):{
                         int dot = envFuncArg.indexOf(".");
                         String entity = envFuncArg.substring(0,dot);
+                        String propertyName = envFuncArg.substring(dot + 1);
                         if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
-
+                            return (float) context.getPrimaryEntityInstance().getPropertyByName(propertyName).getValue();
+                        }else if(entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())){
+                            return (float) context.getSecondaryEntity().getPropertyByName(propertyName).getValue();
+                        }
+                    }
+                    case ("percent"):{
+                        int comma = envFuncArg.indexOf(",");
+                        String numberExpression = envFuncArg.substring(0,comma);
+                        int number = ExpressionType.DECIMAL.evaluate(numberExpression,context);
+                        String percentExpression = envFuncArg.substring(comma);
+                        int percent = ExpressionType.DECIMAL.evaluate(percentExpression,context);
+                        return (float)(number * percent) / 100;
+                    }
+                    case ("ticks"):{
+                        int dot = envFuncArg.indexOf(".");
+                        String entity = envFuncArg.substring(0,dot);
+                        String propertyName = envFuncArg.substring(dot + 1);
+                        if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
+                            return (float) context.getPrimaryEntityInstance().getPropertyByName(propertyName).getTicksSameValue();
+                        }else if(entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())){
+                            return (float) context.getSecondaryEntity().getPropertyByName(propertyName).getTicksSameValue();
                         }
                     }
                     default:
@@ -74,6 +95,34 @@ public enum ExpressionType {
                         int res = random.nextInt(randomVal + 1);
                         return res;
                     }
+                    case("evaluate"):{
+                        int dot = envFuncArg.indexOf(".");
+                        String entity = envFuncArg.substring(0,dot);
+                        String propertyName = envFuncArg.substring(dot + 1);
+                        if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
+                            return (int) context.getPrimaryEntityInstance().getPropertyByName(propertyName).getValue();
+                        }else if(entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())){
+                            return (int) context.getSecondaryEntity().getPropertyByName(propertyName).getValue();
+                        }
+                    }
+                    case ("percent"):{
+                        int comma = envFuncArg.indexOf(",");
+                        String numberExpression = envFuncArg.substring(0,comma);
+                        int number = ExpressionType.DECIMAL.evaluate(numberExpression,context);
+                        String percentExpression = envFuncArg.substring(comma);
+                        int percent = ExpressionType.DECIMAL.evaluate(percentExpression,context);
+                        return (int)(number * percent) / 100;
+                    }
+                    case ("ticks"):{
+                        int dot = envFuncArg.indexOf(".");
+                        String entity = envFuncArg.substring(0,dot);
+                        String propertyName = envFuncArg.substring(dot + 1);
+                        if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
+                            return context.getPrimaryEntityInstance().getPropertyByName(propertyName).getTicksSameValue();
+                        }else if(entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())){
+                            return context.getSecondaryEntity().getPropertyByName(propertyName).getTicksSameValue();
+                        }
+                    }
                     default:
                         throw new RuntimeException("There is no such environment function");
                 }
@@ -108,6 +157,22 @@ public enum ExpressionType {
                     case ("random"): {
                         throw new RuntimeException("This random function can't random String value");
                     }
+                    case("evaluate"):{
+                        int dot = envFuncArg.indexOf(".");
+                        String entity = envFuncArg.substring(0,dot);
+                        String propertyName = envFuncArg.substring(dot + 1);
+                        if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
+                            return (String) context.getPrimaryEntityInstance().getPropertyByName(propertyName).getValue();
+                        }else if(entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())){
+                            return (String) context.getSecondaryEntity().getPropertyByName(propertyName).getValue();
+                        }
+                    }
+                    case ("percent"):{
+                        throw new RuntimeException("This percent function can't return String value");
+                    }
+                    case ("ticks"):{
+                        throw new RuntimeException("This ticks function can't return String value");
+                    }
                     default:
                         throw new RuntimeException("There is no such environment function");
                 }
@@ -136,6 +201,22 @@ public enum ExpressionType {
                     }
                     case ("random"): {
                         throw new RuntimeException("This random function can't random boolean value");
+                    }
+                    case("evaluate"):{
+                        int dot = envFuncArg.indexOf(".");
+                        String entity = envFuncArg.substring(0,dot);
+                        String propertyName = envFuncArg.substring(dot + 1);
+                        if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
+                            return (boolean) context.getPrimaryEntityInstance().getPropertyByName(propertyName).getValue();
+                        }else if(entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())){
+                            return (boolean) context.getSecondaryEntity().getPropertyByName(propertyName).getValue();
+                        }
+                    }
+                    case ("percent"):{
+                        throw new RuntimeException("This percent function can't return boolean value");
+                    }
+                    case ("ticks"):{
+                        throw new RuntimeException("This ticks function can't return boolean value");
                     }
                     default:
                         throw new RuntimeException("There is no such environment function");

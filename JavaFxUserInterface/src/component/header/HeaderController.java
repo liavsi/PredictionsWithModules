@@ -51,9 +51,6 @@ public class HeaderController {
         this.isThereSimulationOutCome = new SimpleBooleanProperty(false);
     }
 
-
-
-
     @FXML
     private void initialize() {
         LabelFilePath.textProperty().bind(filePath);
