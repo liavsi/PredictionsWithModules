@@ -33,18 +33,18 @@ public class DecreaseAction extends AbstractAction {
         }
         if(PropertyType.DECIMAL.equals(propertyInstance.getPropertyDefinition().getType())){
             Integer v = PropertyType.DECIMAL.convert(propertyInstance.getValue());
-            Object xObj = expression.evaluate(byExpression,context);
-            int x = PropertyType.DECIMAL.convert(xObj);
-            //int x = ExpressionType.DECIMAL.evaluate(byExpression,context);
+//            Object xObj = expression.evaluate(byExpression,context);
+//            int x = PropertyType.DECIMAL.convert(xObj);
+            int x = ExpressionType.DECIMAL.evaluate(byExpression,context);
             // actual calculation
             int result = v-x;
             propertyInstance.updateValue(result);
         }
         else if(PropertyType.FLOAT.equals(propertyInstance.getPropertyDefinition().getType())){
             Float v = PropertyType.FLOAT.convert(propertyInstance.getValue());
-            Object xObj = expression.evaluate(byExpression,context);
-            float x = PropertyType.FLOAT.convert(xObj);
-            //float x = ExpressionType.FLOAT.evaluate(byExpression,context);
+//            Object xObj = expression.evaluate(byExpression,context);
+//            float x = PropertyType.FLOAT.convert(xObj);
+            float x = ExpressionType.FLOAT.evaluate(byExpression,context);
             // actual calculation
             float result = v-x;
             propertyInstance.updateValue(result);

@@ -55,9 +55,9 @@ public class EngineImpl implements Engine {
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
         SimulationOutcome simulation = myWorld.runSimulation(countId);
         pastSimulations.put(countId++, simulation);
-//        RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
-//        runSimulation.run();
-        threadExecutor.submit(new RunSimulation(simulation,myWorld,propertyNameToValueAsString));
+        RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
+        runSimulation.run();
+//        threadExecutor.submit(new RunSimulation(simulation,myWorld,propertyNameToValueAsString));
         return simulation.createSimulationOutcomeDTO();
 //        threadExecutor.submit(() -> {
 //            for (PropertyDefinition envVarDefinition : myWorld.getEnvVariablesManager().getEnvVariables().values()) {
