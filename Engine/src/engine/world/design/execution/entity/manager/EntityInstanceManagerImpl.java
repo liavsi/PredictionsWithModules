@@ -9,8 +9,6 @@ import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.property.PropertyInstance;
 import engine.world.design.execution.property.PropertyInstanceImpl;
 import engine.world.design.grid.api.Grid;
-import engine.world.design.grid.cell.Cell;
-import engine.world.design.grid.cell.Coordinate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,8 +19,11 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
 
     private int count;
     private final Map<Integer, EntityInstance> instances;
-    List <Integer> instanceToKill = new ArrayList<>();
-    public EntityInstanceManagerImpl() {
+    private List <Integer> instanceToKill = new ArrayList<>();
+    private Map<EntityDefinition,Map<String,PropertyInstance>> instanceToCreate = new HashMap<>();
+    private Grid grid;
+    public EntityInstanceManagerImpl(Grid grid) {
+        this.grid = grid;
         count = 0;
         instances = new HashMap<>();
     }
@@ -41,7 +42,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
 //    }
 
     @Override
-    public EntityInstance create(EntityDefinition entityDefinition, Grid grid) {
+    public EntityInstance create(EntityDefinition entityDefinition) {
         count++;
         EntityInstance newEntityInstance = new EntityInstanceImpl(entityDefinition, count);
         instances.put(count,newEntityInstance);
@@ -68,7 +69,18 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
         instanceToKill.forEach(id -> instances.remove(id));
         instanceToKill = new ArrayList<>();
     }
-
+    @Override
+    public void createEntities() {
+        for (Map.Entry<EntityDefinition,Map<String,PropertyInstance>> entry: instanceToCreate.entrySet()) {
+            EntityDefinition key = entry.getKey();
+            Map<String,PropertyInstance> value = entry.getValue();
+            EntityInstance entityInstance= create(key);
+            if (value != null){ //create entity - derived mode
+                entityInstance.setProperties(value);
+            }
+        }
+        instanceToCreate = new HashMap<>();
+    }
     @Override
     public void killEntity(int id) {
         if(instances.containsKey(id)) {
@@ -81,5 +93,10 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
     @Override
     public List<Integer> getInstanceToKill() {
         return instanceToKill;
+    }
+
+    @Override
+    public void createEntity(EntityDefinition createEntity, Map<String, PropertyInstance> createEntityProperties) {
+            instanceToCreate.put(createEntity,createEntityProperties);
     }
 }

@@ -1,10 +1,13 @@
 package engine.world.design.execution.context;
 
+import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.entity.manager.EntityInstanceManager;
 import engine.world.design.execution.environment.api.ActiveEnvironment;
 import engine.world.design.execution.property.PropertyInstance;
 import engine.world.design.grid.api.Grid;
+
+import java.util.Map;
 
 public class ContextImpl implements Context {
 
@@ -28,6 +31,11 @@ public class ContextImpl implements Context {
     @Override
     public ActiveEnvironment getActiveEnvironment() {
         return activeEnvironment;
+    }
+
+    @Override
+    public void createEntity(EntityDefinition createEntity, Map<String, PropertyInstance> createEntityProperties) {
+        entityInstanceManager.createEntity(createEntity,createEntityProperties);
     }
 
     @Override

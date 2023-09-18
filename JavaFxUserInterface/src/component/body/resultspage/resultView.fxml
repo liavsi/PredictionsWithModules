@@ -61,17 +61,17 @@
                         <Label text="Seconds:" GridPane.rowIndex="2" />
                         <Label fx:id="TickNumLabel" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label fx:id="SecondsLabel" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TableView prefHeight="41.0" prefWidth="202.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
+                        <TableView fx:id="TableView" prefHeight="41.0" prefWidth="202.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="4">
                           <columns>
-                            <TableColumn prefWidth="109.0" text="Entity Name" />
-                            <TableColumn prefWidth="109.0" text="Population" />
+                            <TableColumn fx:id="EntityNameColumn" prefWidth="109.0" text="Entity Name" />
+                            <TableColumn fx:id="PopulationColumn" prefWidth="109.0" text="Population" />
                           </columns>
                         </TableView>
                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="5.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="5" GridPane.valignment="CENTER">
                            <children>
-                              <Button mnemonicParsing="false" onAction="#onStopButton" text="Stop" />
-                              <Button mnemonicParsing="false" onAction="#onResumeButton" text="Resume" />
-                              <Button mnemonicParsing="false" onAction="#onPauseButton" text="Pause" />
+                              <Button fx:id="ButtonStop" mnemonicParsing="false" onAction="#onStopButton" text="Stop" />
+                              <Button fx:id="ButtonResume" mnemonicParsing="false" onAction="#onResumeButton" text="Resume" />
+                              <Button fx:id="ButtonPause" mnemonicParsing="false" onAction="#onPauseButton" text="Pause" />
                            </children>
                         </HBox>
                      </children>

@@ -1,13 +1,18 @@
 package component.body.resultspage;
 
+import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
 import com.sun.corba.se.spi.activation.Server;
 import com.sun.javafx.collections.ObservableListWrapper;
 import component.mainapp.AppController;
+import engine.SimulationOutcome;
 import engine.api.Engine;
+import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.expression.ExpressionType;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -16,10 +21,8 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
@@ -27,6 +30,7 @@ import utils.results.SimulationOutcomeListCell;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class ResultsPageController {
 
@@ -36,6 +40,19 @@ public class ResultsPageController {
     public Label SecondsLabel;
     @FXML
     public GridPane mainView;
+    @FXML
+    public Button ButtonStop;
+    @FXML
+    public Button ButtonResume;
+    @FXML
+    public Button ButtonPause;
+    @FXML
+    public TableView<ShowEntity> TableView;
+    @FXML
+    public TableColumn<ShowEntity,String> EntityNameColumn;
+    @FXML
+    public TableColumn<ShowEntity,Integer> PopulationColumn;
+
     @FXML private VBox vBoxWithSimulations;
     @FXML
     private AnchorPane resultsPane;
@@ -48,11 +65,16 @@ public class ResultsPageController {
 
     @FXML
     private Button rerunButton;
+
+    private SimpleBooleanProperty isStopSelected;
+    private SimpleBooleanProperty isPauseSelected;
     private AppController mainController;
     private ObservableList<SimulationOutcomeDTO> recentSimulations;
 
+    private ObservableList<ShowEntity> entities;
+
     private SimpleIntegerProperty ticks;
-    private SimpleIntegerProperty seconds;
+    private SimpleLongProperty seconds;
     private Engine engine;
     public GridPane getMainView() {
         return mainView;
@@ -60,14 +82,24 @@ public class ResultsPageController {
 
     public ResultsPageController() {
         this.ticks = new SimpleIntegerProperty();
-        this.seconds = new SimpleIntegerProperty();
+        this.entities = FXCollections.observableArrayList();
+        this.seconds = new SimpleLongProperty();
         recentSimulations = FXCollections.observableArrayList();
+        this.isStopSelected = new SimpleBooleanProperty(false);
+        this.isPauseSelected = new SimpleBooleanProperty(false);
     }
 
     @FXML
     private void initialize() {
         TickNumLabel.textProperty().bind(ticks.asString());
         SecondsLabel.textProperty().bind(seconds.asString());
+        ButtonPause.disableProperty().bind(isPauseSelected);
+        ButtonResume.disableProperty().bind(isPauseSelected.not());
+        ButtonStop.disableProperty().bind(isStopSelected);
+        EntityNameColumn.setCellValueFactory(new PropertyValueFactory<ShowEntity,String>("EntityName"));
+        PopulationColumn.setCellValueFactory(new PropertyValueFactory<ShowEntity,Integer>("Population"));
+        TableView.setItems(entities);
+
         // Initialize your controller
         simulationList.setCellFactory(param -> new SimulationOutcomeListCell());
         // Handle item selection in the list
@@ -75,6 +107,13 @@ public class ResultsPageController {
         simulationList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showSimulationDetails(newValue); // Display details of the selected simulation outcome
         });
+    }
+
+    private void setEntitiesOnClick(SimulationOutcomeDTO currSimulation) {
+        entities.clear();
+        for (EntityDefinitionDTO entityDefinitionDTO: engine.getWorldDTO().getNameToEntityDefinitionDTO().values()){
+            entities.add(new ShowEntity(entityDefinitionDTO));
+        }
     }
 
     private void showSimulationDetails(SimulationOutcomeDTO selectedSimulation) {
@@ -94,8 +133,12 @@ public class ResultsPageController {
                             currSimulationDTO = engine.getPastSimulationDTO(simulationId);
                             SimulationOutcomeDTO finalCurrSimulationDTO = currSimulationDTO;
                             Platform.runLater(() -> {
-                                ticks.set(selectedSimulation.getTerminationDTO().getTicks());
-                                seconds.set(selectedSimulation.getTerminationDTO().getSecondsToPast());
+                                ticks.set(finalCurrSimulationDTO.getTerminationDTO().getCurrTick());
+                                if(!isPauseSelected.get()) {
+                                    seconds.set(finalCurrSimulationDTO.getTerminationDTO().getCurrSecond());
+                                }
+                                // TODO: 18/09/2023  
+                                //setEntitiesOnClick(currSimulationDTO); 
 //                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
                             });
                             Thread.sleep(200);
@@ -123,6 +166,7 @@ public class ResultsPageController {
     }
 
     public void onStopButton(ActionEvent actionEvent) {
+        isStopSelected.set(true);
         if (simulationList.getSelectionModel().getSelectedItem() == null) {
             return;
         }
@@ -131,15 +175,28 @@ public class ResultsPageController {
     }
 
     public void onResumeButton(ActionEvent actionEvent) {
-        engine.resumeSimulationByID(1);
+        if (simulationList.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        int id = simulationList.getSelectionModel().getSelectedItem().getId();
+        engine.resumeSimulationByID(id);
     }
 
     public void onPauseButton(ActionEvent actionEvent) {
-        engine.pauseSimulationByID(1);
+        isPauseSelected.set(true);
+        if (simulationList.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        int id = simulationList.getSelectionModel().getSelectedItem().getId();
+        engine.pauseSimulationByID(id);
     }
 
     public void onRerunButton(ActionEvent actionEvent) {
-        
+        if (simulationList.getSelectionModel().getSelectedItem() == null) {
+            return;
+        }
+        int id = simulationList.getSelectionModel().getSelectedItem().getId();
+        mainController.startSimulationInEngine(id);
     }
 
     public void setEngine(Engine engine) {

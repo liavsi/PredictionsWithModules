@@ -8,6 +8,7 @@ import engine.world.design.action.api.ActionType;
 import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.execution.context.Context;
+import engine.world.design.execution.context.ContextImpl;
 import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.expression.ExpressionType;
 
@@ -33,9 +34,19 @@ public class ProximityAction extends AbstractAction {
 
     @Override
     public void invoke(Context context) {
-        if(isClose(context)){
+        EntityInstance targetEntity = isClose(context);
+        if(targetEntity != null){
             for (Action action: actions){
-                action.invoke(context);
+                if (action.getMainEntity().getName().equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
+                    Context newContext = new ContextImpl(context.getPrimaryEntityInstance(), context.getPrimaryEntityInstance(), context.getEntityInstanceManager(), context.getActiveEnvironment(), context.getGrid());
+                    newContext.setSecondaryEntity(targetEntity);
+                    action.invoke(context);
+                }
+                else if(action.getMainEntity().getName().equals(context.getSecondaryEntity().getEntityDefinition().getName())){
+                    Context newContext = new ContextImpl(context.getSecondaryEntity(), context.getPrimaryEntityInstance(), context.getEntityInstanceManager(), context.getActiveEnvironment(), context.getGrid());
+                    newContext.setPrimaryEntityInstance(targetEntity);
+                    action.invoke(newContext);
+                }
             }
         }
     }
@@ -47,7 +58,7 @@ public class ProximityAction extends AbstractAction {
         return new ProximityDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),ofExpression,columns,rows,actionsDTO);
     }
 
-    private boolean isClose(Context context){
+    private EntityInstance isClose(Context context){
         EntityInstance sourceEntity = context.getPrimaryEntityInstance();
         int depth = ExpressionType.DECIMAL.evaluate(ofExpression,context);
         int x = sourceEntity.getCoordinate().getX();
@@ -62,11 +73,11 @@ public class ProximityAction extends AbstractAction {
                 int yTarget = entityInstance.getCoordinate().getY();
                 if (xTarget >= xLeft && xTarget <= xRight) {
                     if (yTarget <= yUp && yTarget >= yDown) {
-                        return true;
+                        return entityInstance;
                     }
                 }
             }
         }
-        return false;
+        return null;
     }
 }

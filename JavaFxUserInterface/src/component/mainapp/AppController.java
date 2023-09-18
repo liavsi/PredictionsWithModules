@@ -28,10 +28,7 @@ import javafx.util.Duration;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -64,6 +61,7 @@ public class AppController {
     private final ExecutorService executor = Executors.newFixedThreadPool(4); // You can adjust the number of threads as needed
     private Engine engine;
     private ObservableList<SimulationOutcomeDTO> recentSimulations = FXCollections.observableArrayList();
+    private Map<Integer, Map<String,Object>> resToEngineForSimulationId = new HashMap<>();
 
     public AppController() {
     }
@@ -130,6 +128,8 @@ public class AppController {
     public void startSimulationInEngine(Map<String, Object> resToEngine) {
         SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
         int simulationId = simulationOutcomeDTO.getId();
+        //  keep to rerun simulation by id Number
+        resToEngineForSimulationId.put(simulationId,resToEngine);
         recentSimulations.add(simulationOutcomeDTO);
         headerComponentController.setIsIsThereSimulationOutCome(true);
         switchToResultsPage();
@@ -212,5 +212,20 @@ public class AppController {
 
     public ObservableList<SimulationOutcomeDTO> getRecentSimulations() {
         return recentSimulations;
+    }
+
+    public void startSimulationInEngine(int id) {
+        if(!resToEngineForSimulationId.containsKey(id))
+        {
+            throw new RuntimeException("got an id that doesnt have resToEngine");
+        }
+        Map<String,Object> resToEngine = resToEngineForSimulationId.get(id);
+        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+        int simulationId = simulationOutcomeDTO.getId();
+        //  keep to rerun simulation by id Number
+        resToEngineForSimulationId.put(simulationId,resToEngine);
+        recentSimulations.add(simulationOutcomeDTO);
+        headerComponentController.setIsIsThereSimulationOutCome(true);
+        switchToResultsPage();
     }
 }

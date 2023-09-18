@@ -3,13 +3,9 @@ package engine.world.design.world.impl;
 import DTOManager.impl.*;
 import engine.SimulationOutcome;
 import engine.world.design.definition.property.api.PropertyDefinition;
-import engine.world.design.execution.context.Context;
-import engine.world.design.execution.context.ContextImpl;
-import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.entity.manager.EntityInstanceManager;
 import engine.world.design.execution.entity.manager.EntityInstanceManagerImpl;
 import engine.world.design.execution.environment.api.ActiveEnvironment;
-import engine.world.design.execution.property.PropertyInstanceImpl;
 import engine.world.design.grid.api.Grid;
 import engine.world.design.termination.api.Termination;
 import engine.world.design.world.api.World;
@@ -107,7 +103,7 @@ public class WorldImpl implements World {
         String formattedDate = dateFormat.format(currentDate);
         // creating the Active Environment - if the user gave the property its value we will use it otherwise generate value
         ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
-        EntityInstanceManager entityInstanceManager = new EntityInstanceManagerImpl();
+        EntityInstanceManager entityInstanceManager = new EntityInstanceManagerImpl(grid);
         return new SimulationOutcome(formattedDate,id,termination,entityInstanceManager, entityInstanceManager.createDTO(),activeEnvironment);
         // TODO: 11/09/2023 change name 
 
