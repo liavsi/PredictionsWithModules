@@ -11,6 +11,7 @@ import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -51,6 +52,62 @@ public class SimulationPageController {
         this.entityDefinitionByName = world.getNameToEntityDefinitionDTO();
     }
 
+
+//    private void organizePopulationData() {
+//        IntegerProperty maxPopulation = new SimpleIntegerProperty(world.getGridDTO().getArea());
+//        List<DoubleProperty> sumPopulation = new ArrayList<>();
+//        for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionByName.values()) {
+//            HBox pair = null;
+//            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), 0); // Initialize with a default value within the specified range
+//            resultEnvironment.put(entityDefinitionDTO.getName() + "entity", new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().intValue()));
+//            inputPlaceNumber.valueProperty().bindBidirectional(resultEnvironment.get(entityDefinitionDTO.getName()+"entity"));
+//            sumPopulation.add(inputPlaceNumber.valueProperty());
+//            pair = inputPlaceNumber;
+//            if (pair == null) {
+//                throw new RuntimeException("expected pair to have a value");
+//            }
+//            leftVbox.getChildren().add(pair);
+//        }
+//        String goodMessage = "Max Population in the simulation is: " + maxPopulation.intValue();
+//        StringProperty alert = new SimpleStringProperty(goodMessage);
+//        Label alertLabel =new Label("");
+//        alertLabel.textProperty().bind(alert);
+//        leftVbox.getChildren().add(alertLabel);
+//        DoubleBinding result = Bindings.createDoubleBinding(() -> sumPopulation.stream().mapToDouble(DoubleProperty::get).sum(), sumPopulation.toArray(new DoubleProperty[0]));
+//        result.addListener(((observable, oldValue, newValue) -> {
+//            int tooMuch =-1*(maxPopulation.intValue() - newValue.intValue());
+//            if (maxPopulation.intValue() - newValue.intValue() < 0) {
+//                alert.set("You need to lower your population by " + tooMuch);
+//                startSimulationButton.setDisable(true);
+//            }
+//            else {
+//                startSimulationButton.setDisable(false);
+//                alert.set(goodMessage);
+//            }
+//        }));
+//        result.get();
+//    }
+
+
+
+    public void setMainController(AppController appController) {
+        this.appController = appController;
+    }
+    public void onClickedStartSimulation(ActionEvent event) {
+        Map<String, Object> resToEngine = resultEnvironment.entrySet().stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        entry -> entry.getValue() == null ? null : entry.getValue().get()
+                ));
+        appController.startSimulationInEngine(resToEngine);
+    }
+
+    public void onClickedClearButton(ActionEvent event) {
+    }
+
+    public Parent getMainView() {
+        return mainView;
+    }
     public void organizeData() {
         organizeEnvironmentVariablesData();
         organizePopulationData();
@@ -97,41 +154,6 @@ public class SimulationPageController {
         });
     }
 
-//    private void organizePopulationData() {
-//        IntegerProperty maxPopulation = new SimpleIntegerProperty(world.getGridDTO().getArea());
-//        List<DoubleProperty> sumPopulation = new ArrayList<>();
-//        for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionByName.values()) {
-//            HBox pair = null;
-//            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), 0); // Initialize with a default value within the specified range
-//            resultEnvironment.put(entityDefinitionDTO.getName() + "entity", new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().intValue()));
-//            inputPlaceNumber.valueProperty().bindBidirectional(resultEnvironment.get(entityDefinitionDTO.getName()+"entity"));
-//            sumPopulation.add(inputPlaceNumber.valueProperty());
-//            pair = inputPlaceNumber;
-//            if (pair == null) {
-//                throw new RuntimeException("expected pair to have a value");
-//            }
-//            leftVbox.getChildren().add(pair);
-//        }
-//        String goodMessage = "Max Population in the simulation is: " + maxPopulation.intValue();
-//        StringProperty alert = new SimpleStringProperty(goodMessage);
-//        Label alertLabel =new Label("");
-//        alertLabel.textProperty().bind(alert);
-//        leftVbox.getChildren().add(alertLabel);
-//        DoubleBinding result = Bindings.createDoubleBinding(() -> sumPopulation.stream().mapToDouble(DoubleProperty::get).sum(), sumPopulation.toArray(new DoubleProperty[0]));
-//        result.addListener(((observable, oldValue, newValue) -> {
-//            int tooMuch =-1*(maxPopulation.intValue() - newValue.intValue());
-//            if (maxPopulation.intValue() - newValue.intValue() < 0) {
-//                alert.set("You need to lower your population by " + tooMuch);
-//                startSimulationButton.setDisable(true);
-//            }
-//            else {
-//                startSimulationButton.setDisable(false);
-//                alert.set(goodMessage);
-//            }
-//        }));
-//        result.get();
-//    }
-
     private void organizeEnvironmentVariablesData() {
         for(PropertyDefinitionDTO env: environmentVariablesDefinition) {
             HBox pair = null;
@@ -164,26 +186,63 @@ public class SimulationPageController {
             rightVbox.getChildren().add(pair);
         }
     }
-
-    public void setMainController(AppController appController) {
-        this.appController = appController;
-    }
-    public void onClickedStartSimulation(ActionEvent event) {
-        Map<String, Object> resToEngine = resultEnvironment.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue() == null ? null : entry.getValue().get()
-                ));
-        appController.startSimulationInEngine(resToEngine);
+    public void organizeData(Map<String, Object> resToEngine) {
+        organizeEnvironmentVariablesData(resToEngine);
+        organizePopulationData(resToEngine);
     }
 
-    public void onClickedClearButton(ActionEvent event) {
+    private void organizePopulationData(Map<String, Object> resToEngine) {
+        for(Node pair: leftVbox.getChildren()) {
+            if (!(pair instanceof HBox)){
+                continue;
+            }
+            HBox HBpair = (HBox) pair;
+            if (HBpair instanceof LabelNumericInputBox) {
+                LabelNumericInputBox LTBpair = (LabelNumericInputBox) HBpair;
+                for (Map.Entry<String, Object> nameObj : resToEngine.entrySet()) {
+                    String manipulatedString =LTBpair.getLabelText() +"entity";
+                    if (manipulatedString.equals(nameObj.getKey())) {
+                        LTBpair.valueProperty().set((Double) nameObj.getValue());
+                    }
+                }
+            }
+
+        }
     }
 
-    public Parent getMainView() {
-        return mainView;
+    private void organizeEnvironmentVariablesData(Map<String, Object> resToEngine) {
+        for(Node pair: rightVbox.getChildren()) {
+            if (!(pair instanceof HBox)){
+                continue;
+            }
+            HBox HBpair = (HBox) pair;
+            if (HBpair instanceof LabelTextBox) {
+                LabelTextBox LTBpair = (LabelTextBox) HBpair;
+                for (Map.Entry<String, Object> nameObj : resToEngine.entrySet()) {
+                    if (LTBpair.getLabelText().equals(nameObj.getKey())) {
+                        LTBpair.textProperty().set((String) nameObj.getValue());
+                        continue;
+                    }
+                }
+            }
+            if (HBpair instanceof LabelNumericInputBox) {
+                LabelNumericInputBox LNIpair = (LabelNumericInputBox) HBpair;
+                for (Map.Entry<String, Object> nameObj : resToEngine.entrySet()) {
+                    if (LNIpair.getLabelText().equals(nameObj.getKey())) {
+                        LNIpair.valueProperty().set((Double) nameObj.getValue());
+                        continue;
+                    }
+                }
+            }
+            if (HBpair instanceof LabelBooleanInputBox) {
+                LabelBooleanInputBox LBIpair = (LabelBooleanInputBox) HBpair;
+                for (Map.Entry<String, Object> nameObj : resToEngine.entrySet()) {
+                    if (LBIpair.getLabelText().equals(nameObj.getKey())) {
+                        LBIpair.valueProperty().set((Boolean) nameObj.getValue());
+                        continue;
+                    }
+                }
+            }
+        }
     }
-
-
-
 }

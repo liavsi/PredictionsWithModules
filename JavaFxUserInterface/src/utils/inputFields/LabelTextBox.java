@@ -30,6 +30,9 @@ public class LabelTextBox extends HBox {
         setSpacing(10); // Adjust spacing between label and textField
     }
 
+    public String getLabelText() {
+        return label.getText();
+    }
     public SimpleStringProperty textProperty() {
         return textProperty;
     }

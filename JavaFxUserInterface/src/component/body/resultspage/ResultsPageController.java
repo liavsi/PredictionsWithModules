@@ -65,7 +65,7 @@ public class ResultsPageController {
 
     @FXML
     private Button rerunButton;
-
+    Task<SimulationOutcomeDTO> simulationUpdateTask;
     private SimpleBooleanProperty isStopSelected;
     private SimpleBooleanProperty isPauseSelected;
     private AppController mainController;
@@ -117,43 +117,54 @@ public class ResultsPageController {
     }
 
     private void showSimulationDetails(SimulationOutcomeDTO selectedSimulation) {
-        Service backgroundService = new Service() {
-            @Override
-            protected Task createTask() {
 
-                return new Task() {
-                    @Override
-                    protected SimulationOutcomeDTO call() throws Exception {
-                        // Run your simulation here
-                        int simulationId = selectedSimulation.getId();
-                        SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
-                        boolean isSimulationRunning = true;
-                        isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
-                        while (isSimulationRunning) {
-                            currSimulationDTO = engine.getPastSimulationDTO(simulationId);
-                            SimulationOutcomeDTO finalCurrSimulationDTO = currSimulationDTO;
-                            Platform.runLater(() -> {
-                                ticks.set(finalCurrSimulationDTO.getTerminationDTO().getCurrTick());
-                                if(!isPauseSelected.get()) {
-                                    seconds.set(finalCurrSimulationDTO.getTerminationDTO().getCurrSecond());
-                                }
-                                // TODO: 18/09/2023  
-                                //setEntitiesOnClick(currSimulationDTO); 
-//                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
-                            });
-                            Thread.sleep(200);
-                            isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
-                        }
-                        return engine.getPastSimulationDTO(simulationId);
+        if (simulationUpdateTask != null) {
+            simulationUpdateTask.cancel();
+        }
+        simulationUpdateTask = new Task<SimulationOutcomeDTO>() {
+
+            @Override
+            protected SimulationOutcomeDTO call()  {
+                // Run your simulation here
+                int simulationId = selectedSimulation.getId();
+                SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
+                boolean isSimulationRunning = true;
+                isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                System.out.println("running task on simulation id:" + simulationId);
+                System.out.println("current seconds" + currSimulationDTO.getTerminationDTO().getCurrSecond());
+                while (isSimulationRunning) {
+                    if (isCancelled()) {
+                        break;
                     }
-                };
+                    currSimulationDTO = engine.getPastSimulationDTO(simulationId);
+                    SimulationOutcomeDTO finalCurrSimulationDTO = currSimulationDTO;
+                    Platform.runLater(() -> {
+                        ticks.set(finalCurrSimulationDTO.getTerminationDTO().getCurrTick());
+                        if (!isPauseSelected.get()) {
+                            seconds.set(finalCurrSimulationDTO.getTerminationDTO().getCurrSecond());
+                        }
+                        // TODO: 18/09/2023
+                        //setEntitiesOnClick(currSimulationDTO);
+//                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
+                    });
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException interrupted) {
+                        if (isCancelled()) {
+                            break;
+                        }
+                    }
+                    isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                }
+                return engine.getPastSimulationDTO(simulationId);
             }
         };
-        backgroundService.start();
-        backgroundService.setOnSucceeded(event -> {
+        Thread th = new Thread(simulationUpdateTask);
+        th.setDaemon(true);
+        th.start();
+        simulationUpdateTask.setOnSucceeded((event -> {
             // simulation finished make buttons disabled..
-        });
-
+        }));
 
     }
 
@@ -196,7 +207,7 @@ public class ResultsPageController {
             return;
         }
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
-        mainController.startSimulationInEngine(id);
+        mainController.reRunFromId(id);
     }
 
     public void setEngine(Engine engine) {
