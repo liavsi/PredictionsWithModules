@@ -223,11 +223,11 @@ public class EngineImpl implements Engine {
     @Override
     public void resumeSimulationByID(int id){
         SimulationOutcome simulationOutcome = pastSimulations.get(id);
-        simulationOutcome.setResume(true);
+        simulationOutcome.setPause(false);
     }
     @Override
     public void pauseSimulationByID(int id){
         SimulationOutcome simulationOutcome = pastSimulations.get(id);
-        simulationOutcome.setResume(false);
+        simulationOutcome.setPause(true);
     }
 }

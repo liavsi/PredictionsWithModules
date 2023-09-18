@@ -6,7 +6,6 @@ public class TickImpl implements Tick {
 
     private Integer ticks;
     private boolean isTerminateReason;
-
     public TickImpl(Integer ticks) {
         this.ticks = ticks;
     }

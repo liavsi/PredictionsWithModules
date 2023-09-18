@@ -16,4 +16,5 @@ public interface EntityInstance {
     public Map<String, PropertyInstance> getProperties();
     public Coordinate getCoordinate();
     public void setCoordinate(Coordinate coordinate);
+    public void setProperties(Map<String, PropertyInstance> properties);
 }

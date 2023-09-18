@@ -10,6 +10,7 @@ import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.property.PropertyInstance;
 import engine.world.design.execution.property.PropertyInstanceImpl;
 import engine.world.design.rule.Rule;
+import engine.world.design.termination.api.Termination;
 import engine.world.design.world.api.World;
 
 import java.time.Duration;
@@ -48,20 +49,21 @@ public class RunSimulation implements Runnable{
             Double population = (Double) propertyNameToValueAsString.get(entityDefinition.getName()+"entity");
             entityDefinition.setPopulation(population.intValue());
             for (int i = 0 ;i < entityDefinition.getPopulation(); i++) {
-                simulationOutcome.getEntityInstanceManager().create(entityDefinition, world.getGrid());
+                simulationOutcome.getEntityInstanceManager().create(entityDefinition);
             }
         }
-        simulationOutcome.getTermination().startTerminationClock();
+        Termination termination = simulationOutcome.getTermination();
+        termination.startTerminationClock();
         Map<Integer, SimulationOutcome> informationSimulation = new HashMap<>();
         // take a picture
-        int ticks = 0;
+        termination.setCurrTick(0);
         // TODO: 15/09/2023 setTicks
 //        simulationOutcome.getTermination()
-        while (!simulationOutcome.getTermination().isTerminated(ticks,simulationOutcome.isStop())) {
+        while (!simulationOutcome.getTermination().isTerminated(simulationOutcome.isStop())) {
             moveEntities();
             ArrayList<Action> activeActions = new ArrayList<>();
             for (Rule rule: world.getRules()) {
-                if (rule.getActivation().isActive(ticks)) {
+                if (rule.getActivation().isActive(termination.getCurrTick())) {
                     activeActions.addAll(rule.getActionToPreform());
                 }
             }
@@ -90,7 +92,8 @@ public class RunSimulation implements Runnable{
                 }
             }
             simulationOutcome.getEntityInstanceManager().killEntities();
-            ticks++;
+            simulationOutcome.getEntityInstanceManager().createEntities();
+            termination.setCurrTick(termination.getCurrTick()+1);
             pauseAndResume();
         }
 //        SimulationOutcome currSimulation = engine.getMyWorld().runSimulation(engine.getPropertyNameToValueAsString(),engine.getCountId());

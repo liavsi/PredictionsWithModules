@@ -15,7 +15,7 @@ public class EntityInstanceImpl implements EntityInstance{
     private final EntityDefinition entityDefinition;
 
     private final int id;
-    private final Map<String, PropertyInstance> properties;
+    private Map<String, PropertyInstance> properties;
     private Coordinate coordinate;
 
     public EntityInstanceImpl(EntityDefinition entityDefinition, int id) {
@@ -35,6 +35,10 @@ public class EntityInstanceImpl implements EntityInstance{
     @Override
     public int getId() {
         return id;
+    }
+
+    public void setProperties(Map<String, PropertyInstance> properties) {
+        this.properties = properties;
     }
 
     @Override

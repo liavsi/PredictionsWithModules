@@ -13,13 +13,28 @@ public class TerminationImpl implements Termination {
 
     private Tick ticks = null;
     private Second secondsToPast = null;
-    private ByUser byUser = null;
-
-
+    private ByUser byUser;
     private Instant startTime;
+    private long currSecond;
+    private Integer currTick;
     //private Object terminateReason = null;
+    @Override
+    public ByUser getByUser() {
+        return byUser;
+    }
 
     public TerminationImpl() {
+        currTick = 0;
+        startTime = Instant.ofEpochSecond(0);
+        byUser = new ByUser();
+    }
+    @Override
+    public void setCurrTick(Integer currTick) {
+        this.currTick = currTick;
+    }
+    @Override
+    public Integer getCurrTick() {
+        return currTick;
     }
 
     public void setTicks(Tick ticks) {
@@ -43,10 +58,13 @@ public class TerminationImpl implements Termination {
             isSecondsTerminate = secondsToPast.isTerminateReason();
             numOfSeconds = secondsToPast.getSeconds();
         }
-        return new TerminationDTO(numOfTicks, numOfSeconds, isTicksTerminate, isSecondsTerminate);
+        if (!byUser.isTerminationReason()){
+            currSecond = Instant.now().getEpochSecond() - startTime.getEpochSecond();
+        }
+        return new TerminationDTO(numOfTicks, numOfSeconds, isTicksTerminate, isSecondsTerminate,currTick,currSecond);
     }
     @Override
-    public Boolean isTerminated(Integer currentTicks,boolean isUserStop) {
+    public Boolean isTerminated(boolean isUserStop) {
         boolean isTerminate = false;
         if(secondsToPast != null){
             Instant currentTime = Instant.now();
@@ -58,7 +76,7 @@ public class TerminationImpl implements Termination {
             }
         }
         if (ticks != null) {
-            if(currentTicks >= ticks.getTicks()) {
+            if(currTick >= ticks.getTicks()) {
                 isTerminate = true;
                 ticks.setTerminateReason(true);
                 //terminateReason = ticks;
@@ -81,7 +99,7 @@ public class TerminationImpl implements Termination {
 
     @Override
     public void reduceWaitTime(Duration waitTime) {
-        this.startTime = startTime.minus(waitTime);
+        this.startTime = startTime.plus(waitTime);
     }
 
     @Override
