@@ -8,7 +8,6 @@ import engine.world.design.action.api.InteractiveEntity;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.property.api.PropertyDefinition;
 import engine.world.design.execution.context.Context;
-import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.property.PropertyInstance;
 import engine.world.design.execution.property.PropertyInstanceImpl;
 
@@ -50,6 +49,6 @@ public class ReplaceAction extends AbstractAction {
     }
     @Override
     public ActionDTO createActionDTO() {
-        return new ReplaceDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),mode);
+        return new ReplaceDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),mode, createEntity.createEntityDefinitionDTO());
     }
 }
