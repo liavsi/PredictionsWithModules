@@ -115,7 +115,6 @@ public class SimulationPageController {
                 LabelNumericInputBox LTBpair = (LabelNumericInputBox) HBpair;
                 LTBpair.valueProperty().set(0);
             }
-
         }
     }
 

@@ -126,13 +126,13 @@ public class AppController {
     }
 
     public void startSimulationInEngine(Map<String, Object> resToEngine) {
+        switchToResultsPage();
         SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
         int simulationId = simulationOutcomeDTO.getId();
         //  keep to rerun simulation by id Number
         resToEngineForSimulationId.put(simulationId,resToEngine);
         recentSimulations.add(simulationOutcomeDTO);
         headerComponentController.setIsIsThereSimulationOutCome(true);
-        switchToResultsPage();
     }
 
 //        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
@@ -235,7 +235,4 @@ public class AppController {
         switchToNewExecutionPage();
     }
 
-    private void loadResultsPage(Map<String, Object> resToEngine) {
-
-    }
 }

@@ -10,10 +10,12 @@ import engine.api.Engine;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.expression.ExpressionType;
 import javafx.application.Platform;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.concurrent.Service;
@@ -65,6 +67,8 @@ public class ResultsPageController {
 
     @FXML
     private Button rerunButton;
+    private SimpleBooleanProperty isSimulationRunning;
+    private SimpleBooleanProperty isSimulationOver;
     Task<SimulationOutcomeDTO> simulationUpdateTask;
     private SimpleBooleanProperty isStopSelected;
     private SimpleBooleanProperty isPauseSelected;
@@ -85,6 +89,8 @@ public class ResultsPageController {
         this.entities = FXCollections.observableArrayList();
         this.seconds = new SimpleLongProperty();
         recentSimulations = FXCollections.observableArrayList();
+        this.isSimulationRunning = new SimpleBooleanProperty(true);
+        this.isSimulationOver = new SimpleBooleanProperty(false);
         this.isStopSelected = new SimpleBooleanProperty(false);
         this.isPauseSelected = new SimpleBooleanProperty(false);
     }
@@ -93,9 +99,12 @@ public class ResultsPageController {
     private void initialize() {
         TickNumLabel.textProperty().bind(ticks.asString());
         SecondsLabel.textProperty().bind(seconds.asString());
-        ButtonPause.disableProperty().bind(isPauseSelected);
-        ButtonResume.disableProperty().bind(isPauseSelected.not());
-        ButtonStop.disableProperty().bind(isStopSelected);
+        ButtonPause.disableProperty().bind(isSimulationRunning.not());
+        ButtonResume.disableProperty().bind(Bindings.createBooleanBinding(() ->
+                        isSimulationOver.get() || isSimulationRunning.get(),
+                isSimulationOver, isSimulationRunning
+        ));
+        ButtonStop.disableProperty().bind(isSimulationRunning.not());
         EntityNameColumn.setCellValueFactory(new PropertyValueFactory<ShowEntity,String>("EntityName"));
         PopulationColumn.setCellValueFactory(new PropertyValueFactory<ShowEntity,Integer>("Population"));
         TableView.setItems(entities);
@@ -103,7 +112,6 @@ public class ResultsPageController {
         // Initialize your controller
         simulationList.setCellFactory(param -> new SimulationOutcomeListCell());
         // Handle item selection in the list
-        simulationList.getSelectionModel().selectLast();
         simulationList.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             showSimulationDetails(newValue); // Display details of the selected simulation outcome
         });
@@ -128,19 +136,19 @@ public class ResultsPageController {
                 // Run your simulation here
                 int simulationId = selectedSimulation.getId();
                 SimulationOutcomeDTO currSimulationDTO = engine.getPastSimulationDTO(simulationId);
-                boolean isSimulationRunning = true;
-                isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                boolean isCurrSimulationRunning = true;
+                isCurrSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
                 System.out.println("running task on simulation id:" + simulationId);
                 System.out.println("current seconds" + currSimulationDTO.getTerminationDTO().getCurrSecond());
-                while (isSimulationRunning) {
-                    if (isCancelled()) {
-                        break;
-                    }
+                while (isCurrSimulationRunning) {
                     currSimulationDTO = engine.getPastSimulationDTO(simulationId);
                     SimulationOutcomeDTO finalCurrSimulationDTO = currSimulationDTO;
+                    if(isCancelled()){
+                        break;
+                    }
                     Platform.runLater(() -> {
                         ticks.set(finalCurrSimulationDTO.getTerminationDTO().getCurrTick());
-                        if (!isPauseSelected.get()) {
+                        if (!isSimulationOver.get()) {
                             seconds.set(finalCurrSimulationDTO.getTerminationDTO().getCurrSecond());
                         }
                         // TODO: 18/09/2023
@@ -154,7 +162,7 @@ public class ResultsPageController {
                             break;
                         }
                     }
-                    isSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                    isCurrSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
                 }
                 return engine.getPastSimulationDTO(simulationId);
             }
@@ -174,6 +182,14 @@ public class ResultsPageController {
         this.mainController = appController;
         recentSimulations = appController.getRecentSimulations();
         simulationList.setItems(recentSimulations);
+        recentSimulations.addListener((ListChangeListener<SimulationOutcomeDTO>) change -> {
+            while (change.next()) {
+                if (change.wasAdded()) {
+                    // Select the last added item in the ListView
+                    simulationList.getSelectionModel().selectLast();
+                }
+            }
+        });
     }
 
     public void onStopButton(ActionEvent actionEvent) {
@@ -181,23 +197,28 @@ public class ResultsPageController {
         if (simulationList.getSelectionModel().getSelectedItem() == null) {
             return;
         }
+        isSimulationOver.set(true);
+        isSimulationRunning.set(false);
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
         engine.stopSimulationByID(id);
     }
 
     public void onResumeButton(ActionEvent actionEvent) {
-        if (simulationList.getSelectionModel().getSelectedItem() == null) {
+        if (simulationList.getSelectionModel().getSelectedItem() == null || !isPauseSelected.get()) {
             return;
         }
+        isSimulationRunning.set(true);
+        isPauseSelected.set(false);
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
         engine.resumeSimulationByID(id);
     }
 
     public void onPauseButton(ActionEvent actionEvent) {
-        isPauseSelected.set(true);
         if (simulationList.getSelectionModel().getSelectedItem() == null) {
             return;
         }
+        isSimulationRunning.set(false);
+        isPauseSelected.set(true);
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
         engine.pauseSimulationByID(id);
     }
