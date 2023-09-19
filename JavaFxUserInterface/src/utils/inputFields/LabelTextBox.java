@@ -20,6 +20,10 @@ public class LabelTextBox extends HBox {
         // Create a StringProperty for the text value
         textProperty = new SimpleStringProperty(initialText);
 
+        textProperty.addListener((observable, oldValue, newValue) -> {
+            textField.textProperty().set(newValue);
+        });
+
         // Bind the text property of the TextField to the StringProperty
         textField.textProperty().bindBidirectional(textProperty);
 

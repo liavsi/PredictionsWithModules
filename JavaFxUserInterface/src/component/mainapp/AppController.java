@@ -1,33 +1,19 @@
 package component.mainapp;
 
-import DTOManager.impl.PropertyDefinitionDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
-import DTOManager.impl.WorldDTO;
-import com.sun.javafx.collections.ObservableListWrapper;
 import component.body.detailspage.DetailsPageController;
 import component.body.executionpage.SimulationPageController;
 import component.body.resultspage.ResultsPageController;
 import component.header.HeaderController;
 import engine.api.Engine;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.*;
-import javafx.util.Duration;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,7 +25,7 @@ public class AppController {
     private static final String RESULTS_FXML_RESOURCE = "/component/body/resultspage/resultView.fxml";
     private static final int MILISEC_TASK_SEND_UPDATES = 100;
     @FXML
-    public GridPane dynamicAnchorPane;
+    public GridPane dynamicGridPane;
     @FXML
     private VBox dynamicVBox;
 
@@ -90,8 +76,8 @@ public class AppController {
             detailsPageComponentController = loader.getController();
             detailsPageComponentController.setWorld(engine.getWorldDTO());
             detailsPageComponentController.worldMenu();
-            dynamicAnchorPane.getChildren().clear();
-            dynamicAnchorPane.getChildren().add(detailsBox);
+            dynamicGridPane.getChildren().clear();
+            dynamicGridPane.getChildren().add(detailsBox);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,8 +96,8 @@ public class AppController {
             resultsPageController.setEngine(engine);
             // Set the ResultsPage as the center of the BorderPane
             //dynamicVBox.getChildren().clear();
-            dynamicAnchorPane.getChildren().clear(); // Now clear the VBox
-            dynamicAnchorPane.getChildren().add(resultsPage);
+            dynamicGridPane.getChildren().clear(); // Now clear the VBox
+            dynamicGridPane.getChildren().add(resultsPage);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,13 +112,13 @@ public class AppController {
     }
 
     public void startSimulationInEngine(Map<String, Object> resToEngine) {
+        switchToResultsPage();
         SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
         int simulationId = simulationOutcomeDTO.getId();
         //  keep to rerun simulation by id Number
         resToEngineForSimulationId.put(simulationId,resToEngine);
         recentSimulations.add(simulationOutcomeDTO);
         headerComponentController.setIsIsThereSimulationOutCome(true);
-        switchToResultsPage();
     }
 
 //        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
@@ -177,8 +163,8 @@ public class AppController {
 
     public void switchToNewExecutionPage() {
         if (newExecutionPageComponentController != null) {
-            dynamicAnchorPane.getChildren().clear();
-            dynamicAnchorPane.getChildren().add(newExecutionPageComponentController.getMainView());
+            dynamicGridPane.getChildren().clear();
+            dynamicGridPane.getChildren().add(newExecutionPageComponentController.getMainView());
         } else {
             loadNewExecutionPage();
         }
@@ -193,8 +179,8 @@ public class AppController {
             newExecutionPageComponentController.setMainController(this);
             newExecutionPageComponentController.setWorld(engine.getWorldDTO());
             newExecutionPageComponentController.organizeData();
-            dynamicAnchorPane.getChildren().clear();
-            dynamicAnchorPane.getChildren().add(newExecutionPane);
+            dynamicGridPane.getChildren().clear();
+            dynamicGridPane.getChildren().add(newExecutionPane);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -202,8 +188,8 @@ public class AppController {
 
     public void switchToResultsPage() {
         if (resultsPageController != null) {
-            dynamicAnchorPane.getChildren().clear();
-            dynamicAnchorPane.getChildren().add(resultsPageController.getMainView());
+            dynamicGridPane.getChildren().clear();
+            dynamicGridPane.getChildren().add(resultsPageController.getMainView());
         } else {
             loadResultsPage();
         }
@@ -235,7 +221,4 @@ public class AppController {
         switchToNewExecutionPage();
     }
 
-    private void loadResultsPage(Map<String, Object> resToEngine) {
-
-    }
 }
