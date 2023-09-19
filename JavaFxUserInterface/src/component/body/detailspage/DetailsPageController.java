@@ -8,6 +8,7 @@ import DTOManager.impl.actionDTO.*;
 import component.body.detailspage.component.action.calculation.CalculationDetailsController;
 import component.body.detailspage.component.action.condition.ConditionDetailsController;
 import component.body.detailspage.component.action.increasedecrease.IncreaseDecreaseDetailsController;
+import component.body.detailspage.component.action.proximityreplace.ProximityReplaceDetailsController;
 import component.body.detailspage.component.action.setkill.SetKillDetailsController;
 import component.body.detailspage.component.entity.EntityDetailsController;
 import component.body.detailspage.component.property.PropertyDetailsController;
@@ -40,6 +41,7 @@ public class DetailsPageController {
     private static final String Calculation_Details_FXML_RESOURCE = "/component/body/detailspage/component/action/calculation/calculationDetailsView.fxml";
     private static final String SetKill_Details_FXML_RESOURCE = "/component/body/detailspage/component/action/setkill/setKillDetailsView.fxml";
     private static final String Condition_Details_FXML_RESOURCE = "/component/body/detailspage/component/action/condition/conditionDetailsView.fxml";
+    private static final String ProximityReplace_Details_FXML_RESOURCE = "/component/body/detailspage/component/action/proximityreplace/proximityReplaceDetailsView.fxml";
     public void setMainController(AppController appController) {
         this.mainAppController = appController;
     }
@@ -117,8 +119,24 @@ public class DetailsPageController {
             loadSetKill(actionDTO);
         } else if (actionDTO instanceof ConditionActionDTO) {
             loadCondition((ConditionActionDTO)actionDTO);
+        }else if(actionDTO instanceof ProximityDTO || actionDTO instanceof ReplaceDTO){
+            loadProximityReplace(actionDTO);
         }
 
+    }
+
+    private void loadProximityReplace(ActionDTO actionDTO) {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource(ProximityReplace_Details_FXML_RESOURCE));
+            GridPane detailsBox = loader.load();
+            ProximityReplaceDetailsController proximityReplaceDetailsController = loader.getController();
+            proximityReplaceDetailsController.setProximityReplaceDetails(actionDTO);
+            details.getChildren().clear();
+            details.getChildren().add(detailsBox);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadCondition(ConditionActionDTO conditionActionDTO) {
