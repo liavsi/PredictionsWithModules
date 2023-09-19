@@ -34,7 +34,7 @@ public class TasksMain extends Application {
         //engine needs to know the controller
         controller.setEngine(new EngineImpl());
         //setPrimeryStage?
-        Scene scene = new Scene(root, 500, 600);//
+        Scene scene = new Scene(root, 600, 600);//
         // Set the Scene and show the Stage
         primaryStage.setTitle(PRIMARY_STAGE_NAME);
         primaryStage.setScene(scene);

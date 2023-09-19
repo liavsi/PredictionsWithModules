@@ -66,7 +66,7 @@ public class ProximityAction extends AbstractAction {
         int xRight = (x + depth) % columns;
         int xLeft = (x - depth) % columns;
         int yUp = (y + depth) % rows;
-        int yDown = (y + depth) % rows;
+        int yDown = (y - depth) % rows;
         for (EntityInstance entityInstance:context.getEntityInstanceManager().getInstances().values()){
             if (entityInstance.getEntityDefinition().getName().equals(targetEntity.getName())) {
                 int xTarget = entityInstance.getCoordinate().getX();

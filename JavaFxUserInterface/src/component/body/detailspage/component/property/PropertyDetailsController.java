@@ -19,12 +19,14 @@ public class PropertyDetailsController {
     @FXML public Label LabelPropertyType;
     @FXML public Label LabelPropertyRange;
     @FXML public Label LabelIsRandom;
+    @FXML
+    public Label LabelRangeOrInit;
 
     private SimpleStringProperty propertyTitle;
     private SimpleStringProperty propertyName;
     private SimpleStringProperty propertyType;
     private SimpleStringProperty propertyRange;
-
+    private SimpleStringProperty rangeOrInit;
     private SimpleStringProperty isRandom;
     private WorldDTO world;
 
@@ -34,6 +36,7 @@ public class PropertyDetailsController {
         this.propertyType = new SimpleStringProperty("");
         this.propertyRange = new SimpleStringProperty("");
         this.isRandom = new SimpleStringProperty("");
+        this.rangeOrInit = new SimpleStringProperty("");
     }
     @FXML
     private void initialize(){
@@ -42,6 +45,7 @@ public class PropertyDetailsController {
         LabelPropertyType.textProperty().bind(propertyType);
         LabelPropertyRange.textProperty().bind(propertyRange);
         LabelIsRandom.textProperty().bind(isRandom);
+        LabelRangeOrInit.textProperty().bind(rangeOrInit);
     }
     public void setPropertyDetails(TreeItem<String> item) {
         EntityDefinitionDTO entityDefinitionDTO;
@@ -50,7 +54,13 @@ public class PropertyDetailsController {
             entityDefinitionDTO = world.getEntityDefinitionDTOByName(item.getParent().getValue());
             propertyDefinitionDTO = entityDefinitionDTO.getPropertyDefinitionDTOByName(item.getValue());
             propertyTitle.set("Entity Property");
-            isRandom.set(propertyDefinitionDTO.getRandomInitializer().toString().equals("true")? "Property is random initialize" : "Property isn't random initialize");
+            if (propertyDefinitionDTO.getRandomInitializer().toString().equals("true")){
+                isRandom.set("Property is random initialize");
+            }else{
+                isRandom.set("Property isn't random initialize");
+                rangeOrInit.set("Init Value:");
+                propertyRange.set(propertyDefinitionDTO.getValue().toString());
+            }
         }
         else{
             propertyDefinitionDTO = world.getEnvVarDTOByName(item.getValue());
@@ -58,7 +68,10 @@ public class PropertyDetailsController {
         }
         propertyName.set(propertyDefinitionDTO.getName());
         propertyType.set(propertyDefinitionDTO.getPropertyType());
-        propertyRange.set(propertyDefinitionDTO.getFrom() + " - " + propertyDefinitionDTO.getTo());
+        if (propertyDefinitionDTO.getFrom() != null && propertyDefinitionDTO.getTo() != null) {
+            rangeOrInit.set("Range:");
+            propertyRange.set(propertyDefinitionDTO.getFrom() + " - " + propertyDefinitionDTO.getTo());
+        }
     }
     public void setWorld(WorldDTO worldDTO){
         this.world = worldDTO;
