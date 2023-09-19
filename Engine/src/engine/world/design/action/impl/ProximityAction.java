@@ -13,7 +13,6 @@ import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.expression.ExpressionType;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ProximityAction extends AbstractAction {
 
@@ -55,7 +54,7 @@ public class ProximityAction extends AbstractAction {
     public ActionDTO createActionDTO() {
         ArrayList<ActionDTO> actionsDTO = new ArrayList<>();
         actions.forEach(action -> actionsDTO.add(action.createActionDTO()));
-        return new ProximityDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),ofExpression,columns,rows,actionsDTO);
+        return new ProximityDTO(getActionType().name(),getMainEntity().createEntityDefinitionDTO(),ofExpression,columns,rows,actionsDTO, targetEntity.createEntityDefinitionDTO());
     }
 
     private EntityInstance isClose(Context context){
@@ -66,7 +65,7 @@ public class ProximityAction extends AbstractAction {
         int xRight = (x + depth) % columns;
         int xLeft = (x - depth) % columns;
         int yUp = (y + depth) % rows;
-        int yDown = (y + depth) % rows;
+        int yDown = (y - depth) % rows;
         for (EntityInstance entityInstance:context.getEntityInstanceManager().getInstances().values()){
             if (entityInstance.getEntityDefinition().getName().equals(targetEntity.getName())) {
                 int xTarget = entityInstance.getCoordinate().getX();

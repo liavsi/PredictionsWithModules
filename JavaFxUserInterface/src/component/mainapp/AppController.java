@@ -39,7 +39,7 @@ public class AppController {
     private static final String RESULTS_FXML_RESOURCE = "/component/body/resultspage/resultView.fxml";
     private static final int MILISEC_TASK_SEND_UPDATES = 100;
     @FXML
-    public AnchorPane dynamicAnchorPane;
+    public GridPane dynamicAnchorPane;
     @FXML
     private VBox dynamicVBox;
 
@@ -86,7 +86,7 @@ public class AppController {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(Details_FXML_RESOURCE));
-            SplitPane detailsBox = loader.load();
+            GridPane detailsBox = loader.load();
             detailsPageComponentController = loader.getController();
             detailsPageComponentController.setWorld(engine.getWorldDTO());
             detailsPageComponentController.worldMenu();
@@ -188,7 +188,7 @@ public class AppController {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource(NEW_EXECUTION_FXML_RESOURCE));
-            Pane newExecutionPane = loader.load();
+            GridPane newExecutionPane = loader.load();
             newExecutionPageComponentController = loader.getController();
             newExecutionPageComponentController.setMainController(this);
             newExecutionPageComponentController.setWorld(engine.getWorldDTO());

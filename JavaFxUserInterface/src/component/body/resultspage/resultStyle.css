@@ -1,0 +1,89 @@
+/* Apply styling to the GridPane */
+.grid-pane {
+    -fx-background-color: #f0f0f0; /* Background color */
+    -fx-background-radius: 10px; /* Rounded corners */
+}
+
+/* Apply styling to the SplitPane */
+.split-pane {
+    -fx-padding: 10; /* Add padding to the SplitPane */
+}
+
+/* Apply styling to the VBox on the left side of the SplitPane */
+#leftVbox {
+    -fx-background-color: #d3d3d3; /* Background color */
+    -fx-padding: 10; /* Add padding to the VBox */
+    -fx-background-radius: 10px; /* Rounded corners */
+}
+
+/* Apply styling to the VBox on the right side of the SplitPane */
+#rightVbox {
+    -fx-background-color: #e0e0e0; /* Background color */
+    -fx-padding: 10; /* Add padding to the VBox */
+    -fx-background-radius: 10px; /* Rounded corners */
+}
+
+/* Apply styling to the Label inside the right VBox */
+#rightVbox Label {
+    -fx-font-size: 14px; /* Font size */
+}
+
+/* Apply styling to the buttons in the AnchorPane */
+.anchor-pane Button {
+    -fx-background-color: #0073e6; /* Button background color */
+    -fx-text-fill: white; /* Button text color */
+    -fx-font-size: 16px; /* Font size */
+    -fx-pref-width: 100px; /* Button width */
+    -fx-background-radius: 5px; /* Rounded corners for buttons */
+}
+
+
+#rerunButton {
+    -fx-appearance: button;
+    -fx-background-color: #1899D6;
+    -fx-border: solid transparent;
+    -fx-border-radius: 16px;
+    -fx-border-width: 0 0 4px;
+    -fx-box-sizing: border-box;
+    -fx-color: #FFFFFF;
+    -fx-cursor: pointer;
+    -fx-display: inline-block;
+    -fx-font-family: din-round, sans-serif;
+    -fx-font-size: 15px;
+    -fx-font-weight: 700;
+    -fx-letter-spacing: .8px;
+    -fx-line-height: 20px;
+    -fx-margin: 0;
+    -fx-outline: none;
+    -fx-overflow: visible;
+    -fx-text-align: center;
+    -fx-text-transform: uppercase;
+    -fx-touch-action: manipulation;
+    -fx-transform: translateZ(0);
+    -fx-transition: filter .2s;
+    -fx-user-select: none;
+    -fx--webkit-user-select: none;
+    -fx-vertical-align: middle;
+    -fx-white-space: nowrap;
+    -fx-width: 100%;
+}
+/* TableView Style */
+.table-view {
+    -fx-background-color: #d1e3ed; /* Medium Blue */
+    -fx-background-radius: 10px; /* Rounded corners */
+}
+
+/* TableView Cell Style */
+.table-row-cell {
+    -fx-background-color: transparent;
+}
+
+/* TableView Hover Style */
+.table-row-cell:hover {
+    -fx-background-color: #c6dbed; /* Light Blue */
+}
+
+/* TableView Selected Style */
+.table-row-cell:selected {
+    -fx-background-color: #92b6d4; /* Selected item color */
+}

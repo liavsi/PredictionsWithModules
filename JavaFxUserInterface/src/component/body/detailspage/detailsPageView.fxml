@@ -2,11 +2,25 @@
 
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TreeView?>
+<?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<SplitPane dividerPositions="0.5" prefHeight="298.0" prefWidth="498.0" stylesheets="@/component/body/detailspage/detailsStyle.css" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.detailspage.DetailsPageController">
-  <items>
-      <TreeView fx:id="treeView" onContextMenuRequested="#showItem" onMouseClicked="#showItem" prefHeight="200.0" prefWidth="200.0" />
-      <FlowPane fx:id="details" prefHeight="200.0" prefWidth="200.0" />
-  </items>
-</SplitPane>
+
+<GridPane alignment="CENTER" prefWidth="500.0" style="-fx-background-color: GREY;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.detailspage.DetailsPageController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <SplitPane dividerPositions="0.4096989966555184" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@/component/body/detailspage/detailsStyle.css">
+        <items>
+            <TreeView fx:id="treeView" onContextMenuRequested="#showItem" onMouseClicked="#showItem" />
+            <FlowPane fx:id="details" />
+        </items>
+      </SplitPane>
+   </children>
+</GridPane>
