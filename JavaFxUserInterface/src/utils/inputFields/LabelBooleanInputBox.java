@@ -38,5 +38,8 @@ public class LabelBooleanInputBox extends HBox {
         return checkBox.isSelected();
     }
 
+    public String getLabelText() {
+        return label.getText();
+    }
 }
 

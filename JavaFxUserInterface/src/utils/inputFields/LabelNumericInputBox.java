@@ -42,7 +42,9 @@ public class LabelNumericInputBox extends HBox {
         // Set spacing and other styling as needed
         setSpacing(10); // Adjust spacing between label and spinner
     }
-
+    public String getLabelText() {
+        return label.getText();
+    }
     public DoubleProperty valueProperty() {
         return valueProperty;
     }

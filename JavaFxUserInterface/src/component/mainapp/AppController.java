@@ -228,4 +228,14 @@ public class AppController {
         headerComponentController.setIsIsThereSimulationOutCome(true);
         switchToResultsPage();
     }
+
+    public void reRunFromId(int id) {
+        Map<String,Object> resToEngine = resToEngineForSimulationId.get(id);
+        newExecutionPageComponentController.organizeData(resToEngine);
+        switchToNewExecutionPage();
+    }
+
+    private void loadResultsPage(Map<String, Object> resToEngine) {
+
+    }
 }
