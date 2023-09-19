@@ -193,7 +193,6 @@ public class ResultsPageController {
     }
 
     public void onStopButton(ActionEvent actionEvent) {
-        isStopSelected.set(true);
         if (simulationList.getSelectionModel().getSelectedItem() == null) {
             return;
         }
@@ -204,11 +203,10 @@ public class ResultsPageController {
     }
 
     public void onResumeButton(ActionEvent actionEvent) {
-        if (simulationList.getSelectionModel().getSelectedItem() == null || !isPauseSelected.get()) {
+        if (simulationList.getSelectionModel().getSelectedItem() == null ) {
             return;
         }
         isSimulationRunning.set(true);
-        isPauseSelected.set(false);
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
         engine.resumeSimulationByID(id);
     }
