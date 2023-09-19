@@ -35,6 +35,9 @@ public class LabelNumericInputBox extends HBox {
         spinner.getValueFactory().valueProperty().addListener((ObservableValue<? extends Double> observable, Double oldValue, Double newValue) -> {
             valueProperty.set(newValue);
         });
+        valueProperty.addListener((observable, oldValue, newValue) -> {
+            spinner.getValueFactory().setValue(newValue.doubleValue());
+        });
 
         // Add label and spinner to the HBox
         getChildren().addAll(label, spinner);

@@ -1,19 +1,14 @@
 package component.body.executionpage;
 
 import DTOManager.impl.EntityDefinitionDTO;
-import DTOManager.impl.EntityInstanceManagerDTO;
 import DTOManager.impl.PropertyDefinitionDTO;
 import DTOManager.impl.WorldDTO;
-import com.sun.deploy.panel.IProperty;
 import component.mainapp.AppController;
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.DoubleBinding;
 import javafx.beans.property.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
@@ -23,7 +18,6 @@ import utils.inputFields.LabelBooleanInputBox;
 import utils.inputFields.LabelNumericInputBox;
 import utils.inputFields.LabelTextBox;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -103,6 +97,47 @@ public class SimulationPageController {
     }
 
     public void onClickedClearButton(ActionEvent event) {
+        clearData();
+    }
+
+    private void clearData() {
+        clearEnvironmentVariablesData();
+        clearPopulationData();
+    }
+
+    private void clearPopulationData() {
+        for(Node pair: leftVbox.getChildren()) {
+            if (!(pair instanceof HBox)){
+                continue;
+            }
+            HBox HBpair = (HBox) pair;
+            if (HBpair instanceof LabelNumericInputBox) {
+                LabelNumericInputBox LTBpair = (LabelNumericInputBox) HBpair;
+                LTBpair.valueProperty().set(0);
+            }
+
+        }
+    }
+
+    private void clearEnvironmentVariablesData() {
+        for(Node pair: rightVbox.getChildren()) {
+            if (!(pair instanceof HBox)){
+                continue;
+            }
+            HBox HBpair = (HBox) pair;
+            if (HBpair instanceof LabelTextBox) {
+                LabelTextBox LTBpair = (LabelTextBox) HBpair;
+                LTBpair.textProperty().set("");
+            }
+            if (HBpair instanceof LabelNumericInputBox) {
+                LabelNumericInputBox LNIpair = (LabelNumericInputBox) HBpair;
+                LNIpair.valueProperty().set(0);
+            }
+            if (HBpair instanceof LabelBooleanInputBox) {
+                LabelBooleanInputBox LBIpair = (LabelBooleanInputBox) HBpair;
+                LBIpair.valueProperty().set(false);
+            }
+        }
     }
 
     public Parent getMainView() {
@@ -160,21 +195,30 @@ public class SimulationPageController {
             switch (env.getPropertyType()) {
                 case "STRING":
                     LabelTextBox inputPlaceString = new LabelTextBox(env.getName(), "");
-                    resultEnvironment.put(env.getName(), new SimpleObjectProperty<>("")); // Initialize with an empty string
-                    inputPlaceString.textProperty().bindBidirectional(resultEnvironment.get(env.getName()));
+                    ObjectProperty<String> objectProperty =  new SimpleObjectProperty<>("");
+                    resultEnvironment.put(env.getName(),objectProperty); // Initialize with an empty string
+                    inputPlaceString.textProperty().addListener(((observable, oldValue, newValue) -> {
+                        objectProperty.setValue(newValue);
+                    }));
                     pair = inputPlaceString;
                     break;
                 case "FLOAT":
                 case "DECIMAL":
                     LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(env.getName(), env.getFrom(), env.getTo(), (env.getTo() - env.getFrom()) / 2); // Initialize with a default value within the specified range
-                    resultEnvironment.put(env.getName(), new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().get()));
-                    inputPlaceNumber.valueProperty().bindBidirectional(resultEnvironment.get(env.getName()));
+                    ObjectProperty<Double> objectPropertyD =  new SimpleObjectProperty<>(inputPlaceNumber.valueProperty().get());
+                    resultEnvironment.put(env.getName(),objectPropertyD); // Initialize with an empty string
+                    inputPlaceNumber.valueProperty().addListener(((observable, oldValue, newValue) -> {
+                        objectPropertyD.setValue(newValue.doubleValue());
+                    }));
                     pair = inputPlaceNumber;
                     break;
                 case "BOOLEAN":
                     LabelBooleanInputBox inputPlaceBool = new LabelBooleanInputBox(env.getName(), false);
-                    resultEnvironment.put(env.getName(), new SimpleObjectProperty<>(false)); // Initialize with false
-                    inputPlaceBool.valueProperty().bindBidirectional(resultEnvironment.get(env.getName()));
+                    ObjectProperty<Boolean> objectPropertyB =  new SimpleObjectProperty<>(inputPlaceBool.valueProperty().get());
+                    resultEnvironment.put(env.getName(),objectPropertyB); // Initialize with an empty string
+                    inputPlaceBool.valueProperty().addListener(((observable, oldValue, newValue) -> {
+                        objectPropertyB.setValue(newValue.booleanValue());
+                    }));
                     pair = inputPlaceBool;
                     break;
                 default:
