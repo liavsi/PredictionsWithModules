@@ -59,7 +59,7 @@
     -fx-text-align: center;
     -fx-text-transform: uppercase;
     -fx-touch-action: manipulation;
-    -fx-transform: translateZ(0);
+    /*-fx-transform: translateZ(0);*/
     -fx-transition: filter .2s;
     -fx-user-select: none;
     -fx--webkit-user-select: none;
