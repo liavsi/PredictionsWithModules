@@ -1,6 +1,7 @@
 package component.body.resultspage;
 
 import DTOManager.impl.EntityDefinitionDTO;
+import DTOManager.impl.EntityInstanceDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
 import com.sun.corba.se.spi.activation.Server;
 import com.sun.javafx.collections.ObservableListWrapper;
@@ -35,6 +36,7 @@ import utils.results.SimulationOutcomeListCell;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ResultsPageController {
 
@@ -103,15 +105,12 @@ public class ResultsPageController {
                 isSimulationOver, isSimulationRunning
         ));
         ButtonStop.disableProperty().bind(isSimulationRunning.not());
-        List<EntityPopulation> entityPopulations = new ArrayList<>();
-        entityPopulations.add(new EntityPopulation("Entity 1", 100));
-        entityPopulations.add(new EntityPopulation("Entity 2", 75));
+
 
         EntityNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntityName()));
         PopulationColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPopulation()).asObject());
         // Add more entities as needed
         // Set the data in the TableView
-        TableView.getItems().setAll(entityPopulations);
 
 
         // Initialize your controller
@@ -158,12 +157,13 @@ public class ResultsPageController {
                         }
                         isSimulationRunning.set(!(finalCurrSimulationDTO.isPause() || finalCurrSimulationDTO.isStop()));
                         isSimulationOver.set(finalCurrSimulationDTO.isStop());
-                        // TODO: 18/09/2023
+                        updateTable(finalCurrSimulationDTO.getEntityInstanceDTOS().getInstancesDTO());
+
                         //setEntitiesOnClick(currSimulationDTO);
 //                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
                     });
                     try {
-                        Thread.sleep(200);
+                        Thread.sleep(300);
                     } catch (InterruptedException interrupted) {
                         if (isCancelled()) {
                             break;
@@ -183,6 +183,20 @@ public class ResultsPageController {
 
     }
 
+    private void updateTable(Map<Integer, EntityInstanceDTO> instancesDTO) {
+        List<EntityPopulation> entityPopulations = updateTableColumns(instancesDTO);
+        TableView.getItems().clear();
+        TableView.getItems().addAll(entityPopulations);
+    }
+
+    private List<EntityPopulation> updateTableColumns(Map<Integer, EntityInstanceDTO> instancesDTO) {
+        List<EntityPopulation> entityPopulations = new ArrayList<>();
+        Map<String, Long> countMap = instancesDTO.values().stream()
+                .collect(Collectors.groupingBy(EntityInstanceDTO::getName, Collectors.counting()));
+        // Print the counts
+        countMap.forEach((name, count) -> entityPopulations.add(new EntityPopulation(name, count.intValue())));
+        return entityPopulations;
+    }
 
 
     public void setMainController(AppController appController) {
