@@ -148,7 +148,7 @@ public class ResultsPageController {
                     }
                     Platform.runLater(() -> {
                         ticks.set(finalCurrSimulationDTO.getTerminationDTO().getCurrTick());
-                        if (!isSimulationOver.get()) {
+                        if (isSimulationRunning.get()) {
                             seconds.set(finalCurrSimulationDTO.getTerminationDTO().getCurrSecond());
                         }
                         // TODO: 18/09/2023
@@ -196,10 +196,10 @@ public class ResultsPageController {
         if (simulationList.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        isSimulationOver.set(true);
-        isSimulationRunning.set(false);
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
+        isSimulationOver.set(true);
         engine.stopSimulationByID(id);
+        isSimulationRunning.set(false);
     }
 
     public void onResumeButton(ActionEvent actionEvent) {
