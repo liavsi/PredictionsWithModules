@@ -29,7 +29,11 @@ public class QueueManagementView {
             protected MyThreadInfo call() {
                 while (true) {
                     MyThreadInfo threadInfo = engine.getThreadPoolInfo();
+                    if (isCancelled()){
+                        break;
+                    }
                     Platform.runLater(() -> {
+
                         queueSizeLabel.setText("Queue Size: " + threadInfo.getQueueSize());
                         workingThreadsLabel.setText("Working Threads: " + threadInfo.getWorkingThreads());
                         finishedThreadsLabel.setText("Finished Threads: " + threadInfo.getFinishedThread());
@@ -41,15 +45,24 @@ public class QueueManagementView {
                     try {
                         Thread.sleep(400);
                     } catch (InterruptedException e) {
+                        if (isCancelled()){
+                            break;
+                        }
                         throw new RuntimeException(e);
                     }
                     // Run your simulation here
                 }
+                return new MyThreadInfo(0,0,0,0);
             }
         };
         Thread th = new Thread(myThreadInfoTask);
         th.setDaemon(true);
         th.start();
+    }
+    public void closeTask(){
+        if(myThreadInfoTask != null) {
+            myThreadInfoTask.cancel();
+        }
     }
 
     // Implement this method to calculate the progress based on your logic

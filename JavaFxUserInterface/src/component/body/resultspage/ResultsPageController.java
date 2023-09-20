@@ -118,12 +118,7 @@ public class ResultsPageController {
         });
     }
 
-    private void setEntitiesOnClick(SimulationOutcomeDTO currSimulation) {
-        entities.clear();
-        for (EntityDefinitionDTO entityDefinitionDTO: engine.getWorldDTO().getNameToEntityDefinitionDTO().values()){
-            entities.add(new ShowEntity(entityDefinitionDTO));
-        }
-    }
+
 
     private void showSimulationDetails(SimulationOutcomeDTO selectedSimulation) {
         removeGraph();

@@ -2,6 +2,7 @@ package component.header;
 
 import component.mainapp.AppController;
 import engine.api.Engine;
+import engine.impl.EngineImpl;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -56,7 +57,7 @@ public class HeaderController {
         LabelFilePath.textProperty().bind(filePath);
         ButtonDetails.disableProperty().bind(isFileSelected.not());
         ButtonNewExec.disableProperty().bind(isFileSelected.not());
-        // TODO: 01/09/2023 only make enabled when finishd simulation
+        ButtonQueueManage.disableProperty().bind(isFileSelected.not());
         ButtonResults.disableProperty().bind(isThereSimulationOutCome.not());
     }
 
@@ -69,10 +70,14 @@ public class HeaderController {
         if (selectedFile == null)
             return;
         String absolutePath = selectedFile.getAbsolutePath();
-        filePath.set(absolutePath);
-        isFileSelected.set(true);
         try {
-            appController.readWorld();
+            if (absolutePath != filePath.getValue()) {
+                filePath.set(absolutePath);
+                isFileSelected.set(true);
+                appController.reLoadEveryThing();
+                appController.setEngine(new EngineImpl());
+                appController.readWorld();
+            }
         }
         catch (IllegalArgumentException e) {
             filePath.set(e.getMessage());
