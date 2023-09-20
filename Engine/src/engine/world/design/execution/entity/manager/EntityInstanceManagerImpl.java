@@ -21,7 +21,7 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
     private final Map<Integer, EntityInstance> instances;
     private List <Integer> instanceToKill = new ArrayList<>();
     private Map<EntityDefinition,Map<String,PropertyInstance>> instanceToCreate = new HashMap<>();
-    private Grid grid;
+    private final Grid grid;
     public EntityInstanceManagerImpl(Grid grid) {
         this.grid = grid;
         count = 0;

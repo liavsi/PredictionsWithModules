@@ -15,7 +15,7 @@ public class TerminationImpl implements Termination {
     private Second secondsToPast = null;
     private ByUser byUser;
     private Instant startTime;
-    private long currSecond;
+    private long currSecond = 0;
     private Integer currTick;
     //private Object terminateReason = null;
     @Override
@@ -37,10 +37,24 @@ public class TerminationImpl implements Termination {
         return currTick;
     }
 
+    @Override
     public void setTicks(Tick ticks) {
         this.ticks = ticks;
     }
 
+    public Tick getTicks() {
+        return ticks;
+    }
+
+    public Second getSecondsToPast() {
+        return secondsToPast;
+    }
+
+    public long getCurrSecond() {
+        return currSecond;
+    }
+
+    @Override
     public void setSecondsToPast(Second secondsToPast) {
         this.secondsToPast = secondsToPast;
     }
