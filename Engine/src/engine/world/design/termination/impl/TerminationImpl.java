@@ -72,7 +72,7 @@ public class TerminationImpl implements Termination {
             isSecondsTerminate = secondsToPast.isTerminateReason();
             numOfSeconds = secondsToPast.getSeconds();
         }
-        if (!byUser.isTerminationReason()){
+        if (!byUser.isTerminationReason() && !byUser.isPaused()){
             currSecond = Instant.now().getEpochSecond() - startTime.getEpochSecond();
         }
         return new TerminationDTO(numOfTicks, numOfSeconds, isTicksTerminate, isSecondsTerminate,currTick,currSecond);

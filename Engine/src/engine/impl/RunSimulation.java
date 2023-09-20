@@ -126,6 +126,7 @@ public class RunSimulation implements Runnable{
 
     public void pauseThread() {
         synchronized (this){
+            simulationOutcome.getTermination().getByUser().setPaused(true);
             simulationOutcome.setPause(true);
             simulationOutcome.setResume(false);
         }
@@ -133,6 +134,7 @@ public class RunSimulation implements Runnable{
 
     public void resumeThread() {
         synchronized (this) {
+            simulationOutcome.getTermination().getByUser().setPaused(false);
             simulationOutcome.setResume(true);
             simulationOutcome.setStop(false);
             simulationOutcome.setPause(false);
