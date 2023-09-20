@@ -158,12 +158,9 @@ public class ResultsPageController {
                         isSimulationRunning.set(!(finalCurrSimulationDTO.isPause() || finalCurrSimulationDTO.isStop()));
                         isSimulationOver.set(finalCurrSimulationDTO.isStop());
                         updateTable(finalCurrSimulationDTO.getEntityInstanceDTOS().getInstancesDTO());
-
-                        //setEntitiesOnClick(currSimulationDTO);
-//                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
                     });
                     try {
-                        Thread.sleep(300);
+                        Thread.sleep(250);
                     } catch (InterruptedException interrupted) {
                         if (isCancelled()) {
                             break;
