@@ -1,5 +1,6 @@
 package engine.impl;
 
+import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.world.design.action.api.Action;
 import engine.world.design.definition.entity.api.EntityDefinition;
@@ -114,13 +115,36 @@ public class RunSimulation implements Runnable{
                 try {
                     this.wait();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    Thread.currentThread().interrupt();
                 }
             }
-            this.notifyAll();
             Instant nowTime = Instant.now();
             Duration waitTime = Duration.between(startWait,nowTime);
             simulationOutcome.getTermination().reduceWaitTime(waitTime);
+        }
+    }
+
+    public void pauseThread() {
+        synchronized (this){
+            simulationOutcome.setPause(true);
+            simulationOutcome.setResume(false);
+        }
+    }
+
+    public void resumeThread() {
+        synchronized (this) {
+            simulationOutcome.setResume(true);
+            simulationOutcome.setStop(false);
+            simulationOutcome.setPause(false);
+            this.notify();
+        }
+    }
+
+    public void StopThread() {
+        synchronized (this) {
+            simulationOutcome.setStop(true);
+            simulationOutcome.setResume(false);
+            simulationOutcome.setPause(false);
         }
     }
 }
