@@ -21,7 +21,6 @@ public class EntityDetailsController {
     @FXML public ListView<String> ListViewProperties;
     private SimpleStringProperty entityName;
     private SimpleIntegerProperty population;
-
     private ObservableList<String> properties;
     private WorldDTO world;
 

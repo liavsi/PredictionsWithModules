@@ -113,8 +113,10 @@ public class RunSimulation implements Runnable{
             while (simulationOutcome.isPause()) {
                 try {
                     this.wait();
+                    System.out.println("pause");
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+//                    this.notifyAll();
+//                    simulationOutcome.setPause(false);
                 }
             }
             this.notifyAll();
