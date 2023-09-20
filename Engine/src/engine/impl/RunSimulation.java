@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RunSimulation implements Runnable{
+public class RunSimulation extends Thread implements Runnable{
 
     private final SimulationOutcome simulationOutcome;
     private final World world;
@@ -97,6 +97,9 @@ public class RunSimulation implements Runnable{
             simulationOutcome.getEntityInstanceManager().killEntities();
             simulationOutcome.getEntityInstanceManager().createEntities();
             termination.setCurrTick(termination.getCurrTick()+1);
+            if(simulationOutcome.isStop()){
+                break;
+            }
             pauseAndResume();
         }
 //        SimulationOutcome currSimulation = engine.getMyWorld().runSimulation(engine.getPropertyNameToValueAsString(),engine.getCountId());
@@ -140,7 +143,7 @@ public class RunSimulation implements Runnable{
             simulationOutcome.setResume(true);
             simulationOutcome.setStop(false);
             simulationOutcome.setPause(false);
-            this.notify();
+            this.notifyAll();
         }
     }
 
