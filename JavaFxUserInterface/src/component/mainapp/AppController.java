@@ -5,13 +5,18 @@ import component.body.detailspage.DetailsPageController;
 import component.body.executionpage.SimulationPageController;
 import component.body.resultspage.ResultsPageController;
 import component.header.HeaderController;
+import component.queue.manager.QueueManagementView;
 import engine.api.Engine;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.layout.*;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.*;
@@ -225,4 +230,23 @@ public class AppController {
         switchToNewExecutionPage();
     }
 
+    public void showQueueManagement() {
+        try {
+            // Load the FXML file for the new window
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/component/queue/manager/queueManagementView.fxml"));
+            Parent root = loader.load();
+            QueueManagementView queueManagementView = loader.getController();
+            queueManagementView.setThreadInfo(engine);
+            // Create a new stage for the info window
+            Stage infoStage = new Stage();
+            infoStage.setTitle("Thread Pool Info");
+            infoStage.initModality(Modality.WINDOW_MODAL);
+            infoStage.setScene(new Scene(root));
+
+            // Show the new stage
+            infoStage.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

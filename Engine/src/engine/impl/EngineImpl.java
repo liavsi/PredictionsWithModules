@@ -1,5 +1,6 @@
 package engine.impl;
 
+import DTOManager.impl.MyThreadInfo;
 import DTOManager.impl.SimulationOutcomeDTO;
 import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
@@ -13,6 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 // TODO: 10/08/2023 After deleting old World Change to World
 
@@ -25,7 +27,7 @@ public class EngineImpl implements Engine {
     private Integer countId = 1;
     private final Map<Integer, SimulationOutcome> pastSimulations;
 
-    private final Map<Integer, RunSimulation> simulationThereads = new HashMap<>();
+    private final Map<Integer, RunSimulation> simulationThreads = new HashMap<>();
     private Map<String, Object> propertyNameToValueAsString;
     private ExecutorService threadExecutor;
 
@@ -41,19 +43,15 @@ public class EngineImpl implements Engine {
 
     @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
-        try {
-            SimulationOutcome simulation = myWorld.runSimulation(countId);
-            RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
-            pastSimulations.put(countId, simulation);
-            simulationThereads.put(countId, runSimulation);
-            countId++;
+        SimulationOutcome simulation = myWorld.runSimulation(countId);
+        RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
+        pastSimulations.put(countId, simulation);
+        simulationThreads.put(countId, runSimulation);
+        countId++;
 //        runSimulation.run();
-            threadExecutor.submit(runSimulation);
-            return simulation.createSimulationOutcomeDTO();
-        }catch (Exception e){
-            System.out.println(e.getMessage());
-        }
-
+        threadExecutor.execute(runSimulation);
+        return simulation.createSimulationOutcomeDTO();
+    }
 //        threadExecutor.submit(() -> {
 //            for (PropertyDefinition envVarDefinition : myWorld.getEnvVariablesManager().getEnvVariables().values()) {
 //                String envName = envVarDefinition.getName();
@@ -127,8 +125,7 @@ public class EngineImpl implements Engine {
 //    }
 //
 
-        return null; // TODO: 20/09/2023 delete!!!!!!!!!!!
-    }
+
         //SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString,countId);
         //engine.setCountId(engine.getCountId() + 1);
         //engine.getPastSimulations().put(engine.getCountId(), currSimulation);
@@ -146,6 +143,19 @@ public class EngineImpl implements Engine {
     @Override
     public WorldDTO getWorldDTO() {
          return myWorld.createWorldDTO();
+    }
+
+    @Override
+    public MyThreadInfo getThreadPoolInfo(){
+        ThreadPoolExecutor threadPool = (ThreadPoolExecutor) threadExecutor;
+        int threadPoolSize = threadPool.getMaximumPoolSize();
+        int queueSize;
+        int workingThreads;
+        int finishedThread;
+        workingThreads =  threadPool.getActiveCount();
+        finishedThread = (int) threadPool.getCompletedTaskCount();
+        queueSize = threadPool.getQueue().size();
+        return new MyThreadInfo(queueSize, workingThreads, finishedThread, threadPoolSize);
     }
 
     @Override
@@ -212,15 +222,15 @@ public class EngineImpl implements Engine {
     }
     @Override
     public void stopSimulationByID(int id) {
-        simulationThereads.get(id).StopThread();
+        simulationThreads.get(id).StopThread();
     }
 
     @Override
     public void resumeSimulationByID(int id){
-        simulationThereads.get(id).resumeThread();
+        simulationThreads.get(id).resumeThread();
     }
     @Override
     public void pauseSimulationByID(int id){
-        simulationThereads.get(id).pauseThread();
+        simulationThreads.get(id).pauseThread();
     }
 }

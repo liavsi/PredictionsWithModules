@@ -87,6 +87,7 @@ public class HeaderController {
     }
 
 
+
     public void setMainController(AppController appController) {
         this.appController = appController;
     }
@@ -106,5 +107,9 @@ public class HeaderController {
 
     public void onResultsClicked(ActionEvent event) {
         appController.switchToResultsPage();
+    }
+
+    public void onQueueManagementClicked(ActionEvent event) {
+        appController.showQueueManagement();
     }
 }

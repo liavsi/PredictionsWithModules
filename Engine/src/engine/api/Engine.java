@@ -1,5 +1,6 @@
 package engine.api;
 
+import DTOManager.impl.MyThreadInfo;
 import DTOManager.impl.SimulationOutcomeDTO;
 import engine.SimulationOutcome;
 import DTOManager.impl.WorldDTO;
@@ -15,6 +16,9 @@ public interface Engine {
     void readWorldFromXml();
     void readWorldFromXml(String XML_PATH, String JAXB_XML_PACKAGE_NAME);
     WorldDTO getWorldDTO();
+
+    MyThreadInfo getThreadPoolInfo();
+
     SimulationOutcomeDTO getPastSimulationDTO(int wantedSimulationNumber);
 
     Map<Integer, SimulationOutcomeDTO> getPastSimulationMapDTO();
