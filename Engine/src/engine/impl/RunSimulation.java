@@ -72,13 +72,13 @@ public class RunSimulation implements Runnable{
                 for (Action action: activeActions){
                     if (action.getMainEntity().getName().equals(entityInstance.getEntityDefinition().getName())){ //if the action activate on the entity
                         if (action.getInteractiveEntity() != null) {
-                            Context context = new ContextImpl(null, null, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), world.getGrid());
+                            Context context = new ContextImpl(null, null, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), simulationOutcome.getGrid());
                             for (EntityInstance secondaryEntity : action.getSecondaryInstances(context)) {
-                                context = new ContextImpl(entityInstance, secondaryEntity, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), world.getGrid());
+                                context = new ContextImpl(entityInstance, secondaryEntity, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), simulationOutcome.getGrid());
                                 action.invoke(context);
                             }
                         }else{
-                            Context context = new ContextImpl(entityInstance, null, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), world.getGrid());
+                            Context context = new ContextImpl(entityInstance, null, simulationOutcome.getEntityInstanceManager(), simulationOutcome.getActiveEnvironment(), simulationOutcome.getGrid());
                             action.invoke(context);
                         }
                     }
@@ -106,7 +106,7 @@ public class RunSimulation implements Runnable{
                 getEntityInstanceManager().
                 getInstances().
                 values().
-                forEach((entityInstance) -> world.getGrid().moveEntity(entityInstance));
+                forEach((entityInstance) -> simulationOutcome.getGrid().moveEntity(entityInstance));
     }
     private void pauseAndResume(){
         synchronized (this) {

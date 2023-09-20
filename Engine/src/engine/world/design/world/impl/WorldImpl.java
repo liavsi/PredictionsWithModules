@@ -7,8 +7,13 @@ import engine.world.design.execution.entity.manager.EntityInstanceManager;
 import engine.world.design.execution.entity.manager.EntityInstanceManagerImpl;
 import engine.world.design.execution.environment.api.ActiveEnvironment;
 import engine.world.design.grid.api.Grid;
+import engine.world.design.grid.impl.GridImpl;
 import engine.world.design.termination.api.Termination;
 import engine.world.design.termination.impl.TerminationImpl;
+import engine.world.design.termination.second.Second;
+import engine.world.design.termination.second.SecondImpl;
+import engine.world.design.termination.tick.api.Tick;
+import engine.world.design.termination.tick.impl.TickImpl;
 import engine.world.design.world.api.World;
 import engine.world.design.definition.entity.api.EntityDefinition;
 import engine.world.design.definition.environment.api.EnvVariablesManager;
@@ -104,8 +109,20 @@ public class WorldImpl implements World {
         String formattedDate = dateFormat.format(currentDate);
         // creating the Active Environment - if the user gave the property its value we will use it otherwise generate value
         ActiveEnvironment activeEnvironment = envVariablesManager.createActiveEnvironment();
-        EntityInstanceManager entityInstanceManager = new EntityInstanceManagerImpl(grid);
-        return new SimulationOutcome(formattedDate,id, new TerminationImpl(),entityInstanceManager, entityInstanceManager.createDTO(),activeEnvironment);
+        Grid gridSimulation = new GridImpl(grid.getColumns(),grid.getRows());
+        EntityInstanceManager entityInstanceManager = new EntityInstanceManagerImpl(gridSimulation);
+        Termination terminationSimulation = new TerminationImpl();
+        Tick tick = null;
+        Second second = null;
+        if (terminationSimulation.getTicks() != null) {
+            tick = new TickImpl(termination.getTicks().getTicks());
+        }
+        if (terminationSimulation.getTicks() != null){
+            second = new SecondImpl(termination.getSecondsToPast().getSeconds());
+        }
+        terminationSimulation.setTicks(tick);
+        terminationSimulation.setSecondsToPast(second);
+        return new SimulationOutcome(formattedDate,id, terminationSimulation,entityInstanceManager, entityInstanceManager.createDTO(),activeEnvironment, gridSimulation);
         // TODO: 11/09/2023 change name 
 
 
