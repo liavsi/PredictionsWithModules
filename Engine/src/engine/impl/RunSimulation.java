@@ -9,7 +9,6 @@ import engine.world.design.execution.context.ContextImpl;
 import engine.world.design.execution.entity.api.EntityInstance;
 import engine.world.design.execution.property.PropertyInstance;
 import engine.world.design.execution.property.PropertyInstanceImpl;
-import engine.world.design.expression.Expression;
 import engine.world.design.rule.Rule;
 import engine.world.design.termination.api.Termination;
 import engine.world.design.world.api.World;
@@ -47,9 +46,8 @@ public class RunSimulation extends Thread implements Runnable{
             // showFinalEnvProperties();
             // creating the instance manager
             for (EntityDefinition entityDefinition : world.getNameToEntityDefinition().values()) {
-                Object value = propertyNameToValueAsString.get(entityDefinition.getName() + "entity");
-                double population = getPopulation(value);
-                entityDefinition.setPopulation((int) population);
+                Double population = (Double) propertyNameToValueAsString.get(entityDefinition.getName() + "entity");
+                entityDefinition.setPopulation(population.intValue());
                 for (int i = 0; i < entityDefinition.getPopulation(); i++) {
                     simulationOutcome.getEntityInstanceManager().create(entityDefinition);
                 }
@@ -93,7 +91,7 @@ public class RunSimulation extends Thread implements Runnable{
                         }
                     }
                 }
-                if (termination.getCurrTick() % 100 == 0) {
+                if (termination.getCurrTick() % 1000 == 0) {
                     simulationOutcome.addSimulationForTickDTO(termination.getCurrTick(), simulationOutcome.getEntityInstanceManager().createDTO());
                 }
                 simulationOutcome.getEntityInstanceManager().killEntities();
@@ -104,8 +102,9 @@ public class RunSimulation extends Thread implements Runnable{
                 }
                 pauseAndResume();
             }
-        }catch (Exception e){
-            e.getMessage();
+        }
+        catch (Exception e) {
+
         }
 //        SimulationOutcome currSimulation = engine.getMyWorld().runSimulation(engine.getPropertyNameToValueAsString(),engine.getCountId());
 //        engine.setCountId(engine.getCountId() + 1);

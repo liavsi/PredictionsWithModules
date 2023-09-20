@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import utils.errors.AlertToScreen;
 
 import java.io.IOException;
 import java.util.*;
@@ -25,6 +26,9 @@ import java.util.concurrent.Executors;
 
 
 public class AppController {
+    QueueManagementView queueManagementView;
+    Stage infoStage;
+
     private static final String Details_FXML_RESOURCE = "/component/body/detailspage/detailsPageView.fxml";
     private static final String NEW_EXECUTION_FXML_RESOURCE = "/component/body/executionpage/newExecutionView.fxml";
     private static final String RESULTS_FXML_RESOURCE = "/component/body/resultspage/resultView.fxml";
@@ -55,6 +59,7 @@ public class AppController {
     private Map<Integer, Map<String,Object>> resToEngineForSimulationId = new HashMap<>();
 
     public AppController() {
+
     }
 
     @FXML
@@ -65,12 +70,22 @@ public class AppController {
     }
 
     public void setEngine(Engine engine) {
-        this.engine = engine;
-        this.engine.fileNameProperty().bind(headerComponentController.getFilePath());
+        try {
+            this.engine = engine;
+            this.engine.fileNameProperty().bind(headerComponentController.getFilePath());
+        }
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
+        }
     }
 
     public void setFileNameToEngine(SimpleStringProperty filePath) {
-        engine.fileNameProperty().bind(filePath);
+        try {
+            engine.fileNameProperty().bind(filePath);
+        }
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
+        }
     }
 
     public void onDetailsChosen() {
@@ -84,7 +99,7 @@ public class AppController {
             dynamicGridPane.getChildren().clear();
             dynamicGridPane.getChildren().add(detailsBox);
         } catch (IOException e) {
-            e.printStackTrace();
+            AlertToScreen.showErrorDialog(e);
         }
         //detailsPageComponentController.organizeData();
     }
@@ -104,7 +119,7 @@ public class AppController {
             dynamicGridPane.getChildren().clear(); // Now clear the VBox
             dynamicGridPane.getChildren().add(resultsPage);
         } catch (IOException e) {
-            e.printStackTrace();
+            AlertToScreen.showErrorDialog(e);
         }
     }
 
@@ -113,7 +128,12 @@ public class AppController {
     }
 
     public void readWorld() {
-        engine.readWorldFromXml();
+        try {
+
+            engine.readWorldFromXml();
+        } catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
+        }
     }
 
     public void startSimulationInEngine(Map<String, Object> resToEngine) {
@@ -122,11 +142,12 @@ public class AppController {
             SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
             int simulationId = simulationOutcomeDTO.getId();
             //  keep to rerun simulation by id Number
-            resToEngineForSimulationId.put(simulationId, resToEngine);
+            resToEngineForSimulationId.put(simulationId,resToEngine);
             recentSimulations.add(simulationOutcomeDTO);
             headerComponentController.setIsIsThereSimulationOutCome(true);
-        }catch (Exception e){
-            System.out.println(e.getMessage());
+        }
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
         }
     }
 
@@ -171,11 +192,16 @@ public class AppController {
 //    }
 
     public void switchToNewExecutionPage() {
-        if (newExecutionPageComponentController != null) {
-            dynamicGridPane.getChildren().clear();
-            dynamicGridPane.getChildren().add(newExecutionPageComponentController.getMainView());
-        } else {
-            loadNewExecutionPage();
+        try {
+            if (newExecutionPageComponentController != null) {
+                dynamicGridPane.getChildren().clear();
+                dynamicGridPane.getChildren().add(newExecutionPageComponentController.getMainView());
+            } else {
+                loadNewExecutionPage();
+            }
+        }
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
         }
     }
 
@@ -190,17 +216,22 @@ public class AppController {
             newExecutionPageComponentController.organizeData();
             dynamicGridPane.getChildren().clear();
             dynamicGridPane.getChildren().add(newExecutionPane);
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
         }
     }
 
     public void switchToResultsPage() {
-        if (resultsPageController != null) {
-            dynamicGridPane.getChildren().clear();
-            dynamicGridPane.getChildren().add(resultsPageController.getMainView());
-        } else {
-            loadResultsPage();
+        try {
+            if (resultsPageController != null) {
+                dynamicGridPane.getChildren().clear();
+                dynamicGridPane.getChildren().add(resultsPageController.getMainView());
+            } else {
+                loadResultsPage();
+            }
+        }catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
         }
     }
 
@@ -210,24 +241,34 @@ public class AppController {
     }
 
     public void startSimulationInEngine(int id) {
-        if(!resToEngineForSimulationId.containsKey(id))
-        {
-            throw new RuntimeException("got an id that doesnt have resToEngine");
+        try {
+            if(!resToEngineForSimulationId.containsKey(id))
+            {
+                throw new RuntimeException("got an id that doesnt have resToEngine");
+            }
+            Map<String,Object> resToEngine = resToEngineForSimulationId.get(id);
+            SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+            int simulationId = simulationOutcomeDTO.getId();
+            //  keep to rerun simulation by id Number
+            resToEngineForSimulationId.put(simulationId,resToEngine);
+            recentSimulations.add(simulationOutcomeDTO);
+            headerComponentController.setIsIsThereSimulationOutCome(true);
+            switchToResultsPage();
         }
-        Map<String,Object> resToEngine = resToEngineForSimulationId.get(id);
-        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
-        int simulationId = simulationOutcomeDTO.getId();
-        //  keep to rerun simulation by id Number
-        resToEngineForSimulationId.put(simulationId,resToEngine);
-        recentSimulations.add(simulationOutcomeDTO);
-        headerComponentController.setIsIsThereSimulationOutCome(true);
-        switchToResultsPage();
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
+        }
     }
 
     public void reRunFromId(int id) {
-        Map<String,Object> resToEngine = resToEngineForSimulationId.get(id);
-        newExecutionPageComponentController.organizeData(resToEngine);
-        switchToNewExecutionPage();
+        try {
+            Map<String,Object> resToEngine = resToEngineForSimulationId.get(id);
+            newExecutionPageComponentController.organizeData(resToEngine);
+            switchToNewExecutionPage();
+        }
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
+        }
     }
 
     public void showQueueManagement() {
@@ -235,18 +276,34 @@ public class AppController {
             // Load the FXML file for the new window
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/component/queue/manager/queueManagementView.fxml"));
             Parent root = loader.load();
-            QueueManagementView queueManagementView = loader.getController();
+            queueManagementView = loader.getController();
             queueManagementView.setThreadInfo(engine);
             // Create a new stage for the info window
-            Stage infoStage = new Stage();
+            infoStage = new Stage();
             infoStage.setTitle("Thread Pool Info");
             infoStage.initModality(Modality.WINDOW_MODAL);
             infoStage.setScene(new Scene(root));
 
             // Show the new stage
             infoStage.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+        catch (Exception e) {
+            AlertToScreen.showErrorDialog(e);
+        }
+    }
+
+    public void reLoadEveryThing() {
+        dynamicGridPane.getChildren().clear();
+        if(queueManagementView != null) {
+            queueManagementView.closeTask();
+            infoStage.close();
+        }
+        if (resultsPageController != null) {
+            resultsPageController.getMainView().getChildren().clear();
+            resultsPageController = null;
+            recentSimulations.clear();
+        }
+        detailsPageComponentController = null;
+        newExecutionPageComponentController = null;
     }
 }

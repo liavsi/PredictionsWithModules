@@ -9,6 +9,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import utils.errors.AlertToScreen;
 
 import java.io.IOException;
 import java.net.URL;
@@ -28,11 +29,10 @@ public class TasksMain extends Application {
         try {
             root = fxmlLoader.load(url.openStream());//
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            AlertToScreen.showErrorDialog(e);
         }
         AppController controller = fxmlLoader.getController();
         //engine needs to know the controller
-        controller.setEngine(new EngineImpl());
         //setPrimeryStage?
         Scene scene = new Scene(root, 720, 640);//
         // Set the Scene and show the Stage
