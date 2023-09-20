@@ -8,10 +8,12 @@ import engine.world.design.grid.cell.Coordinate;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 public class GridImpl implements Grid {
     private Cell[][] grid;
+    private List<Coordinate> freeCells;
     private final int columns;
     private final int rows;
 
@@ -19,10 +21,12 @@ public class GridImpl implements Grid {
         this.columns = columns;
         this.rows = rows;
         grid = new Cell[rows][columns];
+        freeCells = new ArrayList<>();
         for(int i = 0; i<rows;i++){
             for(int j=0; j<columns; j++){
                 Coordinate coordinate = new Coordinate(i,j);
                 grid[i][j] = new Cell(null,coordinate);
+                freeCells.add(new Coordinate(i,j));
             }
         }
     }
@@ -36,18 +40,27 @@ public class GridImpl implements Grid {
         entityInstance.setCoordinate(freeCell.getCoordinate());
         freeCell.setEntityInstance(entityInstance);
     }
+    @Override
+    public List<Coordinate> getFreeCells() {
+        return freeCells;
+    }
+
     private Cell randomFreeCell(){
         Random random = new Random();
         int x, y;
-        x = random.nextInt(columns);
-        y = random.nextInt(rows);
-        Cell cell = grid[x][y];
-        while(cell.isTaken()){
-            x = random.nextInt(columns);
-            y = random.nextInt(rows);
-            cell = grid[x][y];
-        }
-        return cell;
+        int size = freeCells.size();
+        int index = random.nextInt(size);
+        Coordinate coordinate = freeCells.get(index);
+        freeCells.remove(index);
+//        x = random.nextInt(rows);
+//        y = random.nextInt(columns);
+//        Cell cell = grid[x][y];
+//        while(cell.isTaken()){
+//            x = random.nextInt(rows);
+//            y = random.nextInt(columns);
+//            cell = grid[x][y];
+//        }
+        return grid[coordinate.getX()][coordinate.getY()];
     }
     @Override
     public void moveEntity(EntityInstance entityInstance){
