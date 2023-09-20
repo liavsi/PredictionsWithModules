@@ -167,6 +167,9 @@ public class ResultsPageController {
                         }
                     }
                     isCurrSimulationRunning = !(currSimulationDTO.getTerminationDTO().isSecondsTerminate() || currSimulationDTO.getTerminationDTO().isTicksTerminate());
+                    if(isSimulationOver.get()){
+                        break;
+                    }
                 }
                 return engine.getPastSimulationDTO(simulationId);
             }
