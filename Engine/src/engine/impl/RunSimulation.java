@@ -92,7 +92,7 @@ public class RunSimulation implements Runnable{
                 }
             }
             if(termination.getCurrTick() % 100 == 0) {
-                simulationOutcome.addSimulationForTickDTO(termination.getCurrTick(), simulationOutcome.createSimulationOutcomeDTO());
+                simulationOutcome.addSimulationForTickDTO(termination.getCurrTick(), simulationOutcome.getEntityInstanceManager().createDTO());
             }
             simulationOutcome.getEntityInstanceManager().killEntities();
             simulationOutcome.getEntityInstanceManager().createEntities();
