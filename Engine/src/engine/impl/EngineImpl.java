@@ -1,32 +1,18 @@
 package engine.impl;
 
-import DTOManager.impl.EntityInstanceManagerDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
 import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.api.Engine;
-import engine.world.design.action.api.Action;
-import engine.world.design.definition.entity.api.EntityDefinition;
-import engine.world.design.definition.property.api.PropertyDefinition;
-import engine.world.design.execution.context.Context;
-import engine.world.design.execution.context.ContextImpl;
-import engine.world.design.execution.entity.api.EntityInstance;
-import engine.world.design.execution.property.PropertyInstance;
-import engine.world.design.execution.property.PropertyInstanceImpl;
-import engine.world.design.rule.Rule;
 import engine.world.design.world.api.World;
 import engine.world.design.reader.api.Reader;
 import engine.world.design.reader.impl.ReaderImpl;
 import javafx.beans.property.SimpleStringProperty;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
 
 // TODO: 10/08/2023 After deleting old World Change to World
 
@@ -38,6 +24,8 @@ public class EngineImpl implements Engine {
     private World myWorld; // TODO: 19/08/2023 static?
     private Integer countId = 1;
     private final Map<Integer, SimulationOutcome> pastSimulations;
+
+    private final Map<Integer, RunSimulation> simulationThereads = new HashMap<>();
     private Map<String, Object> propertyNameToValueAsString;
     private ExecutorService threadExecutor;
 
@@ -54,10 +42,12 @@ public class EngineImpl implements Engine {
     @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
         SimulationOutcome simulation = myWorld.runSimulation(countId);
-        pastSimulations.put(countId++, simulation);
-//        RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
+        RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
+        pastSimulations.put(countId, simulation);
+        simulationThereads.put(countId, runSimulation);
+        countId++;
 //        runSimulation.run();
-        threadExecutor.submit(new RunSimulation(simulation,myWorld,propertyNameToValueAsString));
+        threadExecutor.submit(runSimulation);
         return simulation.createSimulationOutcomeDTO();
 //        threadExecutor.submit(() -> {
 //            for (PropertyDefinition envVarDefinition : myWorld.getEnvVariablesManager().getEnvVariables().values()) {
@@ -215,19 +205,16 @@ public class EngineImpl implements Engine {
         this.countId = countId;
     }
     @Override
-    public void stopSimulationByID(int id){
-        SimulationOutcome simulationOutcome = pastSimulations.get(id);
-        simulationOutcome.setStop(true);
-        simulationOutcome.setResume(false);
+    public void stopSimulationByID(int id) {
+        simulationThereads.get(id).StopThread();
     }
+
     @Override
     public void resumeSimulationByID(int id){
-        SimulationOutcome simulationOutcome = pastSimulations.get(id);
-        simulationOutcome.setPause(false);
+        simulationThereads.get(id).resumeThread();
     }
     @Override
     public void pauseSimulationByID(int id){
-        SimulationOutcome simulationOutcome = pastSimulations.get(id);
-        simulationOutcome.setPause(true);
+        simulationThereads.get(id).pauseThread();
     }
 }
