@@ -26,7 +26,7 @@ public class GridImpl implements Grid {
             for(int j=0; j<columns; j++){
                 Coordinate coordinate = new Coordinate(i,j);
                 grid[i][j] = new Cell(null,coordinate);
-                freeCells.add(new Coordinate(i,j));
+                freeCells.add(coordinate);
             }
         }
     }
@@ -47,7 +47,6 @@ public class GridImpl implements Grid {
 
     private Cell randomFreeCell(){
         Random random = new Random();
-        int x, y;
         int size = freeCells.size();
         int index = random.nextInt(size);
         Coordinate coordinate = freeCells.get(index);
@@ -72,49 +71,56 @@ public class GridImpl implements Grid {
         if(!upCell.isTaken()){
             upCell.setEntityInstance(entityInstance);
             entityInstance.setCoordinate(upCell.getCoordinate());
+            freeCells.remove(upCell.getCoordinate());
         }else if(!downCell.isTaken()){
             downCell.setEntityInstance(entityInstance);
             entityInstance.setCoordinate(downCell.getCoordinate());
+            freeCells.remove(downCell.getCoordinate());
         } else if (!rightCell.isTaken()) {
             rightCell.setEntityInstance(entityInstance);
             entityInstance.setCoordinate(rightCell.getCoordinate());
+            freeCells.remove(rightCell.getCoordinate());
         }else if(!leftCell.isTaken()){
             leftCell.setEntityInstance(entityInstance);
             entityInstance.setCoordinate(leftCell.getCoordinate());
+            freeCells.remove(leftCell.getCoordinate());
         }
+        freeCells.add(entityInstance.getCoordinate());
     }
     private Cell upCell(Cell cell){
-        int newY = (cell.getCoordinate().getY() + 1) % rows;
-        if (newY < 0) {
-            newY += rows;
-        }
-        return grid[cell.getCoordinate().getX()][newY];
+        return grid[(cell.getCoordinate().getX() + 1) % rows][cell.getCoordinate().getY()];
     }
 
     private Cell downCell(Cell cell){
-        int newY = (cell.getCoordinate().getY() - 1) % rows;
-        if (newY < 0) {
-            newY += rows;
+        int newX = (cell.getCoordinate().getX() - 1) % rows;
+        try {
+            if (newX < 0) {
+                newX += rows;
+            }
+            return grid[newX][cell.getCoordinate().getY()];
+        }catch (Exception e){
+            System.out.println("newx:" + newX);
+            System.out.println("y:" + cell.getCoordinate().getY());
         }
-        return grid[cell.getCoordinate().getX()][newY];
+        return cell;
     }
-
     private Cell rightCell(Cell cell){
-        int newX = (cell.getCoordinate().getX() + 1) % columns;
-        if (newX < 0) {
-            newX += columns;
-        }
-        return grid[newX][cell.getCoordinate().getY()];
+        return grid[cell.getCoordinate().getX()][(cell.getCoordinate().getY() + 1) % columns];
     }
 
     private Cell leftCell(Cell cell){
-        int newX = (cell.getCoordinate().getX() - 1) % columns;
-        if (newX < 0) {
-            newX += columns;
+        int newY = (cell.getCoordinate().getY() - 1) % columns;
+        try {
+            if (newY < 0) {
+                newY += columns;
+            }
+            return grid[cell.getCoordinate().getX()][newY];
+        }catch (Exception e){
+            System.out.println("newy:" + newY);
+            System.out.println("x:" + cell.getCoordinate().getX());
         }
-        return grid[newX][cell.getCoordinate().getY()];
+        return cell;
     }
-
     @Override
     public int getColumns() {
         return columns;

@@ -112,13 +112,17 @@ public class AppController {
     }
 
     public void startSimulationInEngine(Map<String, Object> resToEngine) {
-        switchToResultsPage();
-        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
-        int simulationId = simulationOutcomeDTO.getId();
-        //  keep to rerun simulation by id Number
-        resToEngineForSimulationId.put(simulationId,resToEngine);
-        recentSimulations.add(simulationOutcomeDTO);
-        headerComponentController.setIsIsThereSimulationOutCome(true);
+        try {
+            switchToResultsPage();
+            SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);
+            int simulationId = simulationOutcomeDTO.getId();
+            //  keep to rerun simulation by id Number
+            resToEngineForSimulationId.put(simulationId, resToEngine);
+            recentSimulations.add(simulationOutcomeDTO);
+            headerComponentController.setIsIsThereSimulationOutCome(true);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
 //        SimulationOutcomeDTO simulationOutcomeDTO = engine.runNewSimulation(resToEngine);

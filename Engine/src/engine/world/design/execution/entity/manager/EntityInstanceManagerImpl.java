@@ -67,8 +67,8 @@ public class EntityInstanceManagerImpl implements EntityInstanceManager{
     @Override
     public void killEntities() {
         instanceToKill.forEach((id) -> {
-            instances.remove(id);
             grid.getFreeCells().add(instances.get(id).getCoordinate());
+            instances.remove(id);
         });
         instanceToKill = new ArrayList<>();
     }

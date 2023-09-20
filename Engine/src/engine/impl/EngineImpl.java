@@ -41,14 +41,19 @@ public class EngineImpl implements Engine {
 
     @Override
     public SimulationOutcomeDTO runNewSimulation(Map<String, Object> propertyNameToValueAsString) {
-        SimulationOutcome simulation = myWorld.runSimulation(countId);
-        RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
-        pastSimulations.put(countId, simulation);
-        simulationThereads.put(countId, runSimulation);
-        countId++;
+        try {
+            SimulationOutcome simulation = myWorld.runSimulation(countId);
+            RunSimulation runSimulation = new RunSimulation(simulation, myWorld, propertyNameToValueAsString);
+            pastSimulations.put(countId, simulation);
+            simulationThereads.put(countId, runSimulation);
+            countId++;
 //        runSimulation.run();
-        threadExecutor.submit(runSimulation);
-        return simulation.createSimulationOutcomeDTO();
+            threadExecutor.submit(runSimulation);
+            return simulation.createSimulationOutcomeDTO();
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
 //        threadExecutor.submit(() -> {
 //            for (PropertyDefinition envVarDefinition : myWorld.getEnvVariablesManager().getEnvVariables().values()) {
 //                String envName = envVarDefinition.getName();
@@ -122,7 +127,8 @@ public class EngineImpl implements Engine {
 //    }
 //
 
-}
+        return null; // TODO: 20/09/2023 delete!!!!!!!!!!!
+    }
         //SimulationOutcome currSimulation = myWorld.runSimulation(propertyNameToValueAsString,countId);
         //engine.setCountId(engine.getCountId() + 1);
         //engine.getPastSimulations().put(engine.getCountId(), currSimulation);
