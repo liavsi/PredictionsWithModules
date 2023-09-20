@@ -89,6 +89,7 @@ public class SimulationPageController {
         this.appController = appController;
     }
     public void onClickedStartSimulation(ActionEvent event) {
+
         Map<String, Object> resToEngine = resultEnvironment.entrySet().stream()
                 .collect(Collectors.toMap(
                         Map.Entry::getKey,
@@ -149,12 +150,12 @@ public class SimulationPageController {
     }
     private void organizePopulationData() {
         IntegerProperty maxPopulation = new SimpleIntegerProperty(world.getGridDTO().getArea());
-        DoubleProperty sumPopulation = new SimpleDoubleProperty(0.0); // Initialize sum to 0
-
+        double initialValue = 3;
+        double sumInitialValue = initialValue * entityDefinitionByName.values().size();
+        DoubleProperty sumPopulation = new SimpleDoubleProperty(sumInitialValue); // Initialize sum to 0
         for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionByName.values()) {
             HBox pair = null;
-            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), 0);
-
+            LabelNumericInputBox inputPlaceNumber = new LabelNumericInputBox(entityDefinitionDTO.getName(), 0, maxPopulation.doubleValue(), initialValue);
             // Bind inputPlaceNumber to sumPopulation
             inputPlaceNumber.valueProperty().addListener((observable, oldValue, newValue) -> {
                 // Update the sumPopulation whenever an inputPlaceNumber changes
@@ -182,7 +183,11 @@ public class SimulationPageController {
             if (maxPopulation.intValue() - newValue.intValue() < 0) {
                 alert.set("You need to lower your population by " + tooMuch);
                 startSimulationButton.setDisable(true);
-            } else {
+            } else if(newValue.intValue() == 0){
+                alert.set("can't run simulation with no entities at all..");
+                startSimulationButton.setDisable(true);
+            }
+                else {
                 startSimulationButton.setDisable(false);
                 alert.set(goodMessage);
             }
