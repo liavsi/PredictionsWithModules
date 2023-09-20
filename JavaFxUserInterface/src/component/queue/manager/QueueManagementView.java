@@ -1,11 +1,12 @@
 package component.queue.manager;
+
 import DTOManager.impl.MyThreadInfo;
-import DTOManager.impl.SimulationOutcomeDTO;
 import engine.api.Engine;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressBar;
 
 public class QueueManagementView {
     @FXML
@@ -17,21 +18,26 @@ public class QueueManagementView {
     @FXML
     private Label finishedThreadsLabel;
 
-    Task<MyThreadInfo> myThreadInfoTask;
+    @FXML
+    private ProgressBar progressBar; // Inject the ProgressBar
 
+    Task<MyThreadInfo> myThreadInfoTask;
 
     public void setThreadInfo(Engine engine) {
         myThreadInfoTask = new Task<MyThreadInfo>() {
-
             @Override
-            protected MyThreadInfo call()  {
+            protected MyThreadInfo call() {
                 while (true) {
                     MyThreadInfo threadInfo = engine.getThreadPoolInfo();
-                    Platform.runLater(()-> {
+                    Platform.runLater(() -> {
                         queueSizeLabel.setText("Queue Size: " + threadInfo.getQueueSize());
                         workingThreadsLabel.setText("Working Threads: " + threadInfo.getWorkingThreads());
                         finishedThreadsLabel.setText("Finished Threads: " + threadInfo.getFinishedThread());
-                            });
+
+                        // Update the progress bar based on your logic
+                        double progress = calculateProgress(threadInfo); // Implement this method
+                        progressBar.setProgress(progress);
+                    });
                     try {
                         Thread.sleep(400);
                     } catch (InterruptedException e) {
@@ -44,7 +50,10 @@ public class QueueManagementView {
         Thread th = new Thread(myThreadInfoTask);
         th.setDaemon(true);
         th.start();
+    }
 
-
+    // Implement this method to calculate the progress based on your logic
+    private double calculateProgress(MyThreadInfo threadInfo) {
+        return (double) threadInfo.getWorkingThreads() / threadInfo.getThreadPoolSize();
     }
 }

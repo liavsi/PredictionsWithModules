@@ -148,13 +148,14 @@ public class EngineImpl implements Engine {
     @Override
     public MyThreadInfo getThreadPoolInfo(){
         ThreadPoolExecutor threadPool = (ThreadPoolExecutor) threadExecutor;
+        int threadPoolSize = threadPool.getMaximumPoolSize();
         int queueSize;
         int workingThreads;
         int finishedThread;
         workingThreads =  threadPool.getActiveCount();
         finishedThread = (int) threadPool.getCompletedTaskCount();
         queueSize = threadPool.getQueue().size();
-        return new MyThreadInfo(queueSize, workingThreads, finishedThread);
+        return new MyThreadInfo(queueSize, workingThreads, finishedThread, threadPoolSize);
     }
 
     @Override
