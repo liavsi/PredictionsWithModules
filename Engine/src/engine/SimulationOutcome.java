@@ -55,7 +55,7 @@ public class SimulationOutcome {
         this.activeEnvironment = activeEnvironment;
     }
     public SimulationOutcomeDTO createSimulationOutcomeDTO(){
-        return new SimulationOutcomeDTO(runDate,id,termination.createTerminationDTO(), entityInstanceManager.createDTO());
+        return new SimulationOutcomeDTO(runDate,id,termination.createTerminationDTO(), entityInstanceManager.createDTO(), isPause, isStop);
     }
 
     public String getRunDate() {

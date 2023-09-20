@@ -14,6 +14,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -28,6 +29,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
+import utils.results.EntityPopulation;
 import utils.results.SimulationOutcomeListCell;
 
 import java.util.ArrayList;
@@ -49,11 +51,11 @@ public class ResultsPageController {
     @FXML
     public Button ButtonPause;
     @FXML
-    public TableView<ShowEntity> TableView;
+    public TableView<EntityPopulation> TableView;
     @FXML
-    public TableColumn<ShowEntity,String> EntityNameColumn;
+    public TableColumn<EntityPopulation,String> EntityNameColumn;
     @FXML
-    public TableColumn<ShowEntity,Integer> PopulationColumn;
+    public TableColumn<EntityPopulation,Integer> PopulationColumn;
 
     @FXML private VBox vBoxWithSimulations;
     @FXML
@@ -67,14 +69,12 @@ public class ResultsPageController {
 
     @FXML
     private Button rerunButton;
+
     private SimpleBooleanProperty isSimulationRunning;
     private SimpleBooleanProperty isSimulationOver;
     Task<SimulationOutcomeDTO> simulationUpdateTask;
-    private SimpleBooleanProperty isStopSelected;
-    private SimpleBooleanProperty isPauseSelected;
     private AppController mainController;
     private ObservableList<SimulationOutcomeDTO> recentSimulations;
-
     private ObservableList<ShowEntity> entities;
 
     private SimpleIntegerProperty ticks;
@@ -91,8 +91,6 @@ public class ResultsPageController {
         recentSimulations = FXCollections.observableArrayList();
         this.isSimulationRunning = new SimpleBooleanProperty(true);
         this.isSimulationOver = new SimpleBooleanProperty(false);
-        this.isStopSelected = new SimpleBooleanProperty(false);
-        this.isPauseSelected = new SimpleBooleanProperty(false);
     }
 
     @FXML
@@ -105,9 +103,16 @@ public class ResultsPageController {
                 isSimulationOver, isSimulationRunning
         ));
         ButtonStop.disableProperty().bind(isSimulationRunning.not());
-        EntityNameColumn.setCellValueFactory(new PropertyValueFactory<ShowEntity,String>("EntityName"));
-        PopulationColumn.setCellValueFactory(new PropertyValueFactory<ShowEntity,Integer>("Population"));
-        TableView.setItems(entities);
+        List<EntityPopulation> entityPopulations = new ArrayList<>();
+        entityPopulations.add(new EntityPopulation("Entity 1", 100));
+        entityPopulations.add(new EntityPopulation("Entity 2", 75));
+
+        EntityNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntityName()));
+        PopulationColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPopulation()).asObject());
+        // Add more entities as needed
+        // Set the data in the TableView
+        TableView.getItems().setAll(entityPopulations);
+
 
         // Initialize your controller
         simulationList.setCellFactory(param -> new SimulationOutcomeListCell());
@@ -151,6 +156,8 @@ public class ResultsPageController {
                         if (isSimulationRunning.get()) {
                             seconds.set(finalCurrSimulationDTO.getTerminationDTO().getCurrSecond());
                         }
+                        isSimulationRunning.set(!(finalCurrSimulationDTO.isPause() || finalCurrSimulationDTO.isStop()));
+                        isSimulationOver.set(finalCurrSimulationDTO.isStop());
                         // TODO: 18/09/2023
                         //setEntitiesOnClick(currSimulationDTO);
 //                        updateProgress(currSimulationDTO.getTerminationDTO().getTicks(), engine.getWorldDTO().getTerminationDTO().getTicks());
@@ -197,16 +204,13 @@ public class ResultsPageController {
             return;
         }
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
-        isSimulationOver.set(true);
         engine.stopSimulationByID(id);
-        isSimulationRunning.set(false);
     }
 
     public void onResumeButton(ActionEvent actionEvent) {
         if (simulationList.getSelectionModel().getSelectedItem() == null ) {
             return;
         }
-        isSimulationRunning.set(true);
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
         engine.resumeSimulationByID(id);
     }
@@ -215,8 +219,6 @@ public class ResultsPageController {
         if (simulationList.getSelectionModel().getSelectedItem() == null) {
             return;
         }
-        isSimulationRunning.set(false);
-        isPauseSelected.set(true);
         int id = simulationList.getSelectionModel().getSelectedItem().getId();
         engine.pauseSimulationByID(id);
     }
