@@ -1,6 +1,5 @@
 package DTOManager.impl;
 
-import java.awt.*;
 import java.util.Map;
 
 public class SimulationOutcomeDTO {
@@ -10,23 +9,29 @@ public class SimulationOutcomeDTO {
     private final TerminationDTO terminationDTO;
     private final EntityInstanceManagerDTO entityInstanceDTOS;
 
-    public boolean isPause() {
-        return isPause;
-    }
-
-    public boolean isStop() {
-        return isStop;
-    }
+    Map<Integer, EntityInstanceManagerDTO> dataAroundTicks;
 
     private  boolean isPause;
     private  boolean isStop;
-    public SimulationOutcomeDTO(String runDate, int id, TerminationDTO terminationDTO, EntityInstanceManagerDTO dto, boolean isPause, boolean isStop) {
+
+    public SimulationOutcomeDTO(String runDate, int id, TerminationDTO terminationDTO, EntityInstanceManagerDTO dto, boolean isPause, boolean isStop, Map<Integer, EntityInstanceManagerDTO> dataAroundTicks) {
         this.isStop = isStop;
         this.isPause = isPause;
         this.runDate = runDate;
         this.id = id;
         this.terminationDTO = terminationDTO;
         entityInstanceDTOS = dto;
+        this.dataAroundTicks = dataAroundTicks;
+    }
+
+    public boolean isPause() {
+        return isPause;
+    }
+    public boolean isStop() {
+        return isStop;
+    }
+    public Map<Integer, EntityInstanceManagerDTO> getDataAroundTicks() {
+        return dataAroundTicks;
     }
 
     public EntityInstanceManagerDTO getEntityInstanceDTOS() {
