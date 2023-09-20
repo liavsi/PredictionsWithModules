@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="76.0" prefWidth="285.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.queue.manager.QueueManagementView">
+    <Label style="-fx-font-size: 16px; -fx-font-weight: bold;" text="Thread Pool Information" />
+    <Label fx:id="queueSizeLabel" />
+    <Label fx:id="workingThreadsLabel" />
+    <Label fx:id="finishedThreadsLabel" />
+</VBox>
