@@ -91,7 +91,7 @@ public class RunSimulation extends Thread implements Runnable{
                     }
                 }
             }
-            if(termination.getCurrTick() % 100 == 0) {
+            if(termination.getCurrTick() % 1000 == 0) {
                 simulationOutcome.addSimulationForTickDTO(termination.getCurrTick(), simulationOutcome.getEntityInstanceManager().createDTO());
             }
             simulationOutcome.getEntityInstanceManager().killEntities();
