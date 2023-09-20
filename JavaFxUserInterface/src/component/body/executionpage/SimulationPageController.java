@@ -150,7 +150,7 @@ public class SimulationPageController {
     }
     private void organizePopulationData() {
         IntegerProperty maxPopulation = new SimpleIntegerProperty(world.getGridDTO().getArea());
-        double initialValue = 3;
+        double initialValue = 3.01;
         double sumInitialValue = initialValue * entityDefinitionByName.values().size();
         DoubleProperty sumPopulation = new SimpleDoubleProperty(sumInitialValue); // Initialize sum to 0
         for (EntityDefinitionDTO entityDefinitionDTO : entityDefinitionByName.values()) {

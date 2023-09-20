@@ -47,8 +47,16 @@ public class RunSimulation extends Thread implements Runnable{
             // showFinalEnvProperties();
             // creating the instance manager
             for (EntityDefinition entityDefinition : world.getNameToEntityDefinition().values()) {
-                Double population = (Double) propertyNameToValueAsString.get(entityDefinition.getName() + "entity");
-                entityDefinition.setPopulation(population.intValue());
+                Object unKnown = propertyNameToValueAsString.get(entityDefinition.getName() + "entity");
+                if(unKnown instanceof Integer){
+                    Integer intValue = (Integer) propertyNameToValueAsString.get(entityDefinition.getName() + "entity");
+                    Double population =intValue.doubleValue();
+                    entityDefinition.setPopulation(population.intValue());
+                }
+                else if (unKnown instanceof Double) {
+                    Double population =(double) unKnown;
+                    entityDefinition.setPopulation(population.intValue());
+                }
                 for (int i = 0; i < entityDefinition.getPopulation(); i++) {
                     simulationOutcome.getEntityInstanceManager().create(entityDefinition);
                 }
@@ -105,7 +113,7 @@ public class RunSimulation extends Thread implements Runnable{
             }
         }
         catch (Exception e) {
-            
+            System.out.println(e.getMessage());
         }
 //        SimulationOutcome currSimulation = engine.getMyWorld().runSimulation(engine.getPropertyNameToValueAsString(),engine.getCountId());
 //        engine.setCountId(engine.getCountId() + 1);
