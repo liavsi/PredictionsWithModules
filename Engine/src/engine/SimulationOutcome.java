@@ -7,6 +7,8 @@ import engine.world.design.execution.environment.api.ActiveEnvironment;
 import engine.world.design.grid.api.Grid;
 import engine.world.design.termination.api.Termination;
 
+import java.util.Map;
+
 public class SimulationOutcome {
     private final String runDate;
     private final int id;
@@ -14,6 +16,8 @@ public class SimulationOutcome {
     private final EntityInstanceManager entityInstanceManager;
     private final EntityInstanceManagerDTO startPosition;
     private final ActiveEnvironment activeEnvironment;
+
+    private Map<Integer ,SimulationOutcomeDTO> dataAroundTicks;
     private final Grid grid;
     private boolean isStop = false;
     private boolean isResume = false;
@@ -83,6 +87,14 @@ public class SimulationOutcome {
 
     public ActiveEnvironment getActiveEnvironment() {
         return activeEnvironment;
+    }
+
+    public void addSimulationForTickDTO(int currTick, SimulationOutcomeDTO simulationOutcomeDTO) {
+        dataAroundTicks.put(currTick, simulationOutcomeDTO);
+    }
+
+    public Map<Integer, SimulationOutcomeDTO> getDataAroundTicks(){
+        return dataAroundTicks;
     }
 //     private TerminationReason terminationReason;
 

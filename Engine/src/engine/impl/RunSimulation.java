@@ -1,6 +1,5 @@
 package engine.impl;
 
-import DTOManager.impl.WorldDTO;
 import engine.SimulationOutcome;
 import engine.world.design.action.api.Action;
 import engine.world.design.definition.entity.api.EntityDefinition;
@@ -91,6 +90,9 @@ public class RunSimulation implements Runnable{
                         propertyInstance.setTicksSameValue(0);
                     }
                 }
+            }
+            if(termination.getCurrTick() % 100 == 0) {
+                simulationOutcome.addSimulationForTickDTO(termination.getCurrTick(), simulationOutcome.createSimulationOutcomeDTO());
             }
             simulationOutcome.getEntityInstanceManager().killEntities();
             simulationOutcome.getEntityInstanceManager().createEntities();

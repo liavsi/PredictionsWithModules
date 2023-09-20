@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.resultspage.GraphView">
+    <LineChart fx:id="populationChart" prefHeight="400.0" prefWidth="600.0">
+        <xAxis>
+            <NumberAxis label="Time" />
+        </xAxis>
+        <yAxis>
+            <NumberAxis label="Population" />
+        </yAxis>
+    </LineChart>
+   <Button layoutX="490.0" layoutY="47.0" mnemonicParsing="false" text="Back" />
+</AnchorPane>

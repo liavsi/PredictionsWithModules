@@ -58,6 +58,9 @@ public class ResultsPageController {
     public TableColumn<EntityPopulation,String> EntityNameColumn;
     @FXML
     public TableColumn<EntityPopulation,Integer> PopulationColumn;
+    @FXML private AnchorPane analyticData;
+    @FXML private Button ButtonStatistic;
+    @FXML private Button ButtonGraph;
 
     @FXML private VBox vBoxWithSimulations;
     @FXML
@@ -105,8 +108,8 @@ public class ResultsPageController {
                 isSimulationOver, isSimulationRunning
         ));
         ButtonStop.disableProperty().bind(isSimulationRunning.not());
-
-
+        ButtonGraph.disableProperty().bind(isSimulationOver.not());
+        ButtonStatistic.disableProperty().bind(isSimulationOver.not());
         EntityNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntityName()));
         PopulationColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPopulation()).asObject());
         // Add more entities as needed
