@@ -420,29 +420,34 @@ public class ReaderImpl implements Reader {
     }
     private PropertyDefinition createFloatPropertyDefinition(Object i_prdProperty) {
         PropertyDefinition res = null;
-        if(i_prdProperty instanceof PRDEnvProperty) {
-            PRDEnvProperty prdEnvProperty = (PRDEnvProperty) i_prdProperty;
-            Float from = PropertyType.FLOAT.convert(prdEnvProperty.getPRDRange().getFrom());
-            Float to = PropertyType.FLOAT.convert(prdEnvProperty.getPRDRange().getTo());
-            String name = prdEnvProperty.getPRDName();
-            res = new FloatPropertyDefinition(name, ValueGeneratorFactory.createRandomFloat(from, to));
-        }
-        else if( i_prdProperty instanceof PRDProperty) {
-            PRDProperty prdProperty = (PRDProperty) i_prdProperty;
-            PRDValue prdValue = prdProperty.getPRDValue();
-            String name = prdProperty.getPRDName();
-            Float from = PropertyType.FLOAT.convert(prdProperty.getPRDRange().getFrom());
-            Float to = PropertyType.FLOAT.convert(prdProperty.getPRDRange().getTo());
-            if(prdValue.isRandomInitialize()) {
-                res = new FloatPropertyDefinition(name, ValueGeneratorFactory.createRandomFloat(from,to));
+        try {
+            if (i_prdProperty instanceof PRDEnvProperty) {
+                PRDEnvProperty prdEnvProperty = (PRDEnvProperty) i_prdProperty;
+                Float from = PropertyType.FLOAT.convert(prdEnvProperty.getPRDRange().getFrom());
+                Float to = PropertyType.FLOAT.convert(prdEnvProperty.getPRDRange().getTo());
+                String name = prdEnvProperty.getPRDName();
+                res = new FloatPropertyDefinition(name, ValueGeneratorFactory.createRandomFloat(from, to));
+            } else if (i_prdProperty instanceof PRDProperty) {
+                PRDProperty prdProperty = (PRDProperty) i_prdProperty;
+                PRDValue prdValue = prdProperty.getPRDValue();
+                String name = prdProperty.getPRDName();
+                Float from = PropertyType.FLOAT.convert(prdProperty.getPRDRange().getFrom());
+                Float to = PropertyType.FLOAT.convert(prdProperty.getPRDRange().getTo());
+                if (prdValue.isRandomInitialize()) {
+                    res = new FloatPropertyDefinition(name, ValueGeneratorFactory.createRandomFloat(from, to));
+                } else {
+                    res = new FloatPropertyDefinition(name, ValueGeneratorFactory.createFixed(PropertyType.FLOAT.convert(prdValue.getInit())));
+                }
             }
-            else {
-                res = new FloatPropertyDefinition(name, ValueGeneratorFactory.createFixed(PropertyType.FLOAT.convert(prdValue.getInit())));
+            if(res == null) {
+                throw new IllegalArgumentException(i_prdProperty.toString() + "is not expected type");
             }
+        }catch (Exception e){
+            throw new RuntimeException("something went wrong in createFloatPropertyDefinition");
         }
-        if(res == null) {
-            throw new IllegalArgumentException(i_prdProperty.toString() + "is not expected type");
-        }
+
+
+
         return res;
     }
     private PropertyDefinition createDecimalPropertyDefinition(Object i_prdProperty) {
