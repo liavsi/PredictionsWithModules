@@ -2,14 +2,10 @@ package component.body.resultspage;
 
 import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.EntityInstanceDTO;
+import DTOManager.impl.EntityInstanceManagerDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
-import com.sun.corba.se.spi.activation.Server;
-import com.sun.javafx.collections.ObservableListWrapper;
 import component.mainapp.AppController;
-import engine.SimulationOutcome;
 import engine.api.Engine;
-import engine.world.design.definition.entity.api.EntityDefinition;
-import engine.world.design.expression.ExpressionType;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -19,20 +15,16 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
-import javafx.collections.ObservableMap;
-import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import utils.results.EntityPopulation;
 import utils.results.SimulationOutcomeListCell;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +50,9 @@ public class ResultsPageController {
     public TableColumn<EntityPopulation,String> EntityNameColumn;
     @FXML
     public TableColumn<EntityPopulation,Integer> PopulationColumn;
+    @FXML private StackPane analyticData;
+    @FXML private Button ButtonStatistic;
+    @FXML private Button ButtonGraph;
 
     @FXML private VBox vBoxWithSimulations;
     @FXML
@@ -81,6 +76,8 @@ public class ResultsPageController {
 
     private SimpleIntegerProperty ticks;
     private SimpleLongProperty seconds;
+    private Pane graphPane;
+
     private Engine engine;
     public GridPane getMainView() {
         return mainView;
@@ -105,8 +102,8 @@ public class ResultsPageController {
                 isSimulationOver, isSimulationRunning
         ));
         ButtonStop.disableProperty().bind(isSimulationRunning.not());
-
-
+        ButtonGraph.disableProperty().bind(isSimulationOver.not());
+        ButtonStatistic.disableProperty().bind(isSimulationOver.not());
         EntityNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getEntityName()));
         PopulationColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getPopulation()).asObject());
         // Add more entities as needed
@@ -129,7 +126,7 @@ public class ResultsPageController {
     }
 
     private void showSimulationDetails(SimulationOutcomeDTO selectedSimulation) {
-
+        removeGraph();
         if (simulationUpdateTask != null) {
             simulationUpdateTask.cancel();
         }
@@ -247,6 +244,39 @@ public class ResultsPageController {
 
     public void setEngine(Engine engine) {
         this.engine = engine;
+    }
+
+    public void onShowGraphClicked(ActionEvent event) {
+        SimulationOutcomeDTO simulationOutcomeDTO = simulationList.getSelectionModel().getSelectedItem();
+        loadGraph(simulationOutcomeDTO.getDataAroundTicks());
+    }
+
+    private void loadGraph(Map<Integer, EntityInstanceManagerDTO> dataAroundTicks)  {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/component/body/resultspage/graphView.fxml"));
+            graphPane = loader.load();
+            GraphViewController graphViewController = loader.getController();
+            // Customize any data or logic you want to pass to the ResultsPageController
+            // For example, you can set recent simulations:
+            graphViewController.setMainController(this);
+            graphViewController.setData(dataAroundTicks);
+            // Set the ResultsPage as the center of the BorderPane
+            //dynamicVBox.getChildren().clear();
+            analyticData.getChildren().add(graphPane);
+            graphPane.toFront();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void removeGraph() {
+        if (graphPane != null) {
+            analyticData.getChildren().remove(graphPane);
+            graphPane = null;
+        }
+
     }
 }
 
