@@ -17,7 +17,6 @@ public class SimulationOutcome {
     private final EntityInstanceManager entityInstanceManager;
     private final EntityInstanceManagerDTO startPosition;
     private final ActiveEnvironment activeEnvironment;
-
     private final Map<Integer, EntityInstanceManagerDTO> dataAroundTicks = new HashMap<>();
     private final Grid grid;
     private boolean isStop = false;

@@ -57,8 +57,6 @@ public class GraphViewController {
         });
         populationChart.getData().addAll(listOfCharts.values());
     }
-
-
     public void onBackFromGraphButton(ActionEvent event) {
         resultsPageController.removeGraph();
     }
