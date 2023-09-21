@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:id="statisticPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="component.body.resultspage.statistic.StatisticData">
+    <children>
+        <VBox spacing="10">
+            <Label style="-fx-font-size: 18px;" text="Select an Entity to Display its Properties:" />
+            <ChoiceBox fx:id="entityChoiceBox" prefWidth="200.0" />
+            <Label style="-fx-font-size: 18px;" text="Select a Property to Display its Histogram:" />
+            <ChoiceBox fx:id="propertyChoiceBox" prefWidth="200.0" />
+            <Button fx:id="showHistogramButton" onAction="#onShowHistogramButtonClicked" text="Show Histogram" />
+            <Label fx:id="histogramResultLabel" />
+            <Label fx:id="entityNameLabel" />
+            <Label fx:id="populationLabel" />
+        </VBox>
+        <Button fx:id="ButtonBack" layoutX="27.0" layoutY="295.0" mnemonicParsing="false" onAction="#onBackFromStatisticButton" text="Back" />
+    </children>
+</AnchorPane>
