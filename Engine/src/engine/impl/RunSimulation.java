@@ -113,7 +113,7 @@ public class RunSimulation extends Thread implements Runnable{
             }
         }
         catch (Exception e) {
-            
+            e.getMessage();
         }
 //        SimulationOutcome currSimulation = engine.getMyWorld().runSimulation(engine.getPropertyNameToValueAsString(),engine.getCountId());
 //        engine.setCountId(engine.getCountId() + 1);

@@ -82,6 +82,7 @@ public enum ExpressionType {
     DECIMAL{
         @Override
         public Integer evaluate(String expression, Context context) {
+            int defaultValue = 3;
             int openingParen = expression.indexOf("(");
             int closingParen = -1;
             if(openingParen != -1) {
@@ -102,13 +103,17 @@ public enum ExpressionType {
                         return res;
                     }
                     case("evaluate"):{
-                        int dot = envFuncArg.indexOf(".");
-                        String entity = envFuncArg.substring(0,dot);
-                        String propertyName = envFuncArg.substring(dot + 1);
-                        if(entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())){
-                            return (int) context.getPrimaryEntityInstance().getPropertyByName(propertyName).getValue();
-                        }else if(entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())){
-                            return (int) context.getSecondaryEntity().getPropertyByName(propertyName).getValue();
+                        try {
+                            int dot = envFuncArg.indexOf(".");
+                            String entity = envFuncArg.substring(0, dot);
+                            String propertyName = envFuncArg.substring(dot + 1);
+                            if (entity.equals(context.getPrimaryEntityInstance().getEntityDefinition().getName())) {
+                                return (int) context.getPrimaryEntityInstance().getPropertyByName(propertyName).getValue();
+                            } else if (entity.equals(context.getSecondaryEntity().getEntityDefinition().getName())) {
+                                return (int) context.getSecondaryEntity().getPropertyByName(propertyName).getValue();
+                            }
+                        }catch (Exception e){
+                            return defaultValue;
                         }
                     }
                     case ("percent"):{
@@ -130,7 +135,8 @@ public enum ExpressionType {
                         }
                     }
                     default:
-                        throw new RuntimeException("There is no such environment function");
+                        return defaultValue;
+                        //throw new RuntimeException("There is no such environment function");
                 }
             }
             try {

@@ -79,6 +79,8 @@ public class AppController {
         }
     }
 
+
+
     public void setFileNameToEngine(SimpleStringProperty filePath) {
         try {
             engine.fileNameProperty().bind(filePath);
@@ -305,5 +307,10 @@ public class AppController {
         }
         detailsPageComponentController = null;
         newExecutionPageComponentController = null;
+    }
+
+    public void changeDesign(String cssFileName) {
+
+
     }
 }

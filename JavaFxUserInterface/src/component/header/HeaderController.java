@@ -1,26 +1,30 @@
 package component.header;
 
 import component.mainapp.AppController;
-import engine.api.Engine;
 import engine.impl.EngineImpl;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
 public class HeaderController {
 
 
+    @FXML
+    public ChoiceBox CBView;
+    @FXML
+    public GridPane gridPaneHeader;
     @FXML private AppController appController;
     @FXML public Button ButtonResults;
     @FXML public Label LabelFilePath;
@@ -38,7 +42,7 @@ public class HeaderController {
     private SimpleBooleanProperty isDetails;
     private SimpleBooleanProperty isQueueManage;
     private SimpleBooleanProperty isFileSelected;
-
+    private ObservableList<String> viewList = FXCollections.observableArrayList("Blue","Pink","white");
     private Stage primaryStage;
 
 
@@ -59,8 +63,33 @@ public class HeaderController {
         ButtonNewExec.disableProperty().bind(isFileSelected.not());
         ButtonQueueManage.disableProperty().bind(isFileSelected.not());
         ButtonResults.disableProperty().bind(isThereSimulationOutCome.not());
+        CBView.setValue("Blue");
+        CBView.setItems(viewList);
+        CBView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> applyStyles((String) newValue));
+
     }
 
+    public void applyStyles(String selectedColor) {
+        String cssFileName;
+        switch (selectedColor) {
+            case "Blue":
+                cssFileName = "blueStyle.css";
+                break;
+            case "Pink":
+                cssFileName = "pinkStyle.css";
+                break;
+            case "Green":
+                cssFileName = "greenStyle.css";
+                break;
+            default:
+                cssFileName = "defaultStyle.css"; // Provide a default style
+                break;
+
+        }
+        appController.changeDesign(cssFileName);
+        gridPaneHeader.getStylesheets().clear();
+        gridPaneHeader.getStylesheets().add(getClass().getResource(cssFileName).toExternalForm());
+    }
     @FXML
     private void onClickLoadFile(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
