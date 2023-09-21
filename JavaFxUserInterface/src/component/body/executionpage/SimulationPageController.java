@@ -251,7 +251,12 @@ public class SimulationPageController {
                 for (Map.Entry<String, Object> nameObj : resToEngine.entrySet()) {
                     String manipulatedString =LTBpair.getLabelText() +"entity";
                     if (manipulatedString.equals(nameObj.getKey())) {
-                        LTBpair.valueProperty().set((Double) nameObj.getValue());
+                        if (nameObj.getValue() instanceof Integer) {
+                            Integer value = (Integer) nameObj.getValue();
+                            LTBpair.valueProperty().set(value.doubleValue());
+                        } else {
+                            LTBpair.valueProperty().set((Double) nameObj.getValue());
+                        }
                     }
                 }
             }
