@@ -4,6 +4,7 @@ import DTOManager.impl.EntityDefinitionDTO;
 import DTOManager.impl.EntityInstanceDTO;
 import DTOManager.impl.EntityInstanceManagerDTO;
 import DTOManager.impl.SimulationOutcomeDTO;
+import component.body.resultspage.statistic.StatisticData;
 import component.mainapp.AppController;
 import engine.api.Engine;
 import javafx.application.Platform;
@@ -79,6 +80,8 @@ public class ResultsPageController {
     private Pane graphPane;
 
     private Engine engine;
+    private Pane statisticPane;
+
     public GridPane getMainView() {
         return mainView;
     }
@@ -122,6 +125,7 @@ public class ResultsPageController {
 
     private void showSimulationDetails(SimulationOutcomeDTO selectedSimulation) {
         removeGraph();
+        removeStatisticView();
         if (simulationUpdateTask != null) {
             simulationUpdateTask.cancel();
         }
@@ -246,6 +250,7 @@ public class ResultsPageController {
         loadGraph(simulationOutcomeDTO.getDataAroundTicks());
     }
 
+
     private void loadGraph(Map<Integer, EntityInstanceManagerDTO> dataAroundTicks)  {
         try {
             FXMLLoader loader = new FXMLLoader();
@@ -265,6 +270,25 @@ public class ResultsPageController {
         }
 
     }
+    private void loadStatistic(Map<Integer, EntityInstanceManagerDTO> dataAroundTicks)  {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("/component/body/resultspage/statistic/statisticDataView.fxml"));
+            statisticPane = loader.load();
+            StatisticData statisticDataView = loader.getController();
+            // Customize any data or logic you want to pass to the ResultsPageController
+            // For example, you can set recent simulations:
+            statisticDataView.setMainController(this);
+            statisticDataView.setData(dataAroundTicks);
+            // Set the ResultsPage as the center of the BorderPane
+            //dynamicVBox.getChildren().clear();
+            analyticData.getChildren().add(statisticPane);
+            statisticPane.toFront();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void removeGraph() {
         if (graphPane != null) {
@@ -272,6 +296,18 @@ public class ResultsPageController {
             graphPane = null;
         }
 
+    }
+
+    public void removeStatisticView() {
+        if (statisticPane != null) {
+            analyticData.getChildren().remove(statisticPane);
+            statisticPane = null;
+        }
+    }
+
+    public void onShowStatistic(ActionEvent event) {
+        SimulationOutcomeDTO simulationOutcomeDTO = simulationList.getSelectionModel().getSelectedItem();
+        loadStatistic(simulationOutcomeDTO.getDataAroundTicks());
     }
 }
 

@@ -78,7 +78,7 @@
                 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="235.0" prefWidth="423.0">
                      <children>
                         <Button fx:id="ButtonGraph" layoutX="249.0" layoutY="99.0" mnemonicParsing="false" onAction="#onShowGraphClicked" text="Show Graph" AnchorPane.bottomAnchor="98.0" AnchorPane.rightAnchor="75.0" AnchorPane.topAnchor="99.0" />
-                        <Button fx:id="ButtonStatistic" layoutX="75.0" layoutY="99.0" mnemonicParsing="false" text="Statistic Data" AnchorPane.bottomAnchor="98.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="99.0" />
+                        <Button fx:id="ButtonStatistic" layoutX="75.0" layoutY="99.0" mnemonicParsing="false" onAction="#onShowStatistic" text="Statistic Data" AnchorPane.bottomAnchor="98.0" AnchorPane.leftAnchor="75.0" AnchorPane.topAnchor="99.0" />
                      </children>
                   </AnchorPane>
                </children>

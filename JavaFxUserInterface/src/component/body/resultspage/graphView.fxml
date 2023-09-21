@@ -18,6 +18,6 @@
                 </LineChart>
             </content>
         </ScrollPane>
-        <Button fx:id="ButtonBack" layoutX="490.0" layoutY="47.0" mnemonicParsing="false" onAction="#onBackFromGraphButton" text="Back" />
+        <Button fx:id="ButtonBack" layoutX="20.0" layoutY="350.0" mnemonicParsing="false" onAction="#onBackFromGraphButton" text="Back" />
     </children>
 </AnchorPane>
