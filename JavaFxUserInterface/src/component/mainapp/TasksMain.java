@@ -34,7 +34,7 @@ public class TasksMain extends Application {
         AppController controller = fxmlLoader.getController();
         //engine needs to know the controller
         //setPrimeryStage?
-        Scene scene = new Scene(root, 600, 600);//
+        Scene scene = new Scene(root, 720, 640);//
         // Set the Scene and show the Stage
         primaryStage.setTitle(PRIMARY_STAGE_NAME);
         primaryStage.setScene(scene);

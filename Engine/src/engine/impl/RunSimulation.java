@@ -96,13 +96,21 @@ public class RunSimulation extends Thread implements Runnable{
                             propertyInstance.setTicksSameValue(propertyInstance.getTicksSameValue() + 1);
                         } else {
                             propertyInstance.setOldValue(propertyInstance.getValue());
-                            propertyInstance.setTicksSameValue(0);
+                            propertyInstance.getSameValueCounts().add(propertyInstance.getTicksSameValue());
+                            propertyInstance.setTicksSameValue(1);
+                        }
+                        if (simulationOutcome.getTermination().isTerminated(simulationOutcome.isStop())){
+                            if (propertyInstance.getValue().equals(propertyInstance.getOldValue())){
+                                propertyInstance.getSameValueCounts().add(propertyInstance.getTicksSameValue());
+                                int x = propertyInstance.getSameValueCounts().size();
+                            }
                         }
                     }
                 }
                 if (termination.getCurrTick() % 1000 == 0) {
                     simulationOutcome.addSimulationForTickDTO(termination.getCurrTick(), simulationOutcome.getEntityInstanceManager().createDTO());
                 }
+
                 simulationOutcome.getEntityInstanceManager().killEntities();
                 simulationOutcome.getEntityInstanceManager().createEntities();
                 termination.setCurrTick(termination.getCurrTick() + 1);
@@ -113,12 +121,28 @@ public class RunSimulation extends Thread implements Runnable{
             }
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            e.getMessage();
         }
 //        SimulationOutcome currSimulation = engine.getMyWorld().runSimulation(engine.getPropertyNameToValueAsString(),engine.getCountId());
 //        engine.setCountId(engine.getCountId() + 1);
 //        engine.getPastSimulations().put(engine.getCountId(), currSimulation);
     }
+
+    private static double getPopulation(Object value) {
+        double population;
+        if (value instanceof Integer) {
+            // Convert Integer to Double
+            population = ((Integer) value).doubleValue();
+        } else if (value instanceof Double) {
+            // Use the Double value directly
+            population = (Double) value;
+        } else {
+            // Handle other cases or provide a default value
+            population = 0.0; // Default value, change as needed
+        }
+        return population;
+    }
+
     private void moveEntities(){
         simulationOutcome.
                 getEntityInstanceManager().

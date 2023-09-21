@@ -57,9 +57,9 @@ public class DetailsPageController {
         TreeItem<String> entitiesNode = new TreeItem<>("Entities");
         TreeItem<String> envVarsNode = new TreeItem<>("Environment Variables");
         TreeItem<String> rulesNode = new TreeItem<>("Rules");
-        TreeItem<String> generalsNode = new TreeItem<>("Generals");
+        //TreeItem<String> generalsNode = new TreeItem<>("Generals");
         treeView.setRoot(worldRoot);
-        worldRoot.getChildren().addAll(entitiesNode, envVarsNode, rulesNode, generalsNode);
+        worldRoot.getChildren().addAll(entitiesNode, envVarsNode, rulesNode);
         for (EntityDefinitionDTO entityDefinitionDTO : world.getNameToEntityDefinitionDTO().values()) {
             TreeItem<String> entityNode = new TreeItem<>(entityDefinitionDTO.getName());
             entitiesNode.getChildren().add(entityNode);

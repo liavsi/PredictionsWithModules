@@ -41,8 +41,8 @@ public class ProximityAction extends AbstractAction {
                     newContext.setSecondaryEntity(targetEntity);
                     action.invoke(context);
                 }
-                else if(action.getMainEntity().getName().equals(context.getSecondaryEntity().getEntityDefinition().getName())){
-                    Context newContext = new ContextImpl(context.getSecondaryEntity(), context.getPrimaryEntityInstance(), context.getEntityInstanceManager(), context.getActiveEnvironment(), context.getGrid());
+                else if(action.getMainEntity().getName().equals(targetEntity.getEntityDefinition().getName())){
+                    Context newContext = new ContextImpl(targetEntity, context.getPrimaryEntityInstance(), context.getEntityInstanceManager(), context.getActiveEnvironment(), context.getGrid());
                     newContext.setPrimaryEntityInstance(targetEntity);
                     action.invoke(newContext);
                 }

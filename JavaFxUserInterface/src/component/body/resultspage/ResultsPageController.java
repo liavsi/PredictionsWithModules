@@ -51,22 +51,14 @@ public class ResultsPageController {
     public TableColumn<EntityPopulation,String> EntityNameColumn;
     @FXML
     public TableColumn<EntityPopulation,Integer> PopulationColumn;
-    @FXML private StackPane analyticData;
+    public AnchorPane AnchorPaneData;
+    public StackPane stackPane;
+    @FXML private AnchorPane analyticData;
     @FXML private Button ButtonStatistic;
     @FXML private Button ButtonGraph;
 
-    @FXML private VBox vBoxWithSimulations;
-    @FXML
-    private AnchorPane resultsPane;
-
     @FXML
     private ListView<SimulationOutcomeDTO> simulationList; // Assuming SimulationOutcomeDTO is the class for simulation outcomes
-
-    @FXML
-    private VBox simulationDetailsPane;
-
-    @FXML
-    private Button rerunButton;
 
     private SimpleBooleanProperty isSimulationRunning;
     private SimpleBooleanProperty isSimulationOver;
@@ -74,7 +66,6 @@ public class ResultsPageController {
     private AppController mainController;
     private ObservableList<SimulationOutcomeDTO> recentSimulations;
     private ObservableList<ShowEntity> entities;
-
     private SimpleIntegerProperty ticks;
     private SimpleLongProperty seconds;
     private Pane graphPane;
@@ -174,6 +165,7 @@ public class ResultsPageController {
         th.setDaemon(true);
         th.start();
         simulationUpdateTask.setOnSucceeded((event -> {
+
             // simulation finished make buttons disabled..
         }));
 
@@ -244,10 +236,30 @@ public class ResultsPageController {
     public void setEngine(Engine engine) {
         this.engine = engine;
     }
-
+    @FXML
     public void onShowGraphClicked(ActionEvent event) {
         SimulationOutcomeDTO simulationOutcomeDTO = simulationList.getSelectionModel().getSelectedItem();
         loadGraph(simulationOutcomeDTO.getDataAroundTicks());
+    }
+    @FXML
+    public void onShowStatistic(ActionEvent event) {
+        int id = simulationList.getSelectionModel().getSelectedItem().getId();
+        SimulationOutcomeDTO simulationOutcomeDTO = engine.getPastSimulationDTO(id);
+        loadStatistic(simulationOutcomeDTO);
+    }
+    public void removeGraph() {
+        if (graphPane != null) {
+            AnchorPaneData.getChildren().remove(graphPane);
+            graphPane = null;
+        }
+
+    }
+
+    public void removeStatisticView() {
+        if (statisticPane != null) {
+            AnchorPaneData.getChildren().remove(statisticPane);
+            statisticPane = null;
+        }
     }
 
 
@@ -262,53 +274,56 @@ public class ResultsPageController {
             graphViewController.setMainController(this);
             graphViewController.setData(dataAroundTicks);
             // Set the ResultsPage as the center of the BorderPane
-            //dynamicVBox.getChildren().clear();
-            analyticData.getChildren().add(graphPane);
+            AnchorPaneData.getChildren().add(graphPane);
             graphPane.toFront();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
-    private void loadStatistic(Map<Integer, EntityInstanceManagerDTO> dataAroundTicks)  {
+    private void loadStatistic(SimulationOutcomeDTO simulationOutcomeDTO)  {
         try {
             FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("/component/body/resultspage/statistic/statisticDataView.fxml"));
+            loader.setLocation(getClass().getResource("/component/body/resultspage/statisticView.fxml"));
             statisticPane = loader.load();
-            StatisticData statisticDataView = loader.getController();
-            // Customize any data or logic you want to pass to the ResultsPageController
-            // For example, you can set recent simulations:
-            statisticDataView.setMainController(this);
-            statisticDataView.setData(dataAroundTicks);
+            StatisticPageController statisticPageController = loader.getController();
+            statisticPageController.setMainController(this);
+            statisticPageController.setEngine(engine);
+            statisticPageController.setSimulationOutcomeDTO(simulationOutcomeDTO);
+            statisticPageController.statisticMenu();
             // Set the ResultsPage as the center of the BorderPane
-            //dynamicVBox.getChildren().clear();
-            analyticData.getChildren().add(statisticPane);
+            AnchorPaneData.getChildren().add(statisticPane);
             statisticPane.toFront();
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
+//    private void loadStatistic(Map<Integer, EntityInstanceManagerDTO> dataAroundTicks)  {
+//        try {
+//            FXMLLoader loader = new FXMLLoader();
+//            loader.setLocation(getClass().getResource("/component/body/resultspage/statistic/statisticDataView.fxml"));
+//            statisticPane = loader.load();
+//            StatisticData statisticDataView = loader.getController();
+//            // Customize any data or logic you want to pass to the ResultsPageController
+//            // For example, you can set recent simulations:
+//            statisticDataView.setMainController(this);
+//            statisticDataView.setData(dataAroundTicks);
+//            // Set the ResultsPage as the center of the BorderPane
+//            //dynamicVBox.getChildren().clear();
+//            analyticData.getChildren().add(statisticPane);
+//            statisticPane.toFront();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
-    public void removeGraph() {
-        if (graphPane != null) {
-            analyticData.getChildren().remove(graphPane);
-            graphPane = null;
-        }
 
-    }
-
-    public void removeStatisticView() {
-        if (statisticPane != null) {
-            analyticData.getChildren().remove(statisticPane);
-            statisticPane = null;
-        }
-    }
-
-    public void onShowStatistic(ActionEvent event) {
-        SimulationOutcomeDTO simulationOutcomeDTO = simulationList.getSelectionModel().getSelectedItem();
-        loadStatistic(simulationOutcomeDTO.getDataAroundTicks());
-    }
+//    public void onShowStatistic(ActionEvent event) {
+//        SimulationOutcomeDTO simulationOutcomeDTO = simulationList.getSelectionModel().getSelectedItem();
+//        loadStatistic(simulationOutcomeDTO.getDataAroundTicks());
+//    }
 }
 
 // Add more methods and logic for your results page as needed
